@@ -1,0 +1,89 @@
+{
+	"title": "Invalid value type in GT, should be number",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"OR": [
+						{
+							"AND": [
+								{
+									"GT": {
+										"sections_avg": 80
+									}
+								},
+								{
+									"LT": {
+										"sections_avg": 85
+									}
+								},
+								{
+									"IS": {
+										"sections_dept": "math"
+									}
+								},
+								{
+									"NOT": {
+										"IS": {
+											"sections_instructor": "*smith*"
+										}
+									}
+								}
+							]
+						},
+						{
+							"AND": [
+								{
+									"GT": {
+										"sections_year": "gsdg"
+									}
+								},
+								{
+									"IS": {
+										"sections_title": "*calculus*"
+									}
+								}
+							]
+						},
+						{
+							"AND": [
+								{
+									"GT": {
+										"sections_pass": 150
+									}
+								},
+								{
+									"LT": {
+										"sections_fail": 5
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"LT": {
+						"sections_audit": 20
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_avg",
+				"sections_instructor",
+				"sections_title",
+				"sections_year",
+				"sections_pass",
+				"sections_audit",
+				"sections_fail",
+				"sections_id",
+				"sections_uuid"
+			],
+			"ORDER": "sections_pass"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

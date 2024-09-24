@@ -1,0 +1,75 @@
+{
+	"title": "Invalid value type in IS, should be string",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"OR": [
+						{
+							"AND": [
+								{
+									"GT": {
+										"sections_avg": 80
+									}
+								},
+								{
+									"LT": {
+										"sections_avg": 90
+									}
+								},
+								{
+									"IS": {
+										"sections_dept": "comm"
+									}
+								},
+								{
+									"NOT": {
+										"IS": {
+											"sections_instructor": 100
+										}
+									}
+								}
+							]
+						},
+						{
+							"AND": [
+								{
+									"EQ": {
+										"sections_year": 2020
+									}
+								},
+								{
+									"IS": {
+										"sections_title": "*data*"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"LT": {
+						"sections_pass": 100
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_avg",
+				"sections_instructor",
+				"sections_title",
+				"sections_year",
+				"sections_pass",
+				"sections_audit",
+				"sections_fail",
+				"sections_id",
+				"sections_uuid"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

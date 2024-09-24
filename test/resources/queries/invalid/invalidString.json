@@ -1,18 +1,17 @@
 {
-	"title": "Multiple datasets",
+	"title": "No Title Specified",
 	"input": {
 		"WHERE": {
 			"GT": {
-				"what_avg": 93
+				"sections_avg": "string"
 			}
 		},
 		"OPTIONS": {
 			"COLUMNS": [
 				"sections_dept",
-				"sections_id",
 				"sections_avg"
 			],
-			"ORDER": "sections_dept"
+			"ORDER": "sections_avg"
 		}
 	},
 	"errorExpected": true,

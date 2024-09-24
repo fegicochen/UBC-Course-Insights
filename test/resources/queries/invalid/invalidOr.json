@@ -1,0 +1,21 @@
+{
+	"title": "OR must be a non-empty array",
+	"input": {
+		"WHERE": {
+			"OR": []
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_avg",
+				"sections_instructor",
+				"sections_title",
+				"sections_year",
+				"sections_pass"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

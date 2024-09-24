@@ -1,18 +1,18 @@
 {
-	"title": "Multiple datasets",
+	"title": "EQ should only have 1 key, has 2",
 	"input": {
 		"WHERE": {
-			"GT": {
-				"what_avg": 93
+			"EQ": {
+				"sections_avg": 97,
+				"sections_dept": 97
 			}
 		},
 		"OPTIONS": {
 			"COLUMNS": [
 				"sections_dept",
-				"sections_id",
 				"sections_avg"
 			],
-			"ORDER": "sections_dept"
+			"ORDER": "sections_avg"
 		}
 	},
 	"errorExpected": true,

@@ -655,5 +655,79 @@ describe("InsightFacade", function () {
 		it("[invalid/lt_passed_string.json] LT passed string", checkQuery);
 		it("[invalid/is_passed_number.json] IS passed number", checkQuery);
 		it("[invalid/empty_object.json] Empty object passed", checkQuery);
+		it("[valid/simple.json] SELECT dept, avg WHERE avg > 97", checkQuery);
+		it("[invalid/invalid.json] Query missing WHERE", checkQuery);
+		it(
+			"[invalid/invalidString.json] Section avg changed to string",
+			checkQuery
+		);
+		it(
+			"[invalid/resultTooBig.json] result too big should send error",
+			checkQuery
+		);
+		it("[valid/validResult.json] valid complicated results", checkQuery);
+		it("[invalid/invalidKey.json] invalid key in IS", checkQuery);
+		it("[invalid/invalidFilter.json] invalid filter key: RANDOM", checkQuery);
+		it(
+			"[invalid/invalidOrderKey.json] ORDER key must be in COLUMNS",
+			checkQuery
+		);
+		it(
+			"[invalid/invalidValueType.json] Invalid value type in EQ, should be number",
+			checkQuery
+		);
+		it(
+			"[invalid/invalidAsterisks.json]  Asterisks (*) can only be the first or last characters of input strings",
+			checkQuery
+		);
+		it(
+			"[invalid/invalidNoKeys.json]  GT should only have 1 key, has 0",
+			checkQuery
+		);
+		it("[invalid/invalidNot.json]  NOT must be object", checkQuery);
+		it("[invalid/invalidOr.json]  OR must be a non-empty array", checkQuery);
+		it(
+			"[invalid/invalidWhere.json]  WHERE should only have 1 key, has 2",
+			checkQuery
+		);
+
+		it(
+			"[invalid/invalidEQ.json]  EQ should only have 1 key, has 2",
+			checkQuery
+		);
+		it(
+			"[invalid/invalidGT.json]  GT should only have 1 key, has 2",
+			checkQuery
+		);
+		it(
+			"[invalid/invalidLT.json]  LT should only have 1 key, has 2",
+			checkQuery
+		);
+		it(
+			"[invalid/invalidIS.json] Invalid value type in IS, should be string",
+			checkQuery
+		);
+		it(
+			"[invalid/missingColumns.json] Invalid key type in LT, should be string",
+			checkQuery
+		);
+		it(
+			"[invalid/invalidColumns.json] Invalid key sections_it in COLUMNS",
+			checkQuery
+		);
+		it("[invalid/invalidAnd.json] AND must be a non-empty array", checkQuery);
+		it("[invalid/invalidEverything.json] Breaking everything", checkQuery);
+		it("[valid/validEverything.json] valid everything", checkQuery);
+		it("[invalid/EQ.json] Invalid key sectiear in EQ", checkQuery);
+		//fsdfsdf
+
+		it("[invalid/LT.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/GT.json] Invalid key sectiear in GT", checkQuery);
+		it(
+			"[invalid/numberEQ.json] Invalid value type in EQ, should be number",
+			checkQuery
+		);
+		it("[invalid/numberGT.json] Invalid key sectiear in GT", checkQuery);
+		it("[invalid/numberLT.json] Invalid key sectiear in LT", checkQuery);
 	});
 });
