@@ -1,0 +1,40 @@
+{
+	"title": "Filter by audit",
+	"input": {
+		"WHERE": {
+			"GT": {
+				"sections_audit": 20
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_title",
+				"sections_audit",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "rhsc",
+			"sections_title": "eval src evidenc",
+			"sections_audit": 21,
+			"sections_avg": 86.89
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_title": "eval src evidenc",
+			"sections_audit": 23,
+			"sections_avg": 88.79
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_title": "machine learn i",
+			"sections_audit": 21,
+			"sections_avg": 90.53
+		}
+	]
+}

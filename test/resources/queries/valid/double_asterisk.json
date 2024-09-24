@@ -1,0 +1,70 @@
+{
+	"title": "Double asterisk",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"IS": {
+						"sections_dept": "*en*"
+					}
+				},
+				{
+					"GT": {
+						"sections_avg": 92
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_pass",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "ceen",
+			"sections_pass": 6,
+			"sections_avg": 92.33
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_pass": 6,
+			"sections_avg": 92.33
+		},
+		{
+			"sections_dept": "dent",
+			"sections_pass": 5,
+			"sections_avg": 92.4
+		},
+		{
+			"sections_dept": "dent",
+			"sections_pass": 5,
+			"sections_avg": 92.4
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_pass": 23,
+			"sections_avg": 92.61
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_pass": 15,
+			"sections_avg": 94.27
+		},
+		{
+			"sections_dept": "dent",
+			"sections_pass": 6,
+			"sections_avg": 94.33
+		},
+		{
+			"sections_dept": "dent",
+			"sections_pass": 6,
+			"sections_avg": 94.33
+		}
+	]
+}

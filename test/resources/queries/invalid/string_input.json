@@ -1,0 +1,6 @@
+{
+	"title": "Query is a string not an object",
+	"input": "PQRS",
+	"errorExpected": true,
+	"expected": "InsightError"
+}

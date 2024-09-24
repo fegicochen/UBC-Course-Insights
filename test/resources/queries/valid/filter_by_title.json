@@ -1,0 +1,73 @@
+{
+	"title": "Filter by title",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"IS": {
+						"sections_title": "project & report"
+					}
+				},
+				{
+					"GT": {
+						"sections_avg": 90
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_instructor",
+				"sections_title",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "",
+			"sections_title": "project & report",
+			"sections_avg": 90.4
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "mazzi, eric",
+			"sections_title": "project & report",
+			"sections_avg": 91.25
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "prodanovic, vladan zoran",
+			"sections_title": "project & report",
+			"sections_avg": 91.5
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "",
+			"sections_title": "project & report",
+			"sections_avg": 92.33
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "mazzi, eric",
+			"sections_title": "project & report",
+			"sections_avg": 92.33
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "",
+			"sections_title": "project & report",
+			"sections_avg": 92.61
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "mazzi, eric",
+			"sections_title": "project & report",
+			"sections_avg": 94.27
+		}
+	]
+}

@@ -1,0 +1,37 @@
+{
+	"title": "Check not (NOT)",
+	"input": {
+		"WHERE": {
+			"NOT": {
+				"GT": {
+					"sections_avg": 1
+				}
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_id",
+				"sections_avg"
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_id": "202",
+			"sections_avg": 0
+		},
+		{
+			"sections_id": "100",
+			"sections_avg": 0
+		},
+		{
+			"sections_id": "100",
+			"sections_avg": 0
+		},
+		{
+			"sections_id": "475",
+			"sections_avg": 1
+		}
+	]
+}

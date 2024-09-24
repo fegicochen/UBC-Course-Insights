@@ -1,0 +1,20 @@
+{
+	"title": "Test searching through dataset one",
+	"input": {
+		"WHERE": {
+			"IS": {
+				"one_uuid": 8147
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"one_uuid"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": {
+
+	}
+}

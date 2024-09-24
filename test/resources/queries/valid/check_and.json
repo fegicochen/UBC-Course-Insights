@@ -1,0 +1,40 @@
+{
+	"title": "Check and operation (AND)",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"GT": {
+						"sections_avg": 93
+					}
+				},
+				{
+					"IS": {
+						"sections_dept": "adhe"
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_id",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "adhe",
+			"sections_id": "329",
+			"sections_avg": 93.33
+		},
+		{
+			"sections_dept": "adhe",
+			"sections_id": "329",
+			"sections_avg": 96.11
+		}
+	]
+}

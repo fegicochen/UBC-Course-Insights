@@ -1,0 +1,11 @@
+{
+	"title": "Invalid JSON in OPTIONS",
+	"input": {
+		"WHERE": {},
+		"OPTIONS": {
+			"COLUMNS": "dnaskd"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

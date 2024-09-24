@@ -1,0 +1,61 @@
+{
+	"title": "Filter by section year",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"GT": {
+						"sections_year": 2015
+					}
+				},
+				{
+					"LT": {
+						"sections_avg": 54
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_title",
+				"sections_audit",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "busi",
+			"sections_title": "found re apprai",
+			"sections_audit": 0,
+			"sections_avg": 4
+		},
+		{
+			"sections_dept": "lled",
+			"sections_title": "intro acad writ",
+			"sections_audit": 0,
+			"sections_avg": 51.14
+		},
+		{
+			"sections_dept": "lled",
+			"sections_title": "intro acad writ",
+			"sections_audit": 0,
+			"sections_avg": 52.4
+		},
+		{
+			"sections_dept": "lled",
+			"sections_title": "intro acad writ",
+			"sections_audit": 0,
+			"sections_avg": 52.69
+		},
+		{
+			"sections_dept": "chem",
+			"sections_title": "chem integ lab i",
+			"sections_audit": 0,
+			"sections_avg": 53
+		}
+	]
+}

@@ -1,0 +1,172 @@
+{
+	"title": "Filter by section pass",
+	"input": {
+		"WHERE": {
+			"GT": {
+				"sections_pass": 2000
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_title",
+				"sections_pass",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2063,
+			"sections_avg": 66.86
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2124,
+			"sections_avg": 67.24
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "princpl macrecon",
+			"sections_pass": 2169,
+			"sections_avg": 68.27
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2378,
+			"sections_avg": 68.4
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2023,
+			"sections_avg": 68.41
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "princpl macrecon",
+			"sections_pass": 2134,
+			"sections_avg": 68.72
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2286,
+			"sections_avg": 68.75
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "princpl macrecon",
+			"sections_pass": 2019,
+			"sections_avg": 68.98
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_title": "bio cog psych",
+			"sections_pass": 2201,
+			"sections_avg": 69.14
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2278,
+			"sections_avg": 69.25
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2099,
+			"sections_avg": 69.43
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_title": "dev soc cli psy",
+			"sections_pass": 2095,
+			"sections_avg": 69.45
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "princpl macrecon",
+			"sections_pass": 2083,
+			"sections_avg": 69.5
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_title": "dev soc cli psy",
+			"sections_pass": 2289,
+			"sections_avg": 69.51
+		},
+		{
+			"sections_dept": "econ",
+			"sections_title": "prncpls micrecon",
+			"sections_pass": 2438,
+			"sections_avg": 69.82
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "strat univ writ",
+			"sections_pass": 2466,
+			"sections_avg": 71.49
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "univrsty writing",
+			"sections_pass": 2502,
+			"sections_avg": 71.51
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "strat univ writ",
+			"sections_pass": 2557,
+			"sections_avg": 71.71
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "strat univ writ",
+			"sections_pass": 2994,
+			"sections_avg": 71.91
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "strat univ writ",
+			"sections_pass": 2491,
+			"sections_avg": 72.02
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_title": "catastroph earth",
+			"sections_pass": 2016,
+			"sections_avg": 72.46
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "univrsty writing",
+			"sections_pass": 2498,
+			"sections_avg": 72.59
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "strat univ writ",
+			"sections_pass": 2698,
+			"sections_avg": 72.91
+		},
+		{
+			"sections_dept": "engl",
+			"sections_title": "strat univ writ",
+			"sections_pass": 2655,
+			"sections_avg": 73.17
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_title": "catastroph earth",
+			"sections_pass": 2015,
+			"sections_avg": 73.39
+		}
+	]
+}

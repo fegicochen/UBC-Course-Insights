@@ -1,0 +1,19 @@
+{
+	"title": "Order is not in columns selected",
+	"input": {
+		"WHERE": {
+			"GT": {
+				"sections_avg": 93
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_id",
+				"sections_avg"
+			],
+			"ORDER": "sections_dept"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}
