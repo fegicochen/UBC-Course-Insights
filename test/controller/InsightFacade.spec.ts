@@ -112,10 +112,10 @@ describe("InsightFacade", function () {
 		it("should reject an id with an underscore in the middle", async () => {
 			try {
 				await facade.addDataset("abc_def", sections, InsightDatasetKind.Sections);
+				expect.fail("Should have thrown.");
 			} catch (err) {
 				expect(err).to.be.instanceOf(InsightError);
 			}
-			expect.fail("Should have thrown.");
 		});
 
 		it("should return id of single active dataset", async () => {
