@@ -27,6 +27,4 @@ export default class InsightFacade implements IInsightFacade {
 		// TODO: Remove this once you implement the methods!
 		throw new Error(`InsightFacadeImpl::listDatasets is unimplemented!`);
 	}
-
-	
 }
