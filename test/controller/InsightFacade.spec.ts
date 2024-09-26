@@ -93,8 +93,8 @@ describe("InsightFacade", function () {
 		it('should reject id with just "_"', async () => {
 			try {
 				await facade.addDataset("_", sections, InsightDatasetKind.Sections);
-			} catch (e) {
-				expect(e).to.be.instanceOf(InsightError);
+			} catch (err) {
+				expect(err).to.be.instanceOf(InsightError);
 				return;
 			}
 			expect.fail("Should have thrown above.");
@@ -102,8 +102,9 @@ describe("InsightFacade", function () {
 
 		it("should accept one character as idstring", async () => {
 			try {
-				await facade.addDataset("a", sections, InsightDatasetKind.Sections);
-			} catch (e) {
+				const result = await facade.addDataset("a", sections, InsightDatasetKind.Sections);
+				expect(result[0]).to.equal("a");
+			} catch (_err) {
 				expect.fail("Shouldn't have thrown.");
 			}
 		});
@@ -111,8 +112,8 @@ describe("InsightFacade", function () {
 		it("should reject an id with an underscore in the middle", async () => {
 			try {
 				await facade.addDataset("abc_def", sections, InsightDatasetKind.Sections);
-			} catch (e) {
-				return;
+			} catch (err) {
+				expect(err).to.be.instanceOf(InsightError);
 			}
 			expect.fail("Should have thrown.");
 		});
@@ -122,7 +123,7 @@ describe("InsightFacade", function () {
 				const ids = await facade.addDataset("abcd", sections, InsightDatasetKind.Sections);
 				expect(ids).to.be.length(1);
 				expect(ids).to.contain("abcd");
-			} catch (e) {
+			} catch (_err) {
 				expect.fail("Should not have thrown.");
 			}
 		});
@@ -132,7 +133,7 @@ describe("InsightFacade", function () {
 				const res = await facade.addDataset("pqrs", sections, InsightDatasetKind.Sections);
 				expect(res).to.be.length(1);
 				expect(res).to.contain("pqrs");
-			} catch (e) {
+			} catch (_err) {
 				expect.fail("Shouldn't have thrown.");
 			}
 			try {
@@ -149,7 +150,7 @@ describe("InsightFacade", function () {
 		it("should accept different ids", async () => {
 			try {
 				await facade.addDataset("pqrs", sections, InsightDatasetKind.Sections);
-			} catch (e) {
+			} catch (_e) {
 				expect.fail("Should not have thrown on first add.");
 			}
 			try {
@@ -158,7 +159,7 @@ describe("InsightFacade", function () {
 				expect(result).to.be.length(expLen);
 				expect(result).to.contain("pqrs");
 				expect(result).to.contain("abcd");
-			} catch (e) {
+			} catch (_e) {
 				expect.fail("Should not have thrown on second add.");
 			}
 		});
@@ -216,7 +217,7 @@ describe("InsightFacade", function () {
 			try {
 				const result = await facade.addDataset("valid", oneValidOneInvalidCourse, InsightDatasetKind.Sections);
 				expect(result).to.contain("valid");
-			} catch (e) {
+			} catch (_e) {
 				expect.fail("Shouldn't have thrown.");
 			}
 		});
@@ -234,7 +235,7 @@ describe("InsightFacade", function () {
 			try {
 				const result = await facade.addDataset("valid", noYearManySections, InsightDatasetKind.Sections);
 				expect(result).contains("valid");
-			} catch (e) {
+			} catch (_e) {
 				expect.fail("Shouldn't have thrown.");
 			}
 		});
@@ -313,7 +314,7 @@ describe("InsightFacade", function () {
 				const datasets = await facade.listDatasets();
 				const expLength = 0;
 				expect(datasets).to.have.length(expLength);
-			} catch (e) {
+			} catch (_e) {
 				expect.fail("Shouldn't have thrown.");
 			}
 		});
@@ -402,7 +403,7 @@ describe("InsightFacade", function () {
 				expect(datasets).to.be.length(expLength);
 				expect(datasetIds).to.contain("two");
 				expect(datasetIds).to.contain("one");
-			} catch (e) {
+			} catch (_e) {
 				expect.fail("Should not throw on add.");
 			}
 		});
@@ -420,7 +421,7 @@ describe("InsightFacade", function () {
 				const expLength = 2;
 				expect(datasets).to.be.length(expLength);
 				datasets.forEach((d) => expect(d.numRows).to.be.equal(rownums.get(d.id)));
-			} catch (e) {
+			} catch (_e) {
 				expect.fail("Should not throw on add.");
 			}
 		});
