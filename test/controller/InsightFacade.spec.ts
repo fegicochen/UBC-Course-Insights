@@ -52,12 +52,8 @@ describe("InsightFacade", function () {
 		oneValidOneInvalidCourse = await getContentFromArchives("invalidJSON.zip");
 		oneSectionNoYear = await getContentFromArchives("noYearOneSection.zip");
 		noYearManySections = await getContentFromArchives("noYearManySections.zip");
-		improperStructureCourses = await getContentFromArchives(
-			"improperStructure.zip"
-		);
-		coursesInWrongFolder = await getContentFromArchives(
-			"courseWrongFolder.zip"
-		);
+		improperStructureCourses = await getContentFromArchives("improperStructure.zip");
+		coursesInWrongFolder = await getContentFromArchives("courseWrongFolder.zip");
 
 		// Just in case there is anything hanging around from a previous run of the test suite
 		await clearDisk();
@@ -114,11 +110,7 @@ describe("InsightFacade", function () {
 
 		it("should reject an id with an underscore in the middle", async () => {
 			try {
-				await facade.addDataset(
-					"abc_def",
-					sections,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("abc_def", sections, InsightDatasetKind.Sections);
 			} catch (e) {
 				return;
 			}
@@ -127,11 +119,7 @@ describe("InsightFacade", function () {
 
 		it("should return id of single active dataset", async () => {
 			try {
-				const ids = await facade.addDataset(
-					"abcd",
-					sections,
-					InsightDatasetKind.Sections
-				);
+				const ids = await facade.addDataset("abcd", sections, InsightDatasetKind.Sections);
 				expect(ids).to.be.length(1);
 				expect(ids).to.contain("abcd");
 			} catch (e) {
@@ -141,22 +129,14 @@ describe("InsightFacade", function () {
 
 		it("should reject repeat ids", async () => {
 			try {
-				const res = await facade.addDataset(
-					"pqrs",
-					sections,
-					InsightDatasetKind.Sections
-				);
+				const res = await facade.addDataset("pqrs", sections, InsightDatasetKind.Sections);
 				expect(res).to.be.length(1);
 				expect(res).to.contain("pqrs");
 			} catch (e) {
 				expect.fail("Shouldn't have thrown.");
 			}
 			try {
-				await facade.addDataset(
-					"pqrs",
-					twoCourses,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("pqrs", twoCourses, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown on first add.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -173,11 +153,7 @@ describe("InsightFacade", function () {
 				expect.fail("Should not have thrown on first add.");
 			}
 			try {
-				const result = await facade.addDataset(
-					"abcd",
-					twoCourses,
-					InsightDatasetKind.Sections
-				);
+				const result = await facade.addDataset("abcd", twoCourses, InsightDatasetKind.Sections);
 				const expLen = 2;
 				expect(result).to.be.length(expLen);
 				expect(result).to.contain("pqrs");
@@ -189,11 +165,7 @@ describe("InsightFacade", function () {
 
 		it("should not add no section datasets", async () => {
 			try {
-				await facade.addDataset(
-					"empty",
-					zeroSectionCourse,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("empty", zeroSectionCourse, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -204,11 +176,7 @@ describe("InsightFacade", function () {
 
 		it("should not add empty datasets", async () => {
 			try {
-				await facade.addDataset(
-					"empty",
-					emptyCourses,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("empty", emptyCourses, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -217,11 +185,7 @@ describe("InsightFacade", function () {
 
 		it("should reject not a base64 string", async () => {
 			try {
-				await facade.addDataset(
-					"invalid",
-					"8)(U(23njnJDNSJDNAIO900129312???dsld",
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("invalid", "8)(U(23njnJDNSJDNAIO900129312???dsld", InsightDatasetKind.Sections);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -232,11 +196,7 @@ describe("InsightFacade", function () {
 
 		it("should reject a meaningless base64 string", async () => {
 			try {
-				await facade.addDataset(
-					"invalid",
-					"aAaAaAaAaAAaaaaaaAAAA",
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("invalid", "aAaAaAaAaAAaaaaaaAAAA", InsightDatasetKind.Sections);
 				expect.fail("Should have thrown.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -254,11 +214,7 @@ describe("InsightFacade", function () {
 
 		it("should accept with one corrupt file and one ok one", async () => {
 			try {
-				const result = await facade.addDataset(
-					"valid",
-					oneValidOneInvalidCourse,
-					InsightDatasetKind.Sections
-				);
+				const result = await facade.addDataset("valid", oneValidOneInvalidCourse, InsightDatasetKind.Sections);
 				expect(result).to.contain("valid");
 			} catch (e) {
 				expect.fail("Shouldn't have thrown.");
@@ -267,11 +223,7 @@ describe("InsightFacade", function () {
 
 		it("should reject one invalid section missing year", async () => {
 			try {
-				await facade.addDataset(
-					"invalid",
-					oneSectionNoYear,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("invalid", oneSectionNoYear, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -280,11 +232,7 @@ describe("InsightFacade", function () {
 
 		it("should accept file with only one section missing data", async () => {
 			try {
-				const result = await facade.addDataset(
-					"valid",
-					noYearManySections,
-					InsightDatasetKind.Sections
-				);
+				const result = await facade.addDataset("valid", noYearManySections, InsightDatasetKind.Sections);
 				expect(result).contains("valid");
 			} catch (e) {
 				expect.fail("Shouldn't have thrown.");
@@ -293,11 +241,7 @@ describe("InsightFacade", function () {
 
 		it("should reject zip file with improper structure", async () => {
 			try {
-				await facade.addDataset(
-					"invalid",
-					improperStructureCourses,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("invalid", improperStructureCourses, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -309,21 +253,13 @@ describe("InsightFacade", function () {
 			await facade.addDataset("two", twoCourses, InsightDatasetKind.Sections);
 
 			try {
-				await facade.addDataset(
-					"invalid",
-					improperStructureCourses,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("invalid", improperStructureCourses, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
 			}
 
-			const res = await facade.addDataset(
-				"one",
-				oneCourse,
-				InsightDatasetKind.Sections
-			);
+			const res = await facade.addDataset("one", oneCourse, InsightDatasetKind.Sections);
 			const expLength = 3;
 			expect(res).to.be.length(expLength);
 			expect(res).to.contain("one");
@@ -332,18 +268,10 @@ describe("InsightFacade", function () {
 		});
 
 		it("shouldn't change data with repeat ids", async () => {
-			await facade.addDataset(
-				"typescript",
-				oneCourse,
-				InsightDatasetKind.Sections
-			);
+			await facade.addDataset("typescript", oneCourse, InsightDatasetKind.Sections);
 
 			try {
-				await facade.addDataset(
-					"typescript",
-					twoCourses,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("typescript", twoCourses, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -359,11 +287,7 @@ describe("InsightFacade", function () {
 
 		it("should reject if courses in wrong folder", async () => {
 			try {
-				await facade.addDataset(
-					"invalid",
-					coursesInWrongFolder,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("invalid", coursesInWrongFolder, InsightDatasetKind.Sections);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -486,11 +410,7 @@ describe("InsightFacade", function () {
 		it("should provide all row counts", async () => {
 			try {
 				await facade.addDataset("one", oneCourse, InsightDatasetKind.Sections);
-				await facade.addDataset(
-					"four",
-					fourCourses,
-					InsightDatasetKind.Sections
-				);
+				await facade.addDataset("four", fourCourses, InsightDatasetKind.Sections);
 
 				const rownums = new Map<string, number>();
 				rownums.set("one", sectionsInOne);
@@ -499,9 +419,7 @@ describe("InsightFacade", function () {
 				const datasets = await facade.listDatasets();
 				const expLength = 2;
 				expect(datasets).to.be.length(expLength);
-				datasets.forEach((d) =>
-					expect(d.numRows).to.be.equal(rownums.get(d.id))
-				);
+				datasets.forEach((d) => expect(d.numRows).to.be.equal(rownums.get(d.id)));
 			} catch (e) {
 				expect.fail("Should not throw on add.");
 			}
@@ -540,9 +458,7 @@ describe("InsightFacade", function () {
 				);
 			}
 			// Destructuring assignment to reduce property accesses
-			const { input, expected, errorExpected } = await loadTestQuery(
-				this.test.title
-			);
+			const { input, expected, errorExpected } = await loadTestQuery(this.test.title);
 			let result: InsightResult[];
 			try {
 				result = await facade.performQuery(input);
@@ -559,9 +475,7 @@ describe("InsightFacade", function () {
 				return;
 			}
 			if (errorExpected) {
-				expect.fail(
-					`performQuery resolved when it should have rejected with ${expected}`
-				);
+				expect.fail(`performQuery resolved when it should have rejected with ${expected}`);
 			}
 		}
 
@@ -580,9 +494,7 @@ describe("InsightFacade", function () {
 			try {
 				await Promise.all(loadDatasetPromises);
 			} catch (err) {
-				throw new Error(
-					`In PerformQuery Before hook, dataset(s) failed to be added. \n${err}`
-				);
+				throw new Error(`In PerformQuery Before hook, dataset(s) failed to be added. \n${err}`);
 			}
 		});
 
@@ -604,10 +516,7 @@ describe("InsightFacade", function () {
 		it("[valid/all_params.json] Get all params", checkQuery);
 		it("[valid/double_asterisk.json] Double asterisk", checkQuery);
 		it("[valid/filter_by_id.json] Filter by section id", checkQuery);
-		it(
-			"[valid/filter_by_instructor.json] Filter by section instructor",
-			checkQuery
-		);
+		it("[valid/filter_by_instructor.json] Filter by section instructor", checkQuery);
 		it("[valid/filter_by_title.json] Filter by section title", checkQuery);
 		it("[valid/filter_by_uuid.json] Filter by section uuid", checkQuery);
 		it("[valid/filter_by_pass.json] Filter by section pass", checkQuery);
@@ -620,33 +529,18 @@ describe("InsightFacade", function () {
 		it("[invalid/missing_where.json] Query missing WHERE", checkQuery);
 		it("[invalid/missing_options.json] Query missing OPTIONS", checkQuery);
 		it("[invalid/missing_columns.json] Query missing COLUMNS", checkQuery);
-		it(
-			"[invalid/string_input.json] Query is a string not an object",
-			checkQuery
-		);
-		it(
-			"[invalid/number_input.json] Query is a number not an object",
-			checkQuery
-		);
+		it("[invalid/string_input.json] Query is a string not an object", checkQuery);
+		it("[invalid/number_input.json] Query is a number not an object", checkQuery);
 		it("[invalid/columns_empty.json] COLUMNS is empty", checkQuery);
-		it(
-			"[invalid/improper_json_options.json] Improper JSON in OPTIONS",
-			checkQuery
-		);
+		it("[invalid/improper_json_options.json] Improper JSON in OPTIONS", checkQuery);
 		it("[invalid/too_big.json] Too many results", checkQuery);
 		it("[invalid/gt_not_numeric.json] GT given string arg", checkQuery);
 		it("[invalid/lt_not_numeric.json] LT given string arg", checkQuery);
-		it(
-			"[invalid/asterisk_in_middle.json] Asterisk can't be in middle",
-			checkQuery
-		);
+		it("[invalid/asterisk_in_middle.json] Asterisk can't be in middle", checkQuery);
 		it("[invalid/only_asterisk.json] Too much", checkQuery);
 		it("[invalid/multiple_datasets.json] Multiple datasets fail", checkQuery);
 		it("[invalid/not_added.json] Accessing dataset not added", checkQuery);
-		it(
-			"[invalid/order_not_in_columns.json] Order is not in columns",
-			checkQuery
-		);
+		it("[invalid/order_not_in_columns.json] Order is not in columns", checkQuery);
 		it("[invalid/num_for_dept.json] Number to filter for dept", checkQuery);
 		it("[invalid/or_empty_array.json] OR as empty array", checkQuery);
 		it("[invalid/and_empty_array.json] AND as empty array", checkQuery);
@@ -657,64 +551,28 @@ describe("InsightFacade", function () {
 		it("[invalid/empty_object.json] Empty object passed", checkQuery);
 		it("[valid/simple.json] SELECT dept, avg WHERE avg > 97", checkQuery);
 		it("[invalid/invalid.json] Query missing WHERE", checkQuery);
-		it(
-			"[invalid/invalidString.json] Section avg changed to string",
-			checkQuery
-		);
-		it(
-			"[invalid/resultTooBig.json] result too big should send error",
-			checkQuery
-		);
+		it("[invalid/invalidString.json] Section avg changed to string", checkQuery);
+		it("[invalid/resultTooBig.json] result too big should send error", checkQuery);
 		it("[valid/validResult.json] valid complicated results", checkQuery);
 		it("[invalid/invalidKey.json] invalid key in IS", checkQuery);
 		it("[invalid/invalidFilter.json] invalid filter key: RANDOM", checkQuery);
-		it(
-			"[invalid/invalidOrderKey.json] ORDER key must be in COLUMNS",
-			checkQuery
-		);
-		it(
-			"[invalid/invalidValueType.json] Invalid value type in EQ, should be number",
-			checkQuery
-		);
+		it("[invalid/invalidOrderKey.json] ORDER key must be in COLUMNS", checkQuery);
+		it("[invalid/invalidValueType.json] Invalid value type in EQ, should be number", checkQuery);
 		it(
 			"[invalid/invalidAsterisks.json]  Asterisks (*) can only be the first or last characters of input strings",
 			checkQuery
 		);
-		it(
-			"[invalid/invalidNoKeys.json]  GT should only have 1 key, has 0",
-			checkQuery
-		);
+		it("[invalid/invalidNoKeys.json]  GT should only have 1 key, has 0", checkQuery);
 		it("[invalid/invalidNot.json]  NOT must be object", checkQuery);
 		it("[invalid/invalidOr.json]  OR must be a non-empty array", checkQuery);
-		it(
-			"[invalid/invalidWhere.json]  WHERE should only have 1 key, has 2",
-			checkQuery
-		);
+		it("[invalid/invalidWhere.json]  WHERE should only have 1 key, has 2", checkQuery);
 
-		it(
-			"[invalid/invalidEQ.json]  EQ should only have 1 key, has 2",
-			checkQuery
-		);
-		it(
-			"[invalid/invalidGT.json]  GT should only have 1 key, has 2",
-			checkQuery
-		);
-		it(
-			"[invalid/invalidLT.json]  LT should only have 1 key, has 2",
-			checkQuery
-		);
-		it(
-			"[invalid/invalidIS.json] Invalid value type in IS, should be string",
-			checkQuery
-		);
-		it(
-			"[invalid/missingColumns.json] Invalid key type in LT, should be string",
-			checkQuery
-		);
-		it(
-			"[invalid/invalidColumns.json] Invalid key sections_it in COLUMNS",
-			checkQuery
-		);
+		it("[invalid/invalidEQ.json]  EQ should only have 1 key, has 2", checkQuery);
+		it("[invalid/invalidGT.json]  GT should only have 1 key, has 2", checkQuery);
+		it("[invalid/invalidLT.json]  LT should only have 1 key, has 2", checkQuery);
+		it("[invalid/invalidIS.json] Invalid value type in IS, should be string", checkQuery);
+		it("[invalid/missingColumns.json] Invalid key type in LT, should be string", checkQuery);
+		it("[invalid/invalidColumns.json] Invalid key sections_it in COLUMNS", checkQuery);
 		it("[invalid/invalidAnd.json] AND must be a non-empty array", checkQuery);
 		it("[invalid/invalidEverything.json] Breaking everything", checkQuery);
 		it("[valid/validEverything.json] valid everything", checkQuery);
@@ -723,10 +581,7 @@ describe("InsightFacade", function () {
 
 		it("[invalid/LT.json] Invalid key sectiear in LT", checkQuery);
 		it("[invalid/GT.json] Invalid key sectiear in GT", checkQuery);
-		it(
-			"[invalid/numberEQ.json] Invalid value type in EQ, should be number",
-			checkQuery
-		);
+		it("[invalid/numberEQ.json] Invalid value type in EQ, should be number", checkQuery);
 		it("[invalid/numberGT.json] Invalid key sectiear in GT", checkQuery);
 		it("[invalid/numberLT.json] Invalid key sectiear in LT", checkQuery);
 	});
