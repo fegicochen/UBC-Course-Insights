@@ -1,3 +1,4 @@
+import exp from "constants";
 import {
 	IInsightFacade,
 	InsightDatasetKind,
@@ -7,6 +8,7 @@ import {
 	ResultTooLargeError,
 } from "../../src/controller/IInsightFacade";
 import InsightFacade from "../../src/controller/InsightFacade";
+import { QueryEngine } from "../../src/controller/QueryEngine";
 import { clearDisk, getContentFromArchives, loadTestQuery } from "../TestUtil";
 
 import { expect, use } from "chai";
@@ -585,5 +587,44 @@ describe("InsightFacade", function () {
 		it("[invalid/numberEQ.json] Invalid value type in EQ, should be number", checkQuery);
 		it("[invalid/numberGT.json] Invalid key sectiear in GT", checkQuery);
 		it("[invalid/numberLT.json] Invalid key sectiear in LT", checkQuery);
+	});
+});
+
+describe("QueryEngine", () => {
+	describe("checkValidJSON", () => {
+		it("should reject a string input", async () => {
+			const qe = new QueryEngine(() => ({ datasets: [] }));
+
+			try {
+				qe.checkValidJSON("PQRS", "abcd");
+				expect.fail("Should have thrown.");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+				expect((e as InsightError).message).to.contain("PQRS");
+			}
+		});
+
+		it("should accept an onject input", async () => {
+			const qe = new QueryEngine(() => ({ datasets: [] }));
+
+			try {
+				qe.checkValidJSON("", { abc: "def" });
+			} catch (e) {
+				expect.fail("Should not have thrown.");
+			}
+		});
+	});
+
+	describe("processBody", () => {
+		it("should reject body missing WHERE", async () => {
+			const qe = new QueryEngine(() => ({ datasets: [] }));
+
+			try {
+				qe.processBody({});
+				expect.fail("Should have thrown.");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
 	});
 });

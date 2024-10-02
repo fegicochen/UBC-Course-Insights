@@ -8,10 +8,7 @@ import { QueryEngine } from "./QueryEngine";
  */
 export default class InsightFacade implements IInsightFacade {
 	public async addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-		// TODO: Remove this once you implement the methods!
-		throw new Error(
-			`InsightFacadeImpl::addDataset() is unimplemented! - id=${id}; content=${content?.length}; kind=${kind}`
-		);
+		return [];
 	}
 
 	public async removeDataset(id: string): Promise<string> {
@@ -20,8 +17,10 @@ export default class InsightFacade implements IInsightFacade {
 	}
 
 	public async performQuery(query: unknown): Promise<InsightResult[]> {
-		// TODO: Remove this once you implement the methods!
-		throw new Error(`InsightFacadeImpl::performQuery() is unimplemented! - query=${query};`);
+		// TODO: replace datasets provider with actual provider.
+		const qe = new QueryEngine(() => ({ datasets: [] }));
+		const sections = await qe.performQuery(query);
+		return sections as unknown as InsightResult[];
 	}
 
 	public async listDatasets(): Promise<InsightDataset[]> {
