@@ -1,3 +1,5 @@
+import { InsightError } from "./IInsightFacade";
+
 enum DatasetId {
 	uuid = "id",
 	id = "Course",
@@ -34,3 +36,16 @@ export interface DatasetList {
 }
 
 export type DatasetsProvider = () => DatasetList;
+
+export class Utils {
+	/**
+	 * Throws InsightError if idstring does not conform to id string guidelines.
+	 *
+	 * @param idstring string to test
+	 * @returns false if string is improperly formatted (only whitespace or contains underscoare), true otherwise
+	 */
+	static isValidIdString(idstring: string): boolean {
+		if (idstring.trim() === "" || idstring.includes("_")) return false;
+		return true;
+	}
+}
