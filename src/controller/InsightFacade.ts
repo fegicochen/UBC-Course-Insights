@@ -1,4 +1,5 @@
 import { IInsightFacade, InsightDataset, InsightDatasetKind, InsightResult } from "./IInsightFacade";
+import { QueryEngine } from "./QueryEngine";
 
 /**
  * This is the main programmatic entry point for the project.
