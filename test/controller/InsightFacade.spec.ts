@@ -591,12 +591,63 @@ describe("InsightFacade", function () {
 });
 
 describe("QueryEngine", () => {
-	describe("checkValidJSON", () => {
-		it("should reject a string input", async () => {
-			const qe = new QueryEngine(() => ({ datasets: [] }));
+	let qe: QueryEngine;
 
+	before(() => {
+		qe = new QueryEngine(() => ({ datasets: [] }));
+	});
+
+	describe("requireExactKeys", () => {
+		it("should throw if there are extra keys", () => {
 			try {
-				qe.checkValidJSON("PQRS", "abcd");
+				QueryEngine.requireKeys({ B: 12, C: 3 }, [["A", true]]);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
+
+		it("should throw if there are missing keys", () => {
+			try {
+				QueryEngine.requireKeys({ B: 4, A: "d" }, [
+					["A", true],
+					["B", true],
+					["C", true],
+				]);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
+
+		it("should not throw if missing keys are optional", () => {
+			let ret;
+			try {
+				ret = QueryEngine.requireKeys({ A: "A" }, [
+					["A", true],
+					["B", false],
+				]);
+			} catch (e) {
+				expect.fail("Shouldn't have thrown.");
+			}
+			expect(ret.get("A")).to.equal("A");
+			expect(ret.get("B")).to.be.undefined;
+		});
+
+		it("should return key values if present", () => {
+			let ret = QueryEngine.requireKeys({ P: 22, Q: "ABC" }, [
+				["P", false],
+				["Q", true],
+			]);
+			expect(ret.get("P")).to.equal(22);
+			expect(ret.get("Q")).to.equal("ABC");
+		});
+	});
+
+	describe("checkIsObject", () => {
+		it("should reject a string input", async () => {
+			try {
+				QueryEngine.checkIsObject("PQRS", "abcd");
 				expect.fail("Should have thrown.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -605,23 +656,66 @@ describe("QueryEngine", () => {
 		});
 
 		it("should accept an onject input", async () => {
-			const qe = new QueryEngine(() => ({ datasets: [] }));
-
 			try {
-				qe.checkValidJSON("", { abc: "def" });
+				QueryEngine.checkIsObject("", { abc: "def" });
 			} catch (e) {
 				expect.fail("Should not have thrown.");
 			}
 		});
 	});
 
-	describe("processBody", () => {
-		it("should reject body missing WHERE", async () => {
-			const qe = new QueryEngine(() => ({ datasets: [] }));
-
+	describe("checkIsArray", () => {
+		it("should reject a number input", async () => {
 			try {
-				qe.processBody({});
+				QueryEngine.checkIsArray("ABC", 12);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+				expect((e as InsightError).message).to.contain("ABC");
+			}
+		});
+
+		it("should accept empty array input", async () => {
+			try {
+				QueryEngine.checkIsArray("", []);
+			} catch (e) {
+				expect.fail("Should not have thrown.");
+			}
+		});
+	});
+
+	describe("processQuery", () => {
+		it("should reject non-json", async () => {
+			try {
+				await qe.processQuery("ABC");
 				expect.fail("Should have thrown.");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
+
+		it("should reject with invalid key", async () => {
+			try {
+				await qe.processQuery({ PLUS: "ABCD" });
+				expect.fail("Should have failed");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
+
+		it("should reject query without options or where", async () => {
+			try {
+				await qe.processQuery({});
+				expect.fail("Should have failed.");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
+
+		it("should reject empty options", async () => {
+			try {
+				await qe.processQuery({ OPTIONS: {} });
+				expect.fail("Should have failed");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
 			}

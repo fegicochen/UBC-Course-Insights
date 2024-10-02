@@ -19,7 +19,7 @@ export default class InsightFacade implements IInsightFacade {
 	public async performQuery(query: unknown): Promise<InsightResult[]> {
 		// TODO: replace datasets provider with actual provider.
 		const qe = new QueryEngine(() => ({ datasets: [] }));
-		const sections = await qe.performQuery(query);
+		const sections = await qe.processQuery(query);
 		return sections as unknown as InsightResult[];
 	}
 
