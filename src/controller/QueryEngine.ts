@@ -1,5 +1,5 @@
 import { Section, DatasetList, DatasetsProvider, DatasetUtils, InsightFacadeKey, Dataset } from "./Dataset";
-import { InsightError } from "./IInsightFacade";
+import { InsightError, ResultTooLargeError } from "./IInsightFacade";
 
 const Keywords = {
 	Body: "WHERE",
@@ -55,9 +55,7 @@ export class QueryEngine {
 
 		// Split into processing body and options
 		const options = this.processOptions(rootStructure.get(Keywords.Options));
-		this.processBody(rootStructure.get(Keywords.Body), options);
-
-		return [];
+		return this.processBody(rootStructure.get(Keywords.Body), options);
 	}
 
 	/**
@@ -119,10 +117,16 @@ export class QueryEngine {
 	 * @param options the options state computed
 	 * @throws InsightError if body is malformed.
 	 */
-	processBody(bodyRaw: unknown, options: OptionsState) {
+	processBody(bodyRaw: unknown, options: OptionsState): Section[] {
 		const filter = new Filter(this.datasets, options);
 
-		QueryEngine.checkSingleFilter(filter, bodyRaw);
+		const filterFunction = QueryEngine.checkSingleFilter(filter, bodyRaw);
+
+		const sections = filterFunction();
+
+		if (sections.length > 5000) throw new ResultTooLargeError();
+
+		return sections;
 	}
 
 	static checkSingleFilter(filter: Filter, bodyRaw: unknown): FilterOperation {
@@ -255,23 +259,48 @@ export class QueryEngine {
 
 type FilterOperation = () => Array<Section>;
 
+/**
+ * A class to manage filter tree structure in a functional manner.
+ * Contains methods or, and, lessThan, etc. which consume a child, children, or parameters
+ * and return a function which computes the value with the provided dataset.
+ * 
+ * Ex. `
+ * const f = new Filter(dp, options);
+ * f.or([f.equals(12, mkey), f.is("abc", skey)]);
+ * `
+ */
 class Filter {
 	private readonly options: OptionsState;
 	private dataset: Dataset;
 
+	/**
+	 * 
+	 * @param dp the datasets provider
+	 * @param options the options for the given query
+	 */
 	constructor(dp: DatasetsProvider, options: OptionsState) {
 		this.options = options;
-		const dataset = DatasetUtils.findDataset(dp, options.datasetId);
+		const dataset = DatasetUtils.findDataset(dp, this.options.datasetId);
 		if (dataset === undefined) throw new InsightError("Could not find dataset with id: " + options.datasetId + ".");
 		this.dataset = dataset;
 	}
 
+	/**
+	 * 
+	 * @param children the filter operations to be "or'ed" together
+	 * @returns A function evaluating the "or" (set union) of the results of the given filter operations.
+	 */
 	or = (children: FilterOperation[]) => () => {
 		const resultSet = new Set<Section>();
 		children.map((child) => child()).forEach((sectionList) => sectionList.forEach((section) => resultSet.add(section)));
 		return Array.from(resultSet);
 	};
 
+	/**
+	 * 
+	 * @param children the filter operations to be "and'ed" together
+	 * @returns A function evaluating the "and" (set intersection) of the results of the given filter operations.
+	 */
 	and = (children: FilterOperation[]) => () => {
 		const resultSet = new Set<Section>();
 		const childResults = children.map((child) => child());
@@ -287,7 +316,14 @@ class Filter {
 		return Array.from(resultSet);
 	};
 
-	mOperation = (compare: (x: number, y: number) => boolean, limit: number, mkey: InsightFacadeKey) => () => {
+	/**
+	 * 
+	 * @param compare the comparator
+	 * @param limit the limit to compare against (rhs of comparator)
+	 * @param mkey the mkey (numeric key) to test against
+	 * @returns A function evaluating the sections from the dataset matching the given id with the given comparator.
+	 */
+	private mOperation = (compare: (x: number, y: number) => boolean, limit: number, mkey: InsightFacadeKey) => () => {
 		let ret: Array<Section> = [];
 		this.dataset.members.forEach((section) => {
 			if (compare(section[mkey.field as keyof Section] as number, limit)) ret = ret.concat(section);
