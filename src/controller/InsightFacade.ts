@@ -54,14 +54,16 @@ export default class InsightFacade implements IInsightFacade {
 	}
 
 	public async performQuery(query: unknown): Promise<InsightResult[]> {
-		// TODO: replace datasets provider with actual provider.
 		const qe = new QueryEngine(this.getDatasets);
 		const sections = await qe.processQuery(query);
 		return sections as unknown as InsightResult[];
 	}
 
 	public async listDatasets(): Promise<InsightDataset[]> {
-		// TODO: Remove this once you implement the methods!
-		throw new Error(`InsightFacadeImpl::listDatasets is unimplemented!`);
+		return this.datasets.datasets.map((dataset) => ({
+			id: dataset.id,
+			kind: InsightDatasetKind.Sections,
+			numRows: dataset.members.length,
+		}));
 	}
 }

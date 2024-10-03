@@ -1,5 +1,5 @@
 import { Section, DatasetList, DatasetsProvider, DatasetUtils, InsightFacadeKey, Dataset } from "./Dataset";
-import { InsightError, ResultTooLargeError } from "./IInsightFacade";
+import { InsightError, InsightResult, ResultTooLargeError } from "./IInsightFacade";
 
 const Keywords = {
 	Body: "WHERE",
@@ -43,7 +43,7 @@ export class QueryEngine {
 	 * @param query The query object in accordance with IInsightFacade.performQuery
 	 * @throws InsightError if query is improprly formed
 	 */
-	async processQuery(queryRaw: unknown): Promise<Array<Section>> {
+	async processQuery(queryRaw: unknown): Promise<Array<InsightResult>> {
 		// Ensure query is obect and update type
 		const query = QueryEngine.checkIsObject("Query", queryRaw);
 
@@ -55,7 +55,16 @@ export class QueryEngine {
 
 		// Split into processing body and options
 		const options = this.processOptions(rootStructure.get(Keywords.Options));
-		return this.processBody(rootStructure.get(Keywords.Body), options);
+		const sections = this.processBody(rootStructure.get(Keywords.Body), options);
+
+		// Return only data requested
+		return sections.map((section) => {
+			const result: InsightResult = {};
+			options.columns.forEach((column) => {
+				result[column.field] = section[column.field];
+			});
+			return result;
+		});
 	}
 
 	/**
