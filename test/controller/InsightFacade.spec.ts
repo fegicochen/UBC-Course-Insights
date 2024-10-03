@@ -107,8 +107,8 @@ describe("InsightFacade", function () {
 			try {
 				const result = await facade.addDataset("a", sections, InsightDatasetKind.Sections);
 				expect(result[0]).to.equal("a");
-			} catch (_err) {
-				expect.fail("Shouldn't have thrown.");
+			} catch (err) {
+				expect.fail("Shouldn't have thrown. " + JSON.stringify(err));
 			}
 		});
 

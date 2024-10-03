@@ -263,7 +263,7 @@ type FilterOperation = () => Array<Section>;
  * A class to manage filter tree structure in a functional manner.
  * Contains methods or, and, lessThan, etc. which consume a child, children, or parameters
  * and return a function which computes the value with the provided dataset.
- * 
+ *
  * Ex. `
  * const f = new Filter(dp, options);
  * f.or([f.equals(12, mkey), f.is("abc", skey)]);
@@ -274,7 +274,7 @@ class Filter {
 	private dataset: Dataset;
 
 	/**
-	 * 
+	 *
 	 * @param dp the datasets provider
 	 * @param options the options for the given query
 	 */
@@ -286,7 +286,7 @@ class Filter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param children the filter operations to be "or'ed" together
 	 * @returns A function evaluating the "or" (set union) of the results of the given filter operations.
 	 */
@@ -297,7 +297,7 @@ class Filter {
 	};
 
 	/**
-	 * 
+	 *
 	 * @param children the filter operations to be "and'ed" together
 	 * @returns A function evaluating the "and" (set intersection) of the results of the given filter operations.
 	 */
@@ -317,7 +317,7 @@ class Filter {
 	};
 
 	/**
-	 * 
+	 *
 	 * @param compare the comparator
 	 * @param limit the limit to compare against (rhs of comparator)
 	 * @param mkey the mkey (numeric key) to test against

@@ -48,6 +48,18 @@ export interface InsightFacadeKey {
 export class DatasetUtils {
 	/**
 	 *
+	 * @param base64 the base64 (maybe) string to validate
+	 * @returns whether it is base64 formatted or not
+	 */
+	static isValidBase64(base64: string): boolean {
+		// Referenced from: https://stackoverflow.com/questions/7860392/determine-if-string-is-in-base64-using-javascript
+		// Used the regular expression provided.
+		const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+		return base64regex.test(base64);
+	}
+
+	/**
+	 *
 	 * @param provider datasets provider
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
