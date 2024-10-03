@@ -13,6 +13,7 @@ import { clearDisk, getContentFromArchives, loadTestQuery } from "../TestUtil";
 
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
+import { DatasetId, DatasetUtils } from "../../src/controller/Dataset";
 
 use(chaiAsPromised);
 
@@ -471,7 +472,7 @@ describe("InsightFacade", function () {
 					expect.fail(`performQuery threw unexpected error: ${err}`);
 				}
 				if (expected === "InsightError") {
-					expect(err).is.instanceOf(InsightError);
+					expect(err).is.instanceOf(InsightError, JSON.stringify(err));
 				} else if (expected === "ResultTooLargeError") {
 					expect(err).is.instanceOf(ResultTooLargeError);
 				}
@@ -587,6 +588,86 @@ describe("InsightFacade", function () {
 		it("[invalid/numberEQ.json] Invalid value type in EQ, should be number", checkQuery);
 		it("[invalid/numberGT.json] Invalid key sectiear in GT", checkQuery);
 		it("[invalid/numberLT.json] Invalid key sectiear in LT", checkQuery);
+	});
+});
+
+describe("DatasetUtils", () => {
+	describe("isValidIDString", () => {
+		it("should reject empty string", () => {
+			expect(DatasetUtils.isValidIdString("")).is.false;
+			expect(DatasetUtils.isValidIdString("  ")).is.false;
+		});
+
+		it("should reject underscores", () => {
+			expect(DatasetUtils.isValidIdString("_")).is.false;
+			expect(DatasetUtils.isValidIdString(" _ ")).is.false;
+			expect(DatasetUtils.isValidIdString("ab_cd")).is.false;
+			expect(DatasetUtils.isValidIdString("PQRS_")).is.false;
+			expect(DatasetUtils.isValidIdString("_ADSD")).is.false;
+		});
+
+		it("should accept proper strings", () => {
+			expect(DatasetUtils.isValidIdString("ABC")).is.true;
+			expect(DatasetUtils.isValidIdString("JDKSD2391i")).is.true;
+		});
+	});
+
+	describe("parseSKey", () => {
+		it("should reject invalid ids in skeys", () => {
+			expect(DatasetUtils.parseSKey("abc_def_avg")).to.be.undefined;
+			expect(DatasetUtils.parseSKey("_year")).to.be.undefined;
+			expect(DatasetUtils.parseSKey("A__B_AD_DAS")).to.be.undefined;
+		});
+
+		it("should accept skeys", () => {
+			expect(DatasetUtils.parseSKey("abc_dept")).to.deep.equal({
+				idstring: "abc",
+				field: DatasetId.Dept,
+			});
+			expect(DatasetUtils.parseSKey("123_uuid")).to.deep.equal({
+				idstring: "123",
+				field: DatasetId.Uuid,
+			});
+		});
+
+		it("should reject mkeys", () => {
+			expect(DatasetUtils.parseSKey("abc_avg")).to.be.undefined;
+			expect(DatasetUtils.parseSKey("123_fail")).to.be.undefined;
+		});
+
+		it("should reject nonsense", () => {
+			expect(DatasetUtils.parseSKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).to.be.undefined;
+			expect(DatasetUtils.parseSKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).to.be.undefined;
+		});
+	});
+
+	describe("parseMKey", () => {
+		it("should reject invalid ids in mkeys", () => {
+			expect(DatasetUtils.parseMKey("abc_def_avg")).to.be.undefined;
+			expect(DatasetUtils.parseMKey("_year")).to.be.undefined;
+			expect(DatasetUtils.parseMKey("A__B_AD_DAS")).to.be.undefined;
+		});
+
+		it("should reject skeys", () => {
+			expect(DatasetUtils.parseMKey("abc_dept")).to.be.undefined;
+			expect(DatasetUtils.parseMKey("123_uuid")).to.be.undefined;
+		});
+
+		it("should accept proper mkeys", () => {
+			expect(DatasetUtils.parseMKey("abc_avg")).to.deep.equal({
+				idstring: "abc",
+				field: DatasetId.Avg,
+			});
+			expect(DatasetUtils.parseMKey("123_fail")).to.deep.equal({
+				idstring: "123",
+				field: DatasetId.Fail,
+			});
+		});
+
+		it("should reject nonsense", () => {
+			expect(DatasetUtils.parseMKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).to.be.undefined;
+			expect(DatasetUtils.parseMKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).to.be.undefined;
+		});
 	});
 });
 
