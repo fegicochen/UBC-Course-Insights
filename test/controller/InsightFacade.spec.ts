@@ -1,4 +1,3 @@
-import exp from "constants";
 import {
 	IInsightFacade,
 	InsightDatasetKind,
@@ -594,29 +593,29 @@ describe("InsightFacade", function () {
 describe("DatasetUtils", () => {
 	describe("isValidIDString", () => {
 		it("should reject empty string", () => {
-			expect(DatasetUtils.isValidIdString("")).is.false;
-			expect(DatasetUtils.isValidIdString("  ")).is.false;
+			expect(DatasetUtils.isValidIdString("")).equals(false);
+			expect(DatasetUtils.isValidIdString("  ")).equals(false);
 		});
 
 		it("should reject underscores", () => {
-			expect(DatasetUtils.isValidIdString("_")).is.false;
-			expect(DatasetUtils.isValidIdString(" _ ")).is.false;
-			expect(DatasetUtils.isValidIdString("ab_cd")).is.false;
-			expect(DatasetUtils.isValidIdString("PQRS_")).is.false;
-			expect(DatasetUtils.isValidIdString("_ADSD")).is.false;
+			expect(DatasetUtils.isValidIdString("_")).equals(false);
+			expect(DatasetUtils.isValidIdString(" _ ")).equals(false);
+			expect(DatasetUtils.isValidIdString("ab_cd")).equals(false);
+			expect(DatasetUtils.isValidIdString("PQRS_")).equals(false);
+			expect(DatasetUtils.isValidIdString("_ADSD")).equals(false);
 		});
 
 		it("should accept proper strings", () => {
-			expect(DatasetUtils.isValidIdString("ABC")).is.true;
-			expect(DatasetUtils.isValidIdString("JDKSD2391i")).is.true;
+			expect(DatasetUtils.isValidIdString("ABC")).equals(true);
+			expect(DatasetUtils.isValidIdString("JDKSD2391i")).equals(true);
 		});
 	});
 
 	describe("parseSKey", () => {
 		it("should reject invalid ids in skeys", () => {
-			expect(DatasetUtils.parseSKey("abc_def_avg")).to.be.undefined;
-			expect(DatasetUtils.parseSKey("_year")).to.be.undefined;
-			expect(DatasetUtils.parseSKey("A__B_AD_DAS")).to.be.undefined;
+			expect(DatasetUtils.parseSKey("abc_def_avg")).equals(undefined);
+			expect(DatasetUtils.parseSKey("_year")).equals(undefined);
+			expect(DatasetUtils.parseSKey("A__B_AD_DAS")).equals(undefined);
 		});
 
 		it("should accept skeys", () => {
@@ -631,26 +630,26 @@ describe("DatasetUtils", () => {
 		});
 
 		it("should reject mkeys", () => {
-			expect(DatasetUtils.parseSKey("abc_avg")).to.be.undefined;
-			expect(DatasetUtils.parseSKey("123_fail")).to.be.undefined;
+			expect(DatasetUtils.parseSKey("abc_avg")).equals(undefined);
+			expect(DatasetUtils.parseSKey("123_fail")).equals(undefined);
 		});
 
 		it("should reject nonsense", () => {
-			expect(DatasetUtils.parseSKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).to.be.undefined;
-			expect(DatasetUtils.parseSKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).to.be.undefined;
+			expect(DatasetUtils.parseSKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).equals(undefined);
+			expect(DatasetUtils.parseSKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).equals(undefined);
 		});
 	});
 
 	describe("parseMKey", () => {
 		it("should reject invalid ids in mkeys", () => {
-			expect(DatasetUtils.parseMKey("abc_def_avg")).to.be.undefined;
-			expect(DatasetUtils.parseMKey("_year")).to.be.undefined;
-			expect(DatasetUtils.parseMKey("A__B_AD_DAS")).to.be.undefined;
+			expect(DatasetUtils.parseMKey("abc_def_avg")).equals(undefined);
+			expect(DatasetUtils.parseMKey("_year")).equals(undefined);
+			expect(DatasetUtils.parseMKey("A__B_AD_DAS")).equals(undefined);
 		});
 
 		it("should reject skeys", () => {
-			expect(DatasetUtils.parseMKey("abc_dept")).to.be.undefined;
-			expect(DatasetUtils.parseMKey("123_uuid")).to.be.undefined;
+			expect(DatasetUtils.parseMKey("abc_dept")).equals(undefined);
+			expect(DatasetUtils.parseMKey("123_uuid")).equals(undefined);
 		});
 
 		it("should accept proper mkeys", () => {
@@ -665,8 +664,8 @@ describe("DatasetUtils", () => {
 		});
 
 		it("should reject nonsense", () => {
-			expect(DatasetUtils.parseMKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).to.be.undefined;
-			expect(DatasetUtils.parseMKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).to.be.undefined;
+			expect(DatasetUtils.parseMKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).equals(undefined);
+			expect(DatasetUtils.parseMKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).equals(undefined);
 		});
 	});
 });
@@ -709,18 +708,19 @@ describe("QueryEngine", () => {
 					["B", false],
 				]);
 			} catch (e) {
-				expect.fail("Shouldn't have thrown.");
+				expect.fail("Shouldn't have thrown: " + e);
 			}
 			expect(ret.get("A")).to.equal("A");
-			expect(ret.get("B")).to.be.undefined;
+			expect(ret.get("B")).equals(undefined);
 		});
 
 		it("should return key values if present", () => {
-			let ret = QueryEngine.requireKeys({ P: 22, Q: "ABC" }, [
+			const pVal = 22;
+			const ret = QueryEngine.requireKeys({ P: pVal, Q: "ABC" }, [
 				["P", false],
 				["Q", true],
 			]);
-			expect(ret.get("P")).to.equal(22);
+			expect(ret.get("P")).to.equal(pVal);
 			expect(ret.get("Q")).to.equal("ABC");
 		});
 	});
@@ -740,7 +740,7 @@ describe("QueryEngine", () => {
 			try {
 				QueryEngine.checkIsObject("", { abc: "def" });
 			} catch (e) {
-				expect.fail("Should not have thrown.");
+				expect.fail("Should not have thrown: " + e);
 			}
 		});
 	});
@@ -748,7 +748,8 @@ describe("QueryEngine", () => {
 	describe("checkIsArray", () => {
 		it("should reject a number input", async () => {
 			try {
-				QueryEngine.checkIsArray("ABC", 12);
+				const num = 12;
+				QueryEngine.checkIsArray("ABC", num);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -760,7 +761,7 @@ describe("QueryEngine", () => {
 			try {
 				QueryEngine.checkIsArray("", []);
 			} catch (e) {
-				expect.fail("Should not have thrown.");
+				expect.fail("Should not have thrown: " + e);
 			}
 		});
 	});

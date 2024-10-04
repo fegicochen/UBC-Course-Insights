@@ -1,4 +1,4 @@
-import { Section, DatasetList, DatasetsProvider, DatasetUtils, InsightFacadeKey, Dataset } from "./Dataset";
+import { Section, DatasetsProvider, DatasetUtils, InsightFacadeKey, Dataset } from "./Dataset";
 import { InsightError, InsightResult, ResultTooLargeError } from "./IInsightFacade";
 
 const Keywords = {
@@ -43,7 +43,7 @@ export class QueryEngine {
 	 * @param query The query object in accordance with IInsightFacade.performQuery
 	 * @throws InsightError if query is improprly formed
 	 */
-	async processQuery(queryRaw: unknown): Promise<Array<InsightResult>> {
+	public async processQuery(queryRaw: unknown): Promise<InsightResult[]> {
 		// Ensure query is obect and update type
 		const query = QueryEngine.checkIsObject("Query", queryRaw);
 
@@ -71,7 +71,7 @@ export class QueryEngine {
 	 * @param query query object to take body from.
 	 * @throws InsightError if options are malformed.
 	 */
-	processOptions(optionsRaw: unknown): OptionsState {
+	private processOptions(optionsRaw: unknown): OptionsState {
 		// Retrieve options and ensure it is JSON
 		const options = QueryEngine.checkIsObject(Keywords.Options, optionsRaw);
 
@@ -81,37 +81,8 @@ export class QueryEngine {
 			[Keywords.Order, false],
 		]);
 
-		let orderForState: InsightFacadeKey | undefined;
-		let columnsForState: InsightFacadeKey[] = [];
-		let datasetIdForState: string | undefined;
-
-		// Process columns key list
-		const columns = QueryEngine.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
-		columns.forEach((columnRaw) => {
-			// Ensure column key has proper formatting
-			const column = QueryEngine.checkIsString(Keywords.Columns, columnRaw);
-			const columnKey = DatasetUtils.parseMOrSKey(column);
-			if (columnKey === undefined) throw new InsightError("Improper column key formatting: " + column + ".");
-			// Ensure multiple datasets not used in column keys
-			if (datasetIdForState !== undefined && datasetIdForState !== columnKey.idstring)
-				throw new InsightError("Multiple datasets used in query. Only one allowed.");
-			else datasetIdForState = columnKey.idstring;
-			columnsForState = columnsForState.concat(columnKey);
-		});
-
-		// Query must have columns selected
-		if (datasetIdForState === undefined) throw new InsightError("Query must select at least one column.");
-
-		// Process order
-		if (optionsStructure.has(Keywords.Order) && optionsStructure.get(Keywords.Order) !== undefined) {
-			const order = QueryEngine.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
-			const orderKey = DatasetUtils.parseMOrSKey(order);
-			if (orderKey !== undefined) {
-				orderForState = orderKey;
-				if (orderKey.idstring !== datasetIdForState)
-					throw new InsightError("Mutliple datasets used in query. Only one allowed.");
-			} else throw new InsightError("Order is not a valid ID string: " + order + ".");
-		}
+		const [columnsForState, datasetIdForState] = this.parseColumns(optionsStructure);
+		const orderForState = this.processOrder(optionsStructure, datasetIdForState);
 
 		return {
 			columns: columnsForState,
@@ -122,23 +93,86 @@ export class QueryEngine {
 
 	/**
 	 *
+	 * @param optionsStructure the parsed key-value structure of data in the options field
+	 * @returns parsed columns as InsightFacadeKeys and the dataset id used in the query
+	 */
+	private parseColumns(optionsStructure: Map<string, unknown>): [InsightFacadeKey[], string] {
+		let columnsForState: InsightFacadeKey[] = [];
+		let datasetIdForState: string | undefined;
+
+		// Process columns key list
+		const columns = QueryEngine.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
+		columns.forEach((columnRaw) => {
+			// Ensure column key has proper formatting
+			const column = QueryEngine.checkIsString(Keywords.Columns, columnRaw);
+			const columnKey = DatasetUtils.parseMOrSKey(column);
+			if (columnKey === undefined) {
+				throw new InsightError("Improper column key formatting: " + column + ".");
+			}
+			// Ensure multiple datasets not used in column keys
+			if (datasetIdForState !== undefined && datasetIdForState !== columnKey.idstring) {
+				throw new InsightError("Multiple datasets used in query. Only one allowed.");
+			} else {
+				datasetIdForState = columnKey.idstring;
+			}
+			columnsForState = columnsForState.concat(columnKey);
+		});
+
+		// Query must have columns selected
+		if (datasetIdForState === undefined) {
+			throw new InsightError("Query must select at least one column.");
+		}
+
+		return [columnsForState, datasetIdForState];
+	}
+
+	/**
+	 *
+	 * @param optionsStructure the parsed key-value structure of data in the options field
+	 * @returns an order if present, otherwise undefined
+	 */
+	private processOrder(
+		optionsStructure: Map<string, unknown>,
+		datasetIdForState: string
+	): InsightFacadeKey | undefined {
+		let orderForState: InsightFacadeKey | undefined;
+		if (optionsStructure.has(Keywords.Order) && optionsStructure.get(Keywords.Order) !== undefined) {
+			const order = QueryEngine.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
+			const orderKey = DatasetUtils.parseMOrSKey(order);
+			if (orderKey !== undefined) {
+				orderForState = orderKey;
+				if (orderKey.idstring !== datasetIdForState) {
+					throw new InsightError("Mutliple datasets used in query. Only one allowed.");
+				}
+			} else {
+				throw new InsightError("Order is not a valid ID string: " + order + ".");
+			}
+		}
+		return orderForState;
+	}
+
+	/**
+	 *
 	 * @param query query object to take body from.
 	 * @param options the options state computed
 	 * @throws InsightError if body is malformed.
 	 */
-	processBody(bodyRaw: unknown, options: OptionsState): Section[] {
+	private processBody(bodyRaw: unknown, options: OptionsState): Section[] {
 		const filter = new Filter(this.datasets, options);
 
 		const filterFunction = QueryEngine.checkSingleFilter(filter, bodyRaw);
 
 		const sections = filterFunction();
 
-		if (sections.length > 5000) throw new ResultTooLargeError();
+		const maxResults = 5000;
+		if (sections.length > maxResults) {
+			throw new ResultTooLargeError();
+		}
 
 		return sections;
 	}
 
-	static checkSingleFilter(filter: Filter, bodyRaw: unknown): FilterOperation {
+	private static checkSingleFilter(filter: Filter, bodyRaw: unknown): FilterOperation {
 		// Retrieve body and ensure it is JSON
 		const body = QueryEngine.checkIsObject(Keywords.Body, bodyRaw);
 
@@ -154,8 +188,9 @@ export class QueryEngine {
 		]);
 
 		// Only one root filter can be applied
-		if (mappedKeys.size > 1)
+		if (mappedKeys.size > 1) {
 			throw new InsightError("Can only have 1 filter applied here: " + JSON.stringify(mappedKeys) + ".");
+		}
 
 		let filterOp = filter.all();
 
@@ -193,9 +228,10 @@ export class QueryEngine {
 	 * @returns str as a string
 	 * @throws InsightError if str is not an string
 	 */
-	static checkIsString(section: string, str: unknown): string {
-		if (typeof str !== "string")
+	private static checkIsString(section: string, str: unknown): string {
+		if (typeof str !== "string") {
 			throw new InsightError("Query improperly formed: " + section + " must be a string, not: " + typeof str + ".");
+		}
 
 		return str as string;
 	}
@@ -209,11 +245,12 @@ export class QueryEngine {
 	 * @returns arr as an array
 	 * @throws InsightError if arr is not an array
 	 */
-	static checkIsArray(section: string, arr: unknown): Array<unknown> {
-		if (!Array.isArray(arr))
+	public static checkIsArray(section: string, arr: unknown): unknown[] {
+		if (!Array.isArray(arr)) {
 			throw new InsightError("Query improperly formed: " + section + " must be an array, not: " + typeof arr + ".");
+		}
 
-		return arr as Array<unknown>;
+		return arr as unknown[];
 	}
 
 	/**
@@ -225,9 +262,10 @@ export class QueryEngine {
 	 * @returns obj as an object
 	 * @throws InsightError if obj is not an object.
 	 */
-	static checkIsObject(section: string, obj: unknown): object {
-		if (typeof obj !== "object")
+	public static checkIsObject(section: string, obj: unknown): object {
+		if (typeof obj !== "object") {
 			throw new InsightError("Query improperly formed: " + section + " must be an object, not: " + typeof obj + ".");
+		}
 
 		return obj as object;
 	}
@@ -242,31 +280,39 @@ export class QueryEngine {
 	 * @param keys keys in object to retrieve paired with whether they are mandatory
 	 * @throws InsighError if key match isn't exact (extra or missing keys)
 	 */
-	static requireKeys(obj: object, keys: Array<[string, boolean]>): Map<string, unknown> {
+	public static requireKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
 		// Check for extra keys
-		const keyFound: Array<boolean> = Array.of(...keys).map(() => false);
+		const keyFound: boolean[] = Array.of(...keys).map(() => false);
 		Object.getOwnPropertyNames(obj).forEach((key, index) => {
 			if (keys.find((pair) => pair[0] === key) !== undefined) {
 				keyFound[index] = true;
-			} else throw new InsightError("Extraneous key: " + key + ".");
+			} else {
+				throw new InsightError("Extraneous key: " + key + ".");
+			}
 		});
 		// Check for missing keys
-		let missingKeys: Array<string> = [];
+		let missingKeys: string[] = [];
 		keys.forEach((pair, index) => {
-			if (pair[1] && !keyFound[index]) missingKeys = missingKeys.concat(pair[0]);
+			if (pair[1] && !keyFound[index]) {
+				missingKeys = missingKeys.concat(pair[0]);
+			}
 		});
-		if (missingKeys.length !== 0) throw new InsightError("Missing key(s): " + JSON.stringify(missingKeys) + ".");
+		if (missingKeys.length !== 0) {
+			throw new InsightError("Missing key(s): " + JSON.stringify(missingKeys) + ".");
+		}
 
 		// Map keys to values in object
 		const keyValueMap = new Map<string, unknown>();
 		keys.forEach((key, index) => {
-			if (keyFound[index]) keyValueMap.set(key[0], obj[key[0] as keyof typeof obj]);
+			if (keyFound[index]) {
+				keyValueMap.set(key[0], obj[key[0] as keyof typeof obj]);
+			}
 		});
 		return keyValueMap;
 	}
 }
 
-type FilterOperation = () => Array<Section>;
+type FilterOperation = () => Section[];
 
 /**
  * A class to manage filter tree structure in a functional manner.
@@ -290,7 +336,9 @@ class Filter {
 	constructor(dp: DatasetsProvider, options: OptionsState) {
 		this.options = options;
 		const dataset = DatasetUtils.findDataset(dp, this.options.datasetId);
-		if (dataset === undefined) throw new InsightError("Could not find dataset with id: " + options.datasetId + ".");
+		if (dataset === undefined) {
+			throw new InsightError("Could not find dataset with id: " + options.datasetId + ".");
+		}
 		this.dataset = dataset;
 	}
 
@@ -299,31 +347,39 @@ class Filter {
 	 * @param children the filter operations to be "or'ed" together
 	 * @returns A function evaluating the "or" (set union) of the results of the given filter operations.
 	 */
-	or = (children: FilterOperation[]) => () => {
-		const resultSet = new Set<Section>();
-		children.map((child) => child()).forEach((sectionList) => sectionList.forEach((section) => resultSet.add(section)));
-		return Array.from(resultSet);
-	};
+	public or =
+		(children: FilterOperation[]): FilterOperation =>
+		() => {
+			const resultSet = new Set<Section>();
+			children
+				.map((child) => child())
+				.forEach((sectionList) => sectionList.forEach((section) => resultSet.add(section)));
+			return Array.from(resultSet);
+		};
 
 	/**
 	 *
 	 * @param children the filter operations to be "and'ed" together
 	 * @returns A function evaluating the "and" (set intersection) of the results of the given filter operations.
 	 */
-	and = (children: FilterOperation[]) => () => {
-		const resultSet = new Set<Section>();
-		const childResults = children.map((child) => child());
-		for (let i = 0; i < childResults.length; ++i) {
-			if (i == 0) {
-				childResults[i].forEach((section) => resultSet.add(section));
-			} else {
-				childResults[i].forEach((section) => {
-					if (!resultSet.has(section)) resultSet.delete(section);
-				});
+	public and =
+		(children: FilterOperation[]): FilterOperation =>
+		() => {
+			const resultSet = new Set<Section>();
+			const childResults = children.map((child) => child());
+			for (let i = 0; i < childResults.length; ++i) {
+				if (i === 0) {
+					childResults[i].forEach((section) => resultSet.add(section));
+				} else {
+					childResults[i].forEach((section) => {
+						if (!resultSet.has(section)) {
+							resultSet["delete"](section);
+						}
+					});
+				}
 			}
-		}
-		return Array.from(resultSet);
-	};
+			return Array.from(resultSet);
+		};
 
 	/**
 	 *
@@ -332,39 +388,54 @@ class Filter {
 	 * @param mkey the mkey (numeric key) to test against
 	 * @returns A function evaluating the sections from the dataset matching the given id with the given comparator.
 	 */
-	private mOperation = (compare: (x: number, y: number) => boolean, limit: number, mkey: InsightFacadeKey) => () => {
-		let ret: Array<Section> = [];
-		this.dataset.members.forEach((section) => {
-			if (compare(section[mkey.field as keyof Section] as number, limit)) ret = ret.concat(section);
-		});
-		return ret;
-	};
+	private mOperation =
+		(compare: (x: number, y: number) => boolean, limit: number, mkey: InsightFacadeKey): FilterOperation =>
+		() => {
+			let ret: Section[] = [];
+			this.dataset.members.forEach((section) => {
+				if (compare(section[mkey.field as keyof Section] as number, limit)) {
+					ret = ret.concat(section);
+				}
+			});
+			return ret;
+		};
 
-	lessThan = (limit: number, mkey: InsightFacadeKey) => this.mOperation((x, y) => x < y, limit, mkey);
-	greaterThan = (limit: number, mkey: InsightFacadeKey) => this.mOperation((x, y) => x > y, limit, mkey);
-	equals = (limit: number, mkey: InsightFacadeKey) => this.mOperation((x, y) => x === y, limit, mkey);
+	public lessThan = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
+		this.mOperation((x, y) => x < y, limit, mkey);
+	public greaterThan = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
+		this.mOperation((x, y) => x > y, limit, mkey);
+	public equals = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
+		this.mOperation((x, y) => x === y, limit, mkey);
 
-	is = (compare: string, skey: InsightFacadeKey) => () => {
-		let ret: Array<Section> = [];
-		this.dataset.members.forEach((section) => {
-			if ((section[skey.field as keyof Section] as string) === compare) ret = ret.concat(section);
-		});
-		return ret;
-	};
+	public is =
+		(compare: string, skey: InsightFacadeKey): FilterOperation =>
+		() => {
+			let ret: Section[] = [];
+			this.dataset.members.forEach((section) => {
+				if ((section[skey.field as keyof Section] as string) === compare) {
+					ret = ret.concat(section);
+				}
+			});
+			return ret;
+		};
 
-	not = (child: FilterOperation) => () => {
-		const childSet = new Set<Section>();
-		let result: Section[] = [];
-		child().forEach((section) => childSet.add(section));
-		this.dataset.members.forEach((section) => {
-			if (!childSet.has(section)) result = result.concat(section);
-		});
-		return result;
-	};
+	public not =
+		(child: FilterOperation): FilterOperation =>
+		() => {
+			const childSet = new Set<Section>();
+			let result: Section[] = [];
+			child().forEach((section) => childSet.add(section));
+			this.dataset.members.forEach((section) => {
+				if (!childSet.has(section)) {
+					result = result.concat(section);
+				}
+			});
+			return result;
+		};
 
 	/**
 	 *
 	 * @returns a function returning everything in the dataset
 	 */
-	all = () => () => this.dataset.members;
+	public all = (): FilterOperation => () => this.dataset.members;
 }

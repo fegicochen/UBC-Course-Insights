@@ -1,5 +1,3 @@
-import { InsightError } from "./IInsightFacade";
-
 export enum DatasetId {
 	Uuid = "uuid",
 	Id = "id",
@@ -28,11 +26,11 @@ export interface Section {
 
 export interface Dataset {
 	id: string;
-	members: Array<Section>;
+	members: Section[];
 }
 
 export interface DatasetList {
-	datasets: Array<Dataset>;
+	datasets: Dataset[];
 }
 
 export type DatasetsProvider = () => DatasetList;
@@ -51,7 +49,7 @@ export class DatasetUtils {
 	 * @param base64 the base64 (maybe) string to validate
 	 * @returns whether it is base64 formatted or not
 	 */
-	static isValidBase64(base64: string): boolean {
+	public static isValidBase64(base64: string): boolean {
 		// Referenced from: https://stackoverflow.com/questions/7860392/determine-if-string-is-in-base64-using-javascript
 		// Used the regular expression provided.
 		const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
@@ -64,7 +62,7 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	static findDataset(provider: DatasetsProvider, id: string): Dataset | undefined {
+	public static findDataset(provider: DatasetsProvider, id: string): Dataset | undefined {
 		const datasets = provider();
 		return datasets.datasets.find((dataset) => dataset.id === id);
 	}
@@ -75,23 +73,29 @@ export class DatasetUtils {
 	 * @param idstring string to test
 	 * @returns false if string is improperly formatted (only whitespace or contains underscoare), true otherwise
 	 */
-	static isValidIdString(idstring: string): boolean {
-		if (idstring.trim() === "" || idstring.includes("_")) return false;
+	public static isValidIdString(idstring: string): boolean {
+		if (idstring.trim() === "" || idstring.includes("_")) {
+			return false;
+		}
 		return true;
 	}
 
 	/**
 	 *
 	 * @param key string to test
-	 * @returns undefined if string is improperly formatted as an mkey,
-	 * 			id string and key split if it is valid.
+	 * @returns undefined if string is improperly formatted as an mkey, id string and key split if it is valid.
 	 */
-	static parseMKey(key: string): InsightFacadeKey | undefined {
+	public static parseMKey(key: string): InsightFacadeKey | undefined {
 		const splitUnderscore = key.split("_");
-		if (splitUnderscore.length != 2) return undefined;
+		const beforeAndAfterUnderscoreLength = 2;
+		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
+			return undefined;
+		}
 		const idstring = splitUnderscore[0],
 			mfield = splitUnderscore[1];
-		if (!this.isValidIdString(idstring) || !MFields.find((x) => x === mfield)) return undefined;
+		if (!this.isValidIdString(idstring) || !MFields.find((x) => x === mfield)) {
+			return undefined;
+		}
 		return {
 			idstring: idstring,
 			field: mfield as DatasetId,
@@ -101,15 +105,19 @@ export class DatasetUtils {
 	/**
 	 *
 	 * @param key string to test
-	 * @returns undefined if string is improperly formatted as an skey,
-	 * 			id string and key split if it is valid.
+	 * @returns undefined if string is improperly formatted as an skey, id string and key split if it is valid.
 	 */
-	static parseSKey(key: string): InsightFacadeKey | undefined {
+	public static parseSKey(key: string): InsightFacadeKey | undefined {
 		const splitUnderscore = key.split("_");
-		if (splitUnderscore.length != 2) return undefined;
+		const beforeAndAfterUnderscoreLength = 2;
+		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
+			return undefined;
+		}
 		const idstring = splitUnderscore[0],
 			sfield = splitUnderscore[1];
-		if (!this.isValidIdString(idstring) || !SFields.find((x) => x === sfield)) return undefined;
+		if (!this.isValidIdString(idstring) || !SFields.find((x) => x === sfield)) {
+			return undefined;
+		}
 		return {
 			idstring: idstring,
 			field: sfield as DatasetId,
@@ -119,13 +127,15 @@ export class DatasetUtils {
 	/**
 	 *
 	 * @param key string to test
-	 * @reutrns undefined if string is not an mkey or skey, otherwise
-	 * 			produces id string and key split.
+	 * @reutrns undefined if string is not an mkey or skey, otherwise produces id string and key split.
 	 */
-	static parseMOrSKey(key: string): InsightFacadeKey | undefined {
+	public static parseMOrSKey(key: string): InsightFacadeKey | undefined {
 		const mkeyParse = this.parseMKey(key);
-		if (mkeyParse !== undefined) return mkeyParse;
-		else return this.parseSKey(key);
+		if (mkeyParse !== undefined) {
+			return mkeyParse;
+		} else {
+			return this.parseSKey(key);
+		}
 	}
 
 	/**
@@ -133,7 +143,7 @@ export class DatasetUtils {
 	 * @param key key to test with idstring and field
 	 * @returns whether it is an mkey or not
 	 */
-	static isMKey(key: InsightFacadeKey): boolean {
+	public static isMKey(key: InsightFacadeKey): boolean {
 		return MFields.find((x) => x === key.field) !== undefined;
 	}
 
@@ -142,7 +152,7 @@ export class DatasetUtils {
 	 * @param key key to test with idstring and field
 	 * @returns whether it is an skey or not
 	 */
-	static isSKey(key: InsightFacadeKey): boolean {
+	public static isSKey(key: InsightFacadeKey): boolean {
 		return SFields.find((x) => x === key.field) !== undefined;
 	}
 }
