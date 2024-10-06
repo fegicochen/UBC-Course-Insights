@@ -1,35 +1,6 @@
-import { Section, DatasetsProvider, DatasetUtils, InsightFacadeKey, Dataset } from "./Dataset";
+import { Section, DatasetsProvider, DatasetUtils, InsightFacadeKey, Keywords, OptionsState } from "./Dataset";
+import { Filter, FilterOperation } from "./Filter";
 import { InsightError, InsightResult, ResultTooLargeError } from "./IInsightFacade";
-
-const Keywords = {
-	Body: "WHERE",
-	Options: "OPTIONS",
-	Filter: {
-		Logic: {
-			And: "AND",
-			Or: "OR",
-		},
-		MComparator: {
-			LessThan: "LT",
-			GreaterThan: "GT",
-			Equal: "EQ",
-		},
-		SComparator: {
-			Is: "IS",
-		},
-		Negation: {
-			Not: "NOT",
-		},
-	},
-	Columns: "COLUMNS",
-	Order: "ORDER",
-};
-
-interface OptionsState {
-	order: InsightFacadeKey | undefined;
-	columns: InsightFacadeKey[];
-	datasetId: string;
-}
 
 export class QueryEngine {
 	private readonly datasets: DatasetsProvider;
@@ -45,10 +16,10 @@ export class QueryEngine {
 	 */
 	public async processQuery(queryRaw: unknown): Promise<InsightResult[]> {
 		// Ensure query is obect and update type
-		const query = QueryEngine.checkIsObject("Query", queryRaw);
+		const query = DatasetUtils.checkIsObject("Query", queryRaw);
 
 		// Ensure only keys are body and options
-		const rootStructure = QueryEngine.requireKeys(query, [
+		const rootStructure = DatasetUtils.requireKeys(query, [
 			[Keywords.Options, true],
 			[Keywords.Body, true],
 		]);
@@ -58,13 +29,17 @@ export class QueryEngine {
 		const sections = this.processBody(rootStructure.get(Keywords.Body), options);
 
 		// Return only data requested
-		return sections.map((section) => {
+		const resultUnsorted = sections.map((section) => {
 			const result: InsightResult = {};
 			options.columns.forEach((column) => {
 				result[column.field] = section[column.field];
 			});
 			return result;
 		});
+
+		// Sort result and return
+		// TODO
+		return resultUnsorted;
 	}
 
 	/**
@@ -73,10 +48,10 @@ export class QueryEngine {
 	 */
 	private processOptions(optionsRaw: unknown): OptionsState {
 		// Retrieve options and ensure it is JSON
-		const options = QueryEngine.checkIsObject(Keywords.Options, optionsRaw);
+		const options = DatasetUtils.checkIsObject(Keywords.Options, optionsRaw);
 
 		// Break down by property name
-		const optionsStructure = QueryEngine.requireKeys(options, [
+		const optionsStructure = DatasetUtils.requireKeys(options, [
 			[Keywords.Columns, true],
 			[Keywords.Order, false],
 		]);
@@ -101,10 +76,10 @@ export class QueryEngine {
 		let datasetIdForState: string | undefined;
 
 		// Process columns key list
-		const columns = QueryEngine.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
+		const columns = DatasetUtils.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
 		columns.forEach((columnRaw) => {
 			// Ensure column key has proper formatting
-			const column = QueryEngine.checkIsString(Keywords.Columns, columnRaw);
+			const column = DatasetUtils.checkIsString(Keywords.Columns, columnRaw);
 			const columnKey = DatasetUtils.parseMOrSKey(column);
 			if (columnKey === undefined) {
 				throw new InsightError("Improper column key formatting: " + column + ".");
@@ -137,7 +112,7 @@ export class QueryEngine {
 	): InsightFacadeKey | undefined {
 		let orderForState: InsightFacadeKey | undefined;
 		if (optionsStructure.has(Keywords.Order) && optionsStructure.get(Keywords.Order) !== undefined) {
-			const order = QueryEngine.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
+			const order = DatasetUtils.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
 			const orderKey = DatasetUtils.parseMOrSKey(order);
 			if (orderKey !== undefined) {
 				orderForState = orderKey;
@@ -172,12 +147,20 @@ export class QueryEngine {
 		return sections;
 	}
 
+	/**
+	 * Takes a section of the body and checks that a single filter is correctly applied within it.
+	 *
+	 * @param filter the filter object used
+	 * @param bodyRaw the raw body to check
+	 * @returns A filter operation representing the given body and filter
+	 * @throws InsightError if bodyRaw is improperly formatted
+	 */
 	private static checkSingleFilter(filter: Filter, bodyRaw: unknown): FilterOperation {
 		// Retrieve body and ensure it is JSON
-		const body = QueryEngine.checkIsObject(Keywords.Body, bodyRaw);
+		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
 		// Break down by property name
-		const mappedKeys = QueryEngine.requireKeys(body, [
+		const mappedKeys = DatasetUtils.requireKeys(body, [
 			[Keywords.Filter.Logic.And, false],
 			[Keywords.Filter.Logic.Or, false],
 			[Keywords.Filter.MComparator.Equal, false],
@@ -192,250 +175,80 @@ export class QueryEngine {
 			throw new InsightError("Can only have 1 filter applied here: " + JSON.stringify(mappedKeys) + ".");
 		}
 
+		// Base case filter: return everything
 		let filterOp = filter.all();
 
 		// This will run 1 or 0 times
-		mappedKeys.forEach((value, key) => {
-			// TODO
-			if (key === Keywords.Filter.Logic.And) {
-				const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
-				filterOp = filter.and(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
-			} else if (key === Keywords.Filter.Logic.Or) {
-				const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
-				filterOp = filter.or(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
-			} else if (key === Keywords.Filter.MComparator.Equal) {
-				// TODO
-			} else if (key === Keywords.Filter.MComparator.GreaterThan) {
-				// TODO
-			} else if (key === Keywords.Filter.MComparator.LessThan) {
-				// TODO
-			} else if (key === Keywords.Filter.Negation.Not) {
-				filterOp = filter.not(QueryEngine.checkSingleFilter(filter, value));
-			} else if (key === Keywords.Filter.SComparator.Is) {
-				// TODO
-			}
-		});
+		mappedKeys.forEach((value, key) => (filterOp = this.processFilter(filter, key, value)));
 
 		return filterOp;
 	}
 
 	/**
-	 * Checks whether the given arr is a string, and throws an error identified with
-	 * section when it is not.
 	 *
-	 * @param section the name of the array
-	 * @param str the variable to test
-	 * @returns str as a string
-	 * @throws InsightError if str is not an string
+	 * @param filter the filter object used
+	 * @param key the filter key to check
+	 * @param value the value of the filter key in the query object
+	 * @returns A filter operation for the given key and children
+	 * @throws InsightError if the provided key could not be processed correctly
 	 */
-	private static checkIsString(section: string, str: unknown): string {
-		if (typeof str !== "string") {
-			throw new InsightError("Query improperly formed: " + section + " must be a string, not: " + typeof str + ".");
+	private static processFilter(filter: Filter, key: string, value: unknown): FilterOperation {
+		if (key === Keywords.Filter.Logic.And) {
+			const array = DatasetUtils.checkIsArray(Keywords.Filter.Logic.And, value);
+			return filter.and(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
+		} else if (key === Keywords.Filter.Logic.Or) {
+			const array = DatasetUtils.checkIsArray(Keywords.Filter.Logic.And, value);
+			return filter.or(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
+		} else if (key === Keywords.Filter.MComparator.Equal) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.Equal, value);
+			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.Equal, filterVal);
+			return filter.equals(valNum, columnKey);
+		} else if (key === Keywords.Filter.MComparator.GreaterThan) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.GreaterThan, value);
+			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.GreaterThan, filterVal);
+			return filter.greaterThan(valNum, columnKey);
+		} else if (key === Keywords.Filter.MComparator.LessThan) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.LessThan, value);
+			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.LessThan, filterVal);
+			return filter.lessThan(valNum, columnKey);
+		} else if (key === Keywords.Filter.Negation.Not) {
+			return filter.not(QueryEngine.checkSingleFilter(filter, value));
+		} else if (key === Keywords.Filter.SComparator.Is) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value);
+			const valStr = DatasetUtils.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
+			return filter.is(valStr, columnKey);
+		} else {
+			throw new InsightError("Filter key not recognized: " + key);
 		}
-
-		return str as string;
-	}
-
-	/**
-	 * Checks whether the given arr is an array, and throws an error identified with
-	 * section when it is not.
-	 *
-	 * @param section the name of the array
-	 * @param arr the variable to test
-	 * @returns arr as an array
-	 * @throws InsightError if arr is not an array
-	 */
-	public static checkIsArray(section: string, arr: unknown): unknown[] {
-		if (!Array.isArray(arr)) {
-			throw new InsightError("Query improperly formed: " + section + " must be an array, not: " + typeof arr + ".");
-		}
-
-		return arr as unknown[];
-	}
-
-	/**
-	 * Checks whether given obj is an object, and throws an error identified with
-	 * section when it is not.
-	 *
-	 * @param section the name of the object
-	 * @param obj the variable to test
-	 * @returns obj as an object
-	 * @throws InsightError if obj is not an object.
-	 */
-	public static checkIsObject(section: string, obj: unknown): object {
-		if (typeof obj !== "object") {
-			throw new InsightError("Query improperly formed: " + section + " must be an object, not: " + typeof obj + ".");
-		}
-
-		return obj as object;
-	}
-
-	/**
-	 * Ensures object is populated with only the given keys and returns a map
-	 * between keys and their values in the object. Keys are paried with boolean indicating
-	 * whether they are mandatory or not. If they are not mandatory and not found, function
-	 * will not throw.
-	 *
-	 * @param obj object to check
-	 * @param keys keys in object to retrieve paired with whether they are mandatory
-	 * @throws InsighError if key match isn't exact (extra or missing keys)
-	 */
-	public static requireKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
-		// Check for extra keys
-		const keyFound: boolean[] = Array.of(...keys).map(() => false);
-		Object.getOwnPropertyNames(obj).forEach((key, index) => {
-			if (keys.find((pair) => pair[0] === key) !== undefined) {
-				keyFound[index] = true;
-			} else {
-				throw new InsightError("Extraneous key: " + key + ".");
-			}
-		});
-		// Check for missing keys
-		let missingKeys: string[] = [];
-		keys.forEach((pair, index) => {
-			if (pair[1] && !keyFound[index]) {
-				missingKeys = missingKeys.concat(pair[0]);
-			}
-		});
-		if (missingKeys.length !== 0) {
-			throw new InsightError("Missing key(s): " + JSON.stringify(missingKeys) + ".");
-		}
-
-		// Map keys to values in object
-		const keyValueMap = new Map<string, unknown>();
-		keys.forEach((key, index) => {
-			if (keyFound[index]) {
-				keyValueMap.set(key[0], obj[key[0] as keyof typeof obj]);
-			}
-		});
-		return keyValueMap;
-	}
-}
-
-type FilterOperation = () => Section[];
-
-/**
- * A class to manage filter tree structure in a functional manner.
- * Contains methods or, and, lessThan, etc. which consume a child, children, or parameters
- * and return a function which computes the value with the provided dataset.
- *
- * Ex. `
- * const f = new Filter(dp, options);
- * f.or([f.equals(12, mkey), f.is("abc", skey)]);
- * `
- */
-class Filter {
-	private readonly options: OptionsState;
-	private dataset: Dataset;
-
-	/**
-	 *
-	 * @param dp the datasets provider
-	 * @param options the options for the given query
-	 */
-	constructor(dp: DatasetsProvider, options: OptionsState) {
-		this.options = options;
-		const dataset = DatasetUtils.findDataset(dp, this.options.datasetId);
-		if (dataset === undefined) {
-			throw new InsightError("Could not find dataset with id: " + options.datasetId + ".");
-		}
-		this.dataset = dataset;
 	}
 
 	/**
 	 *
-	 * @param children the filter operations to be "or'ed" together
-	 * @returns A function evaluating the "or" (set union) of the results of the given filter operations.
+	 * @param type the key type checking under (ie. Keywords.Filter.MComparator.Equal)
+	 * @param bodyRaw the raw body under this key (ie. { "key": "value" })
+	 * @returns a tuple of the parsed key and value
 	 */
-	public or =
-		(children: FilterOperation[]): FilterOperation =>
-		() => {
-			const resultSet = new Set<Section>();
-			children
-				.map((child) => child())
-				.forEach((sectionList) => sectionList.forEach((section) => resultSet.add(section)));
-			return Array.from(resultSet);
-		};
+	private static checkKey(type: string, bodyRaw: unknown): [InsightFacadeKey, unknown] {
+		// Ensure child is an object
+		const keyBody = DatasetUtils.checkIsObject(type, bodyRaw);
+		// Ensure body has a single key value pair
+		const bodyEntries = Array.from(Object.entries(keyBody));
+		if (bodyEntries.length !== 1) {
+			throw new InsightError("Expected one entry in an mkey field.");
+		}
 
-	/**
-	 *
-	 * @param children the filter operations to be "and'ed" together
-	 * @returns A function evaluating the "and" (set intersection) of the results of the given filter operations.
-	 */
-	public and =
-		(children: FilterOperation[]): FilterOperation =>
-		() => {
-			const resultSet = new Set<Section>();
-			const childResults = children.map((child) => child());
-			for (let i = 0; i < childResults.length; ++i) {
-				if (i === 0) {
-					childResults[i].forEach((section) => resultSet.add(section));
-				} else {
-					childResults[i].forEach((section) => {
-						if (!resultSet.has(section)) {
-							resultSet["delete"](section);
-						}
-					});
-				}
-			}
-			return Array.from(resultSet);
-		};
+		// Check that entry has properly formatted key and value
+		const key = DatasetUtils.parseMOrSKey(bodyEntries[0][0]);
+		const keyValue = bodyEntries[0][1];
 
-	/**
-	 *
-	 * @param compare the comparator
-	 * @param limit the limit to compare against (rhs of comparator)
-	 * @param mkey the mkey (numeric key) to test against
-	 * @returns A function evaluating the sections from the dataset matching the given id with the given comparator.
-	 */
-	private mOperation =
-		(compare: (x: number, y: number) => boolean, limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		() => {
-			let ret: Section[] = [];
-			this.dataset.members.forEach((section) => {
-				if (compare(section[mkey.field as keyof Section] as number, limit)) {
-					ret = ret.concat(section);
-				}
-			});
-			return ret;
-		};
-
-	public lessThan = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		this.mOperation((x, y) => x < y, limit, mkey);
-	public greaterThan = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		this.mOperation((x, y) => x > y, limit, mkey);
-	public equals = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		this.mOperation((x, y) => x === y, limit, mkey);
-
-	public is =
-		(compare: string, skey: InsightFacadeKey): FilterOperation =>
-		() => {
-			let ret: Section[] = [];
-			this.dataset.members.forEach((section) => {
-				if ((section[skey.field as keyof Section] as string) === compare) {
-					ret = ret.concat(section);
-				}
-			});
-			return ret;
-		};
-
-	public not =
-		(child: FilterOperation): FilterOperation =>
-		() => {
-			const childSet = new Set<Section>();
-			let result: Section[] = [];
-			child().forEach((section) => childSet.add(section));
-			this.dataset.members.forEach((section) => {
-				if (!childSet.has(section)) {
-					result = result.concat(section);
-				}
-			});
-			return result;
-		};
-
-	/**
-	 *
-	 * @returns a function returning everything in the dataset
-	 */
-	public all = (): FilterOperation => () => this.dataset.members;
+		if (key === undefined) {
+			throw new InsightError("Improper structure of key: " + bodyEntries[0][0]);
+		} else if (DatasetUtils.isMKey(key)) {
+			return [key, keyValue];
+		} else if (DatasetUtils.isSKey(key)) {
+			return [key, keyValue];
+		} else {
+			throw new InsightError("Unexpected key type: " + type + ", " + bodyEntries[0][0]);
+		}
+	}
 }

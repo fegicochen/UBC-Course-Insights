@@ -1,3 +1,5 @@
+import { InsightError } from "./IInsightFacade";
+
 export enum DatasetId {
 	Uuid = "uuid",
 	Id = "id",
@@ -41,6 +43,36 @@ export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, Data
 export interface InsightFacadeKey {
 	idstring: string;
 	field: DatasetId;
+}
+
+export const Keywords = {
+	Body: "WHERE",
+	Options: "OPTIONS",
+	Filter: {
+		Logic: {
+			And: "AND",
+			Or: "OR",
+		},
+		MComparator: {
+			LessThan: "LT",
+			GreaterThan: "GT",
+			Equal: "EQ",
+		},
+		SComparator: {
+			Is: "IS",
+		},
+		Negation: {
+			Not: "NOT",
+		},
+	},
+	Columns: "COLUMNS",
+	Order: "ORDER",
+};
+
+export interface OptionsState {
+	order: InsightFacadeKey | undefined;
+	columns: InsightFacadeKey[];
+	datasetId: string;
 }
 
 export class DatasetUtils {
@@ -140,19 +172,130 @@ export class DatasetUtils {
 
 	/**
 	 *
-	 * @param key key to test with idstring and field
+	 * @param key key to test with idstring and field or string representing type (DatasetId.Audit etc)
 	 * @returns whether it is an mkey or not
 	 */
-	public static isMKey(key: InsightFacadeKey): boolean {
-		return MFields.find((x) => x === key.field) !== undefined;
+	public static isMKey(key: InsightFacadeKey | string | undefined): boolean {
+		if (key === undefined) {
+			return false;
+		}
+		return MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
 	}
 
 	/**
 	 *
-	 * @param key key to test with idstring and field
+	 * @param key key to test with idstring and field or string representing type (DatasetId.Uuid, etc)
 	 * @returns whether it is an skey or not
 	 */
-	public static isSKey(key: InsightFacadeKey): boolean {
-		return SFields.find((x) => x === key.field) !== undefined;
+	public static isSKey(key: InsightFacadeKey | string | undefined): boolean {
+		if (key === undefined) {
+			return false;
+		}
+		return SFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
+	}
+
+	/**
+	 * Ensures object is populated with only the given keys and returns a map
+	 * between keys and their values in the object. Keys are paried with boolean indicating
+	 * whether they are mandatory or not. If they are not mandatory and not found, function
+	 * will not throw.
+	 *
+	 * @param obj object to check
+	 * @param keys keys in object to retrieve paired with whether they are mandatory
+	 * @throws InsighError if key match isn't exact (extra or missing keys)
+	 */
+	public static requireKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
+		// Check for extra keys
+		const keyFound: boolean[] = Array.of(...keys).map(() => false);
+		Object.getOwnPropertyNames(obj).forEach((key, index) => {
+			if (keys.find((pair) => pair[0] === key) !== undefined) {
+				keyFound[index] = true;
+			} else {
+				throw new InsightError("Extraneous key: " + key + ".");
+			}
+		});
+		// Check for missing keys
+		let missingKeys: string[] = [];
+		keys.forEach((pair, index) => {
+			if (pair[1] && !keyFound[index]) {
+				missingKeys = missingKeys.concat(pair[0]);
+			}
+		});
+		if (missingKeys.length !== 0) {
+			throw new InsightError("Missing key(s): " + JSON.stringify(missingKeys) + ".");
+		}
+
+		// Map keys to values in object
+		const keyValueMap = new Map<string, unknown>();
+		keys.forEach((key, index) => {
+			if (keyFound[index]) {
+				keyValueMap.set(key[0], obj[key[0] as keyof typeof obj]);
+			}
+		});
+		return keyValueMap;
+	}
+
+	/**
+	 * Checks whether the given num is a number, and throws an error identified with
+	 * section when it is not.
+	 *
+	 * @param section the name of the number
+	 * @param str the variable to test
+	 * @returns num as a number
+	 * @throws InsightError if num is not an number
+	 */
+	public static checkIsNumber(section: string, num: unknown): number {
+		if (typeof num !== "number") {
+			throw new InsightError("JSON format error: " + section + " must be a number, not: " + typeof num + ".");
+		}
+		return num as number;
+	}
+
+	/**
+	 * Checks whether the given str is a string, and throws an error identified with
+	 * section when it is not.
+	 *
+	 * @param section the name of the string
+	 * @param str the variable to test
+	 * @returns str as a string
+	 * @throws InsightError if str is not an string
+	 */
+	public static checkIsString(section: string, str: unknown): string {
+		if (typeof str !== "string") {
+			throw new InsightError("JSON format error: " + section + " must be a string, not: " + typeof str + ".");
+		}
+		return str as string;
+	}
+
+	/**
+	 * Checks whether the given arr is an array, and throws an error identified with
+	 * section when it is not.
+	 *
+	 * @param section the name of the array
+	 * @param arr the variable to test
+	 * @returns arr as an array
+	 * @throws InsightError if arr is not an array
+	 */
+	public static checkIsArray(section: string, arr: unknown): unknown[] {
+		if (!Array.isArray(arr)) {
+			throw new InsightError("JSON format error: " + section + " must be an array, not: " + typeof arr + ".");
+		}
+		return arr as unknown[];
+	}
+
+	/**
+	 * Checks whether given obj is an object, and throws an error identified with
+	 * section when it is not.
+	 *
+	 * @param section the name of the object
+	 * @param obj the variable to test
+	 * @returns obj as an object
+	 * @throws InsightError if obj is not an object.
+	 */
+	public static checkIsObject(section: string, obj: unknown): object {
+		if (typeof obj !== "object") {
+			throw new InsightError("JSON format error: " + section + " must be an object, not: " + typeof obj + ".");
+		}
+		return obj as object;
 	}
 }

@@ -7,12 +7,11 @@ import {
 	ResultTooLargeError,
 } from "../../src/controller/IInsightFacade";
 import InsightFacade from "../../src/controller/InsightFacade";
-import { QueryEngine } from "../../src/controller/QueryEngine";
 import { clearDisk, getContentFromArchives, loadTestQuery } from "../TestUtil";
-
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { DatasetId, DatasetUtils } from "../../src/controller/Dataset";
+import { QueryEngine } from "../../src/controller/QueryEngine";
 
 use(chaiAsPromised);
 
@@ -670,7 +669,7 @@ describe("DatasetUtils", () => {
 	});
 });
 
-describe("QueryEngine", () => {
+describe("DatasetUtils", () => {
 	let qe: QueryEngine;
 
 	before(() => {
@@ -680,7 +679,7 @@ describe("QueryEngine", () => {
 	describe("requireExactKeys", () => {
 		it("should throw if there are extra keys", () => {
 			try {
-				QueryEngine.requireKeys({ B: 12, C: 3 }, [["A", true]]);
+				DatasetUtils.requireKeys({ B: 12, C: 3 }, [["A", true]]);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -689,7 +688,7 @@ describe("QueryEngine", () => {
 
 		it("should throw if there are missing keys", () => {
 			try {
-				QueryEngine.requireKeys({ B: 4, A: "d" }, [
+				DatasetUtils.requireKeys({ B: 4, A: "d" }, [
 					["A", true],
 					["B", true],
 					["C", true],
@@ -703,7 +702,7 @@ describe("QueryEngine", () => {
 		it("should not throw if missing keys are optional", () => {
 			let ret;
 			try {
-				ret = QueryEngine.requireKeys({ A: "A" }, [
+				ret = DatasetUtils.requireKeys({ A: "A" }, [
 					["A", true],
 					["B", false],
 				]);
@@ -716,7 +715,7 @@ describe("QueryEngine", () => {
 
 		it("should return key values if present", () => {
 			const pVal = 22;
-			const ret = QueryEngine.requireKeys({ P: pVal, Q: "ABC" }, [
+			const ret = DatasetUtils.requireKeys({ P: pVal, Q: "ABC" }, [
 				["P", false],
 				["Q", true],
 			]);
@@ -728,7 +727,7 @@ describe("QueryEngine", () => {
 	describe("checkIsObject", () => {
 		it("should reject a string input", async () => {
 			try {
-				QueryEngine.checkIsObject("PQRS", "abcd");
+				DatasetUtils.checkIsObject("PQRS", "abcd");
 				expect.fail("Should have thrown.");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -738,7 +737,7 @@ describe("QueryEngine", () => {
 
 		it("should accept an onject input", async () => {
 			try {
-				QueryEngine.checkIsObject("", { abc: "def" });
+				DatasetUtils.checkIsObject("", { abc: "def" });
 			} catch (e) {
 				expect.fail("Should not have thrown: " + e);
 			}
@@ -749,7 +748,7 @@ describe("QueryEngine", () => {
 		it("should reject a number input", async () => {
 			try {
 				const num = 12;
-				QueryEngine.checkIsArray("ABC", num);
+				DatasetUtils.checkIsArray("ABC", num);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -759,7 +758,7 @@ describe("QueryEngine", () => {
 
 		it("should accept empty array input", async () => {
 			try {
-				QueryEngine.checkIsArray("", []);
+				DatasetUtils.checkIsArray("", []);
 			} catch (e) {
 				expect.fail("Should not have thrown: " + e);
 			}
