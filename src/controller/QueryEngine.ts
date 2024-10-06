@@ -1,35 +1,6 @@
-import { Section, DatasetsProvider, DatasetUtils, InsightFacadeKey, Dataset } from "./Dataset";
+import { Section, DatasetsProvider, DatasetUtils, InsightFacadeKey, Keywords, OptionsState } from "./Dataset";
+import { Filter, FilterOperation } from "./Filter";
 import { InsightError, InsightResult, ResultTooLargeError } from "./IInsightFacade";
-
-const Keywords = {
-	Body: "WHERE",
-	Options: "OPTIONS",
-	Filter: {
-		Logic: {
-			And: "AND",
-			Or: "OR",
-		},
-		MComparator: {
-			LessThan: "LT",
-			GreaterThan: "GT",
-			Equal: "EQ",
-		},
-		SComparator: {
-			Is: "IS",
-		},
-		Negation: {
-			Not: "NOT",
-		},
-	},
-	Columns: "COLUMNS",
-	Order: "ORDER",
-};
-
-interface OptionsState {
-	order: InsightFacadeKey | undefined;
-	columns: InsightFacadeKey[];
-	datasetId: string;
-}
 
 export class QueryEngine {
 	private readonly datasets: DatasetsProvider;
@@ -172,6 +143,14 @@ export class QueryEngine {
 		return sections;
 	}
 
+	/**
+	 * Takes a section of the body and checks that a single filter is correctly applied within it.
+	 *
+	 * @param filter the filter object used
+	 * @param bodyRaw the raw body to check
+	 * @returns A filter operation representing the given body and filter
+	 * @throws InsightError if bodyRaw is improperly formatted
+	 */
 	private static checkSingleFilter(filter: Filter, bodyRaw: unknown): FilterOperation {
 		// Retrieve body and ensure it is JSON
 		const body = QueryEngine.checkIsObject(Keywords.Body, bodyRaw);
@@ -192,38 +171,104 @@ export class QueryEngine {
 			throw new InsightError("Can only have 1 filter applied here: " + JSON.stringify(mappedKeys) + ".");
 		}
 
+		// Base case filter: return everything
 		let filterOp = filter.all();
 
 		// This will run 1 or 0 times
-		mappedKeys.forEach((value, key) => {
-			// TODO
-			if (key === Keywords.Filter.Logic.And) {
-				const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
-				filterOp = filter.and(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
-			} else if (key === Keywords.Filter.Logic.Or) {
-				const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
-				filterOp = filter.or(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
-			} else if (key === Keywords.Filter.MComparator.Equal) {
-				// TODO
-			} else if (key === Keywords.Filter.MComparator.GreaterThan) {
-				// TODO
-			} else if (key === Keywords.Filter.MComparator.LessThan) {
-				// TODO
-			} else if (key === Keywords.Filter.Negation.Not) {
-				filterOp = filter.not(QueryEngine.checkSingleFilter(filter, value));
-			} else if (key === Keywords.Filter.SComparator.Is) {
-				// TODO
-			}
-		});
+		mappedKeys.forEach((value, key) => (filterOp = this.processFilter(filter, key, value)));
 
 		return filterOp;
 	}
 
 	/**
-	 * Checks whether the given arr is a string, and throws an error identified with
+	 *
+	 * @param filter the filter object used
+	 * @param key the filter key to check
+	 * @param value the value of the filter key in the query object
+	 * @returns A filter operation for the given key and children
+	 * @throws InsightError if the provided key could not be processed correctly
+	 */
+	private static processFilter(filter: Filter, key: string, value: unknown): FilterOperation {
+		if (key === Keywords.Filter.Logic.And) {
+			const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
+			return filter.and(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
+		} else if (key === Keywords.Filter.Logic.Or) {
+			const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
+			return filter.or(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
+		} else if (key === Keywords.Filter.MComparator.Equal) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.Equal, value);
+			const valNum = this.checkIsNumber(Keywords.Filter.MComparator.Equal, filterVal);
+			return filter.equals(valNum, columnKey);
+		} else if (key === Keywords.Filter.MComparator.GreaterThan) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.GreaterThan, value);
+			const valNum = this.checkIsNumber(Keywords.Filter.MComparator.GreaterThan, filterVal);
+			return filter.greaterThan(valNum, columnKey);
+		} else if (key === Keywords.Filter.MComparator.LessThan) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.LessThan, value);
+			const valNum = this.checkIsNumber(Keywords.Filter.MComparator.LessThan, filterVal);
+			return filter.lessThan(valNum, columnKey);
+		} else if (key === Keywords.Filter.Negation.Not) {
+			return filter.not(QueryEngine.checkSingleFilter(filter, value));
+		} else if (key === Keywords.Filter.SComparator.Is) {
+			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value);
+			const valStr = this.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
+			return filter.is(valStr, columnKey);
+		} else {
+			throw new InsightError("Filter key not recognized: " + key);
+		}
+	}
+
+	/**
+	 *
+	 * @param type the key type checking under (ie. Keywords.Filter.MComparator.Equal)
+	 * @param bodyRaw the raw body under this key (ie. { "key": "value" })
+	 * @returns a tuple of the parsed key and value
+	 */
+	private static checkKey(type: string, bodyRaw: unknown): [InsightFacadeKey, unknown] {
+		// Ensure child is an object
+		const keyBody = QueryEngine.checkIsObject(type, bodyRaw);
+		// Ensure body has a single key value pair
+		const bodyEntries = Array.from(Object.entries(keyBody));
+		if (bodyEntries.length !== 1) {
+			throw new InsightError("Expected one entry in an mkey field.");
+		}
+
+		// Check that entry has properly formatted key and value
+		const key = DatasetUtils.parseMOrSKey(bodyEntries[0][0]);
+		const keyValue = bodyEntries[0][1];
+
+		if (key === undefined) {
+			throw new InsightError("Improper structure of key: " + bodyEntries[0][0]);
+		} else if (DatasetUtils.isMKey(key)) {
+			return [key, keyValue];
+		} else if (DatasetUtils.isSKey(key)) {
+			return [key, keyValue];
+		} else {
+			throw new InsightError("Unexpected key type: " + type + ", " + bodyEntries[0][0]);
+		}
+	}
+
+	/**
+	 * Checks whether the given num is a number, and throws an error identified with
 	 * section when it is not.
 	 *
-	 * @param section the name of the array
+	 * @param section the name of the number
+	 * @param str the variable to test
+	 * @returns num as a number
+	 * @throws InsightError if num is not an number
+	 */
+	private static checkIsNumber(section: string, num: unknown): number {
+		if (typeof num !== "number") {
+			throw new InsightError("Query improperly formed: " + section + " must be a number, not: " + typeof num + ".");
+		}
+		return num as number;
+	}
+
+	/**
+	 * Checks whether the given str is a string, and throws an error identified with
+	 * section when it is not.
+	 *
+	 * @param section the name of the string
 	 * @param str the variable to test
 	 * @returns str as a string
 	 * @throws InsightError if str is not an string
@@ -232,7 +277,6 @@ export class QueryEngine {
 		if (typeof str !== "string") {
 			throw new InsightError("Query improperly formed: " + section + " must be a string, not: " + typeof str + ".");
 		}
-
 		return str as string;
 	}
 
@@ -249,7 +293,6 @@ export class QueryEngine {
 		if (!Array.isArray(arr)) {
 			throw new InsightError("Query improperly formed: " + section + " must be an array, not: " + typeof arr + ".");
 		}
-
 		return arr as unknown[];
 	}
 
@@ -266,7 +309,6 @@ export class QueryEngine {
 		if (typeof obj !== "object") {
 			throw new InsightError("Query improperly formed: " + section + " must be an object, not: " + typeof obj + ".");
 		}
-
 		return obj as object;
 	}
 
@@ -310,132 +352,4 @@ export class QueryEngine {
 		});
 		return keyValueMap;
 	}
-}
-
-type FilterOperation = () => Section[];
-
-/**
- * A class to manage filter tree structure in a functional manner.
- * Contains methods or, and, lessThan, etc. which consume a child, children, or parameters
- * and return a function which computes the value with the provided dataset.
- *
- * Ex. `
- * const f = new Filter(dp, options);
- * f.or([f.equals(12, mkey), f.is("abc", skey)]);
- * `
- */
-class Filter {
-	private readonly options: OptionsState;
-	private dataset: Dataset;
-
-	/**
-	 *
-	 * @param dp the datasets provider
-	 * @param options the options for the given query
-	 */
-	constructor(dp: DatasetsProvider, options: OptionsState) {
-		this.options = options;
-		const dataset = DatasetUtils.findDataset(dp, this.options.datasetId);
-		if (dataset === undefined) {
-			throw new InsightError("Could not find dataset with id: " + options.datasetId + ".");
-		}
-		this.dataset = dataset;
-	}
-
-	/**
-	 *
-	 * @param children the filter operations to be "or'ed" together
-	 * @returns A function evaluating the "or" (set union) of the results of the given filter operations.
-	 */
-	public or =
-		(children: FilterOperation[]): FilterOperation =>
-		() => {
-			const resultSet = new Set<Section>();
-			children
-				.map((child) => child())
-				.forEach((sectionList) => sectionList.forEach((section) => resultSet.add(section)));
-			return Array.from(resultSet);
-		};
-
-	/**
-	 *
-	 * @param children the filter operations to be "and'ed" together
-	 * @returns A function evaluating the "and" (set intersection) of the results of the given filter operations.
-	 */
-	public and =
-		(children: FilterOperation[]): FilterOperation =>
-		() => {
-			const resultSet = new Set<Section>();
-			const childResults = children.map((child) => child());
-			for (let i = 0; i < childResults.length; ++i) {
-				if (i === 0) {
-					childResults[i].forEach((section) => resultSet.add(section));
-				} else {
-					childResults[i].forEach((section) => {
-						if (!resultSet.has(section)) {
-							resultSet["delete"](section);
-						}
-					});
-				}
-			}
-			return Array.from(resultSet);
-		};
-
-	/**
-	 *
-	 * @param compare the comparator
-	 * @param limit the limit to compare against (rhs of comparator)
-	 * @param mkey the mkey (numeric key) to test against
-	 * @returns A function evaluating the sections from the dataset matching the given id with the given comparator.
-	 */
-	private mOperation =
-		(compare: (x: number, y: number) => boolean, limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		() => {
-			let ret: Section[] = [];
-			this.dataset.members.forEach((section) => {
-				if (compare(section[mkey.field as keyof Section] as number, limit)) {
-					ret = ret.concat(section);
-				}
-			});
-			return ret;
-		};
-
-	public lessThan = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		this.mOperation((x, y) => x < y, limit, mkey);
-	public greaterThan = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		this.mOperation((x, y) => x > y, limit, mkey);
-	public equals = (limit: number, mkey: InsightFacadeKey): FilterOperation =>
-		this.mOperation((x, y) => x === y, limit, mkey);
-
-	public is =
-		(compare: string, skey: InsightFacadeKey): FilterOperation =>
-		() => {
-			let ret: Section[] = [];
-			this.dataset.members.forEach((section) => {
-				if ((section[skey.field as keyof Section] as string) === compare) {
-					ret = ret.concat(section);
-				}
-			});
-			return ret;
-		};
-
-	public not =
-		(child: FilterOperation): FilterOperation =>
-		() => {
-			const childSet = new Set<Section>();
-			let result: Section[] = [];
-			child().forEach((section) => childSet.add(section));
-			this.dataset.members.forEach((section) => {
-				if (!childSet.has(section)) {
-					result = result.concat(section);
-				}
-			});
-			return result;
-		};
-
-	/**
-	 *
-	 * @returns a function returning everything in the dataset
-	 */
-	public all = (): FilterOperation => () => this.dataset.members;
 }

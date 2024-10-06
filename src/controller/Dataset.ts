@@ -43,6 +43,36 @@ export interface InsightFacadeKey {
 	field: DatasetId;
 }
 
+export const Keywords = {
+	Body: "WHERE",
+	Options: "OPTIONS",
+	Filter: {
+		Logic: {
+			And: "AND",
+			Or: "OR",
+		},
+		MComparator: {
+			LessThan: "LT",
+			GreaterThan: "GT",
+			Equal: "EQ",
+		},
+		SComparator: {
+			Is: "IS",
+		},
+		Negation: {
+			Not: "NOT",
+		},
+	},
+	Columns: "COLUMNS",
+	Order: "ORDER",
+};
+
+export interface OptionsState {
+	order: InsightFacadeKey | undefined;
+	columns: InsightFacadeKey[];
+	datasetId: string;
+}
+
 export class DatasetUtils {
 	/**
 	 *
@@ -140,19 +170,25 @@ export class DatasetUtils {
 
 	/**
 	 *
-	 * @param key key to test with idstring and field
+	 * @param key key to test with idstring and field or string representing type (DatasetId.Audit etc)
 	 * @returns whether it is an mkey or not
 	 */
-	public static isMKey(key: InsightFacadeKey): boolean {
-		return MFields.find((x) => x === key.field) !== undefined;
+	public static isMKey(key: InsightFacadeKey | string | undefined): boolean {
+		if (key === undefined) {
+			return false;
+		}
+		return MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
 	}
 
 	/**
 	 *
-	 * @param key key to test with idstring and field
+	 * @param key key to test with idstring and field or string representing type (DatasetId.Uuid, etc)
 	 * @returns whether it is an skey or not
 	 */
-	public static isSKey(key: InsightFacadeKey): boolean {
-		return SFields.find((x) => x === key.field) !== undefined;
+	public static isSKey(key: InsightFacadeKey | string | undefined): boolean {
+		if (key === undefined) {
+			return false;
+		}
+		return SFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
 	}
 }
