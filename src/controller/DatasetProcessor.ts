@@ -1,7 +1,6 @@
 import JSZip from "jszip";
-import { Section } from "./Dataset";
+import { DatasetId, DatasetUtils, Section } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
-
 export default class DatasetProcessor {
 	/**
 	 *
@@ -9,8 +8,12 @@ export default class DatasetProcessor {
 	 * @returns Returns the valid sections from zip file
 	 */
 	public static async getValidSections(content: string): Promise<Section[]> {
-		let validSections: Section[] = [];
-		const unzipped = await new JSZip().loadAsync(content, { base64: true });
+		let unzipped;
+		try {
+			unzipped = await new JSZip().loadAsync(content, { base64: true });
+		} catch (e) {
+			throw new InsightError("Error parsing content " + e);
+		}
 
 		// Check if unzipped file has courses folder
 		if (unzipped.folder("courses") === null) {
@@ -26,26 +29,84 @@ export default class DatasetProcessor {
 			const jsonContent = await file.async("string");
 			try {
 				const parsedData = JSON.parse(jsonContent);
-				// Check if the result key exists and if its an array
-				if (!Array.isArray(parsedData.result)) {
-					throw new InsightError("Invalid section format in file");
-				}
-				return parsedData.result; // Return the valid sections
-			} catch (_error) {
-				throw new InsightError("Failed to parse JSON in file");
+				const parsedDataObject = DatasetUtils.checkIsObject("result", parsedData);
+				const resultInMap = DatasetUtils.requireHasKeys(parsedDataObject, [["result", true]]);
+				const arrayOfSectionLike = DatasetUtils.checkIsArray("section array", resultInMap.get("result"));
+				const sectionArray = arrayOfSectionLike.map((x) => this.checkIsSection(x));
+				const sectionFilteredArray = sectionArray.filter((x) => x !== undefined) as Section[];
+
+				return sectionFilteredArray; // Return the valid sections
+			} catch (e) {
+				throw new InsightError("Failed to parse JSON in file: " + e);
 			}
 		});
 		// Wait for all promises to resolve and flatten the results
 		const courseSectionsArrays = await Promise.all(courseFilePromises);
-		validSections = courseSectionsArrays.flat();
+		const sections = courseSectionsArrays.flat();
 
 		// Check if there's at least one valid section
-		if (validSections.length === 0) {
+		if (sections.length === 0) {
 			throw new InsightError("No valid sections found in content!");
 		}
 
-		return validSections;
+		return sections;
 	}
 
-	// public static async checkSectionValidQuerys(sections: Promise<Section[]>): Promise<Section[]> {}
+	public static checkIsSection(sectionLike: unknown): Section | undefined {
+		try {
+			const sectionLikeIsObject = DatasetUtils.checkIsObject("section", sectionLike);
+			const map = DatasetUtils.requireHasKeys(sectionLikeIsObject, [
+				["id", true],
+				["Course", true],
+				["Title", true],
+				["Professor", true],
+				["Subject", true],
+				["Year", true],
+				["Avg", true],
+				["Pass", true],
+				["Fail", true],
+				["Audit", true],
+			]);
+
+			const sectionKVP = Array.from(map.entries()).map(([fileKey, val]) => {
+				const dsetKey = this.mapFileToDatasetKey(fileKey);
+				if (DatasetUtils.isMKey(dsetKey)) {
+					try {
+						const numVal = DatasetUtils.checkIsNumber("section " + dsetKey, val);
+						return [dsetKey, numVal];
+					} catch (_e) {
+						const strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
+						return [dsetKey, Number.parseInt(strVal, 10)];
+					}
+				} else if (DatasetUtils.isSKey(dsetKey)) {
+					const strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
+					return [dsetKey, strVal];
+				} else {
+					throw new InsightError("Key value not a number or string");
+				}
+			});
+
+			return Object.fromEntries(sectionKVP) as Section;
+		} catch (_e) {
+			return undefined;
+		}
+	}
+
+	private static mapFileToDatasetKey(fileKey: string): DatasetId {
+		const fileToDatasetMap = new Map<string, DatasetId>();
+		fileToDatasetMap.set("id", DatasetId.Uuid);
+		fileToDatasetMap.set("Course", DatasetId.Id);
+		fileToDatasetMap.set("Title", DatasetId.Title);
+		fileToDatasetMap.set("Professor", DatasetId.Instructor);
+		fileToDatasetMap.set("Subject", DatasetId.Dept);
+		fileToDatasetMap.set("Year", DatasetId.Year);
+		fileToDatasetMap.set("Avg", DatasetId.Avg);
+		fileToDatasetMap.set("Pass", DatasetId.Pass);
+		fileToDatasetMap.set("Fail", DatasetId.Fail);
+		fileToDatasetMap.set("Audit", DatasetId.Audit);
+		if (!fileToDatasetMap.has(fileKey)) {
+			throw new InsightError("File key does not correspond to DatasetId");
+		}
+		return fileToDatasetMap.get(fileKey)!!;
+	}
 }

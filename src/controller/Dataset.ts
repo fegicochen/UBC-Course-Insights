@@ -37,8 +37,8 @@ export interface DatasetList {
 
 export type DatasetsProvider = () => DatasetList;
 
-export const MFields = [DatasetId.Avg, DatasetId.Pass, DatasetId.Fail, DatasetId.Audit, DatasetId.Year];
-export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, DatasetId.Title, DatasetId.Uuid];
+export const MFields = [DatasetId.Avg, DatasetId.Pass, DatasetId.Fail, DatasetId.Audit, DatasetId.Year, DatasetId.Uuid];
+export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, DatasetId.Title];
 
 export interface InsightFacadeKey {
 	idstring: string;
