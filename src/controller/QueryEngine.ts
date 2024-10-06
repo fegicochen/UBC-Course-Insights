@@ -16,10 +16,10 @@ export class QueryEngine {
 	 */
 	public async processQuery(queryRaw: unknown): Promise<InsightResult[]> {
 		// Ensure query is obect and update type
-		const query = QueryEngine.checkIsObject("Query", queryRaw);
+		const query = DatasetUtils.checkIsObject("Query", queryRaw);
 
 		// Ensure only keys are body and options
-		const rootStructure = QueryEngine.requireKeys(query, [
+		const rootStructure = DatasetUtils.requireKeys(query, [
 			[Keywords.Options, true],
 			[Keywords.Body, true],
 		]);
@@ -29,13 +29,17 @@ export class QueryEngine {
 		const sections = this.processBody(rootStructure.get(Keywords.Body), options);
 
 		// Return only data requested
-		return sections.map((section) => {
+		const resultUnsorted = sections.map((section) => {
 			const result: InsightResult = {};
 			options.columns.forEach((column) => {
 				result[column.field] = section[column.field];
 			});
 			return result;
 		});
+
+		// Sort result and return
+		// TODO
+		return resultUnsorted;
 	}
 
 	/**
@@ -44,10 +48,10 @@ export class QueryEngine {
 	 */
 	private processOptions(optionsRaw: unknown): OptionsState {
 		// Retrieve options and ensure it is JSON
-		const options = QueryEngine.checkIsObject(Keywords.Options, optionsRaw);
+		const options = DatasetUtils.checkIsObject(Keywords.Options, optionsRaw);
 
 		// Break down by property name
-		const optionsStructure = QueryEngine.requireKeys(options, [
+		const optionsStructure = DatasetUtils.requireKeys(options, [
 			[Keywords.Columns, true],
 			[Keywords.Order, false],
 		]);
@@ -72,10 +76,10 @@ export class QueryEngine {
 		let datasetIdForState: string | undefined;
 
 		// Process columns key list
-		const columns = QueryEngine.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
+		const columns = DatasetUtils.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
 		columns.forEach((columnRaw) => {
 			// Ensure column key has proper formatting
-			const column = QueryEngine.checkIsString(Keywords.Columns, columnRaw);
+			const column = DatasetUtils.checkIsString(Keywords.Columns, columnRaw);
 			const columnKey = DatasetUtils.parseMOrSKey(column);
 			if (columnKey === undefined) {
 				throw new InsightError("Improper column key formatting: " + column + ".");
@@ -108,7 +112,7 @@ export class QueryEngine {
 	): InsightFacadeKey | undefined {
 		let orderForState: InsightFacadeKey | undefined;
 		if (optionsStructure.has(Keywords.Order) && optionsStructure.get(Keywords.Order) !== undefined) {
-			const order = QueryEngine.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
+			const order = DatasetUtils.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
 			const orderKey = DatasetUtils.parseMOrSKey(order);
 			if (orderKey !== undefined) {
 				orderForState = orderKey;
@@ -153,10 +157,10 @@ export class QueryEngine {
 	 */
 	private static checkSingleFilter(filter: Filter, bodyRaw: unknown): FilterOperation {
 		// Retrieve body and ensure it is JSON
-		const body = QueryEngine.checkIsObject(Keywords.Body, bodyRaw);
+		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
 		// Break down by property name
-		const mappedKeys = QueryEngine.requireKeys(body, [
+		const mappedKeys = DatasetUtils.requireKeys(body, [
 			[Keywords.Filter.Logic.And, false],
 			[Keywords.Filter.Logic.Or, false],
 			[Keywords.Filter.MComparator.Equal, false],
@@ -190,28 +194,28 @@ export class QueryEngine {
 	 */
 	private static processFilter(filter: Filter, key: string, value: unknown): FilterOperation {
 		if (key === Keywords.Filter.Logic.And) {
-			const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
+			const array = DatasetUtils.checkIsArray(Keywords.Filter.Logic.And, value);
 			return filter.and(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
 		} else if (key === Keywords.Filter.Logic.Or) {
-			const array = QueryEngine.checkIsArray(Keywords.Filter.Logic.And, value);
+			const array = DatasetUtils.checkIsArray(Keywords.Filter.Logic.And, value);
 			return filter.or(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
 		} else if (key === Keywords.Filter.MComparator.Equal) {
 			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.Equal, value);
-			const valNum = this.checkIsNumber(Keywords.Filter.MComparator.Equal, filterVal);
+			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.Equal, filterVal);
 			return filter.equals(valNum, columnKey);
 		} else if (key === Keywords.Filter.MComparator.GreaterThan) {
 			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.GreaterThan, value);
-			const valNum = this.checkIsNumber(Keywords.Filter.MComparator.GreaterThan, filterVal);
+			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.GreaterThan, filterVal);
 			return filter.greaterThan(valNum, columnKey);
 		} else if (key === Keywords.Filter.MComparator.LessThan) {
 			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.LessThan, value);
-			const valNum = this.checkIsNumber(Keywords.Filter.MComparator.LessThan, filterVal);
+			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.LessThan, filterVal);
 			return filter.lessThan(valNum, columnKey);
 		} else if (key === Keywords.Filter.Negation.Not) {
 			return filter.not(QueryEngine.checkSingleFilter(filter, value));
 		} else if (key === Keywords.Filter.SComparator.Is) {
 			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value);
-			const valStr = this.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
+			const valStr = DatasetUtils.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
 			return filter.is(valStr, columnKey);
 		} else {
 			throw new InsightError("Filter key not recognized: " + key);
@@ -226,7 +230,7 @@ export class QueryEngine {
 	 */
 	private static checkKey(type: string, bodyRaw: unknown): [InsightFacadeKey, unknown] {
 		// Ensure child is an object
-		const keyBody = QueryEngine.checkIsObject(type, bodyRaw);
+		const keyBody = DatasetUtils.checkIsObject(type, bodyRaw);
 		// Ensure body has a single key value pair
 		const bodyEntries = Array.from(Object.entries(keyBody));
 		if (bodyEntries.length !== 1) {
@@ -246,110 +250,5 @@ export class QueryEngine {
 		} else {
 			throw new InsightError("Unexpected key type: " + type + ", " + bodyEntries[0][0]);
 		}
-	}
-
-	/**
-	 * Checks whether the given num is a number, and throws an error identified with
-	 * section when it is not.
-	 *
-	 * @param section the name of the number
-	 * @param str the variable to test
-	 * @returns num as a number
-	 * @throws InsightError if num is not an number
-	 */
-	private static checkIsNumber(section: string, num: unknown): number {
-		if (typeof num !== "number") {
-			throw new InsightError("Query improperly formed: " + section + " must be a number, not: " + typeof num + ".");
-		}
-		return num as number;
-	}
-
-	/**
-	 * Checks whether the given str is a string, and throws an error identified with
-	 * section when it is not.
-	 *
-	 * @param section the name of the string
-	 * @param str the variable to test
-	 * @returns str as a string
-	 * @throws InsightError if str is not an string
-	 */
-	private static checkIsString(section: string, str: unknown): string {
-		if (typeof str !== "string") {
-			throw new InsightError("Query improperly formed: " + section + " must be a string, not: " + typeof str + ".");
-		}
-		return str as string;
-	}
-
-	/**
-	 * Checks whether the given arr is an array, and throws an error identified with
-	 * section when it is not.
-	 *
-	 * @param section the name of the array
-	 * @param arr the variable to test
-	 * @returns arr as an array
-	 * @throws InsightError if arr is not an array
-	 */
-	public static checkIsArray(section: string, arr: unknown): unknown[] {
-		if (!Array.isArray(arr)) {
-			throw new InsightError("Query improperly formed: " + section + " must be an array, not: " + typeof arr + ".");
-		}
-		return arr as unknown[];
-	}
-
-	/**
-	 * Checks whether given obj is an object, and throws an error identified with
-	 * section when it is not.
-	 *
-	 * @param section the name of the object
-	 * @param obj the variable to test
-	 * @returns obj as an object
-	 * @throws InsightError if obj is not an object.
-	 */
-	public static checkIsObject(section: string, obj: unknown): object {
-		if (typeof obj !== "object") {
-			throw new InsightError("Query improperly formed: " + section + " must be an object, not: " + typeof obj + ".");
-		}
-		return obj as object;
-	}
-
-	/**
-	 * Ensures object is populated with only the given keys and returns a map
-	 * between keys and their values in the object. Keys are paried with boolean indicating
-	 * whether they are mandatory or not. If they are not mandatory and not found, function
-	 * will not throw.
-	 *
-	 * @param obj object to check
-	 * @param keys keys in object to retrieve paired with whether they are mandatory
-	 * @throws InsighError if key match isn't exact (extra or missing keys)
-	 */
-	public static requireKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
-		// Check for extra keys
-		const keyFound: boolean[] = Array.of(...keys).map(() => false);
-		Object.getOwnPropertyNames(obj).forEach((key, index) => {
-			if (keys.find((pair) => pair[0] === key) !== undefined) {
-				keyFound[index] = true;
-			} else {
-				throw new InsightError("Extraneous key: " + key + ".");
-			}
-		});
-		// Check for missing keys
-		let missingKeys: string[] = [];
-		keys.forEach((pair, index) => {
-			if (pair[1] && !keyFound[index]) {
-				missingKeys = missingKeys.concat(pair[0]);
-			}
-		});
-		if (missingKeys.length !== 0) {
-			throw new InsightError("Missing key(s): " + JSON.stringify(missingKeys) + ".");
-		}
-
-		// Map keys to values in object
-		const keyValueMap = new Map<string, unknown>();
-		keys.forEach((key, index) => {
-			if (keyFound[index]) {
-				keyValueMap.set(key[0], obj[key[0] as keyof typeof obj]);
-			}
-		});
-		return keyValueMap;
 	}
 }
