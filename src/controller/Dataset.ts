@@ -246,7 +246,7 @@ export class DatasetUtils {
 	 */
 	public static checkIsNumber(section: string, num: unknown): number {
 		if (typeof num !== "number") {
-			throw new InsightError("Query improperly formed: " + section + " must be a number, not: " + typeof num + ".");
+			throw new InsightError("JSON format error: " + section + " must be a number, not: " + typeof num + ".");
 		}
 		return num as number;
 	}
@@ -262,7 +262,7 @@ export class DatasetUtils {
 	 */
 	public static checkIsString(section: string, str: unknown): string {
 		if (typeof str !== "string") {
-			throw new InsightError("Query improperly formed: " + section + " must be a string, not: " + typeof str + ".");
+			throw new InsightError("JSON format error: " + section + " must be a string, not: " + typeof str + ".");
 		}
 		return str as string;
 	}
@@ -278,7 +278,7 @@ export class DatasetUtils {
 	 */
 	public static checkIsArray(section: string, arr: unknown): unknown[] {
 		if (!Array.isArray(arr)) {
-			throw new InsightError("Query improperly formed: " + section + " must be an array, not: " + typeof arr + ".");
+			throw new InsightError("JSON format error: " + section + " must be an array, not: " + typeof arr + ".");
 		}
 		return arr as unknown[];
 	}
@@ -294,7 +294,7 @@ export class DatasetUtils {
 	 */
 	public static checkIsObject(section: string, obj: unknown): object {
 		if (typeof obj !== "object") {
-			throw new InsightError("Query improperly formed: " + section + " must be an object, not: " + typeof obj + ".");
+			throw new InsightError("JSON format error: " + section + " must be an object, not: " + typeof obj + ".");
 		}
 		return obj as object;
 	}
