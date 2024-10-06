@@ -622,9 +622,9 @@ describe("DatasetUtils", () => {
 				idstring: "abc",
 				field: DatasetId.Dept,
 			});
-			expect(DatasetUtils.parseSKey("123_year")).to.deep.equal({
+			expect(DatasetUtils.parseSKey("123_instructor")).to.deep.equal({
 				idstring: "123",
-				field: DatasetId.Uuid,
+				field: DatasetId.Instructor,
 			});
 		});
 
@@ -648,7 +648,7 @@ describe("DatasetUtils", () => {
 
 		it("should reject skeys", () => {
 			expect(DatasetUtils.parseMKey("abc_dept")).equals(undefined);
-			expect(DatasetUtils.parseMKey("123_year")).equals(undefined);
+			expect(DatasetUtils.parseMKey("123_instructor")).equals(undefined);
 		});
 
 		it("should accept proper mkeys", () => {
