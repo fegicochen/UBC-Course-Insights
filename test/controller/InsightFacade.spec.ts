@@ -102,12 +102,9 @@ describe("InsightFacade", function () {
 		});
 
 		it("should accept one character as idstring", async () => {
-			try {
-				const result = await facade.addDataset("a", sections, InsightDatasetKind.Sections);
-				expect(result[0]).to.equal("a");
-			} catch (err) {
-				expect.fail("Shouldn't have thrown. " + JSON.stringify(err));
-			}
+			const result = await facade.addDataset("a", sections, InsightDatasetKind.Sections);
+			expect(result).to.be.length(1);
+			expect(result[0]).to.equal("a");
 		});
 
 		it("should reject an id with an underscore in the middle", async () => {

@@ -33,26 +33,9 @@ export default class InsightFacade implements IInsightFacade {
 
 		// Check kind
 		if (kind === InsightDatasetKind.Sections) {
-			// Verify content is base64
-			if (!DatasetUtils.isValidBase64(content)) {
-				throw new InsightError("File content is not valid base64.");
-			}
-
-			// Unzip content with JSZip
-
 			const validSections = await DatasetProcessor.getValidSections(content);
-
 			const dataset: Dataset = { id: id, members: validSections };
-
 			this.datasets.datasets.push(dataset);
-
-			// // Go through files
-			// Object.entries(unzipped.files).forEach((entry) => {
-			// 	const fileName = entry[0];
-			// 	const fileData = entry[1];
-			// 	// TODO: Fegico
-			// 	throw new Error(fileName + ": " + JSON.stringify(fileData));
-			// });
 		} else {
 			throw new InsightError("InsightDatasetKind.Rooms not supported yet.");
 		}
