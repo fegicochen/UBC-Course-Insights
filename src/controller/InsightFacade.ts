@@ -1,7 +1,7 @@
-import JSZip from "jszip";
-import { DatasetList, DatasetUtils } from "./Dataset";
+import { Dataset, DatasetList, DatasetUtils } from "./Dataset";
 import { IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, InsightResult } from "./IInsightFacade";
 import { QueryEngine } from "./QueryEngine";
+import DatasetProcessor from "../../src/controller/DatasetProcessor";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -39,15 +39,20 @@ export default class InsightFacade implements IInsightFacade {
 			}
 
 			// Unzip content with JSZip
-			const zip = await new JSZip().loadAsync(content, { base64: true });
 
-			// Go through files
-			Object.entries(zip.files).forEach((entry) => {
-				const fileName = entry[0];
-				const fileData = entry[1];
-				// TODO: Fegico
-				throw new Error(fileName + ": " + JSON.stringify(fileData));
-			});
+			const validSections = await DatasetProcessor.getValidSections(content);
+
+			const dataset: Dataset = { id: id, members: validSections };
+
+			this.datasets.datasets.push(dataset);
+
+			// // Go through files
+			// Object.entries(unzipped.files).forEach((entry) => {
+			// 	const fileName = entry[0];
+			// 	const fileData = entry[1];
+			// 	// TODO: Fegico
+			// 	throw new Error(fileName + ": " + JSON.stringify(fileData));
+			// });
 		} else {
 			throw new InsightError("InsightDatasetKind.Rooms not supported yet.");
 		}
@@ -64,7 +69,7 @@ export default class InsightFacade implements IInsightFacade {
 	public async performQuery(query: unknown): Promise<InsightResult[]> {
 		const qe = new QueryEngine(this.getDatasets);
 		const sections = await qe.processQuery(query);
-		return sections as unknown as InsightResult[];
+		return sections;
 	}
 
 	public async listDatasets(): Promise<InsightDataset[]> {
