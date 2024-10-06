@@ -55,29 +55,21 @@ export default class DatasetProcessor {
 	public static checkIsSection(sectionLike: unknown): Section | undefined {
 		try {
 			const sectionLikeIsObject = DatasetUtils.checkIsObject("section", sectionLike);
-			const map = DatasetUtils.requireHasKeys(sectionLikeIsObject, [
-				["id", true],
-				["Course", true],
-				["Title", true],
-				["Professor", true],
-				["Subject", true],
-				["Year", true],
-				["Avg", true],
-				["Pass", true],
-				["Fail", true],
-				["Audit", true],
-			]);
+			const map = DatasetUtils.requireHasKeys(
+				sectionLikeIsObject,
+				["id", "Course", "Title", "Professor", "Subject", "Year", "Avg", "Pass", "Fail", "Audit"].map((x) => [x, true])
+			);
 
 			const sectionKVP = Array.from(map.entries()).map(([fileKey, val]) => {
 				const dsetKey = this.mapFileToDatasetKey(fileKey);
 				if (DatasetUtils.isMKey(dsetKey)) {
+					let numVal: number;
 					try {
-						const numVal = DatasetUtils.checkIsNumber("section " + dsetKey, val);
-						return [dsetKey, numVal];
+						numVal = DatasetUtils.checkIsNumber("section " + dsetKey, val);
 					} catch (_e) {
-						const strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
-						return [dsetKey, Number.parseInt(strVal, 10)];
+						numVal = Number.parseInt(DatasetUtils.checkIsString("section " + dsetKey, val), 10);
 					}
+					return [dsetKey, numVal];
 				} else if (DatasetUtils.isSKey(dsetKey)) {
 					const strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
 					return [dsetKey, strVal];
