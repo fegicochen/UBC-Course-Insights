@@ -679,7 +679,7 @@ describe("DatasetUtils", () => {
 	describe("requireExactKeys", () => {
 		it("should throw if there are extra keys", () => {
 			try {
-				DatasetUtils.requireKeys({ B: 12, C: 3 }, [["A", true]]);
+				DatasetUtils.requireExactKeys({ B: 12, C: 3 }, [["A", true]]);
 				expect.fail("Should have thrown");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
@@ -688,7 +688,7 @@ describe("DatasetUtils", () => {
 
 		it("should throw if there are missing keys", () => {
 			try {
-				DatasetUtils.requireKeys({ B: 4, A: "d" }, [
+				DatasetUtils.requireExactKeys({ B: 4, A: "d" }, [
 					["A", true],
 					["B", true],
 					["C", true],
@@ -702,7 +702,7 @@ describe("DatasetUtils", () => {
 		it("should not throw if missing keys are optional", () => {
 			let ret;
 			try {
-				ret = DatasetUtils.requireKeys({ A: "A" }, [
+				ret = DatasetUtils.requireExactKeys({ A: "A" }, [
 					["A", true],
 					["B", false],
 				]);
@@ -715,12 +715,45 @@ describe("DatasetUtils", () => {
 
 		it("should return key values if present", () => {
 			const pVal = 22;
-			const ret = DatasetUtils.requireKeys({ P: pVal, Q: "ABC" }, [
+			const ret = DatasetUtils.requireExactKeys({ P: pVal, Q: "ABC" }, [
 				["P", false],
 				["Q", true],
 			]);
 			expect(ret.get("P")).to.equal(pVal);
 			expect(ret.get("Q")).to.equal("ABC");
+		});
+	});
+
+	describe("requireHasKeys", () => {
+		it("should fail if a required key is missing", () => {
+			try {
+				DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
+					["a", true],
+					["q", true],
+				]);
+				expect.fail("Should have thrown.");
+			} catch (e) {
+				expect(e).is.instanceOf(InsightError);
+			}
+		});
+
+		it("should pass if not required key missing", () => {
+			const result = DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
+				["a", true],
+				["q", false],
+			]);
+			expect(result.get("a")).to.equal("bc");
+			expect(result.has("q")).to.equal(false);
+			expect(result.has("d")).to.equal(false);
+		});
+
+		it("should pass if match is exact", () => {
+			const result = DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
+				["a", true],
+				["d", true],
+			]);
+			expect(result.get("a")).to.equal("bc");
+			expect(result.get("d")).to.equal("ef");
 		});
 	});
 

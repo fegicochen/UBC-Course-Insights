@@ -204,7 +204,7 @@ export class DatasetUtils {
 	 * @param keys keys in object to retrieve paired with whether they are mandatory
 	 * @throws InsighError if key match isn't exact (extra or missing keys)
 	 */
-	public static requireKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
+	public static requireExactKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
 		// Check for extra keys
 		const keyFound: boolean[] = Array.of(...keys).map(() => false);
 		Object.getOwnPropertyNames(obj).forEach((key, index) => {
@@ -230,6 +230,32 @@ export class DatasetUtils {
 		keys.forEach((key, index) => {
 			if (keyFound[index]) {
 				keyValueMap.set(key[0], obj[key[0] as keyof typeof obj]);
+			}
+		});
+		return keyValueMap;
+	}
+
+	/**
+	 * Ensures object is populated with the given keys. Other keys are ignored. Options keys
+	 * are allowed to be there or not.
+	 *
+	 * @param obj object to check
+	 * @param keys keys in object to retrieve paired with whether they are mandatory or not
+	 * @throws InsightError if a required key is not found
+	 */
+	public static requireHasKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
+		const keyValueMap = new Map<string, unknown>();
+		Object.entries(obj).forEach(([key, value]) => {
+			const matchedSearchKey = keys.find((k) => k[0] === key);
+			if (matchedSearchKey !== undefined) {
+				keyValueMap.set(key, value);
+			}
+		});
+		// Ensure keys which are required have been mapped
+		keys.forEach((key) => {
+			const [keyString, keyRequired] = key;
+			if (keyRequired && !keyValueMap.has(keyString)) {
+				throw new InsightError("Missing key: " + keyString);
 			}
 		});
 		return keyValueMap;
