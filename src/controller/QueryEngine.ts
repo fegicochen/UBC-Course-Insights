@@ -19,7 +19,7 @@ export class QueryEngine {
 		const query = DatasetUtils.checkIsObject("Query", queryRaw);
 
 		// Ensure only keys are body and options
-		const rootStructure = DatasetUtils.requireKeys(query, [
+		const rootStructure = DatasetUtils.requireExactKeys(query, [
 			[Keywords.Options, true],
 			[Keywords.Body, true],
 		]);
@@ -51,7 +51,7 @@ export class QueryEngine {
 		const options = DatasetUtils.checkIsObject(Keywords.Options, optionsRaw);
 
 		// Break down by property name
-		const optionsStructure = DatasetUtils.requireKeys(options, [
+		const optionsStructure = DatasetUtils.requireExactKeys(options, [
 			[Keywords.Columns, true],
 			[Keywords.Order, false],
 		]);
@@ -160,7 +160,7 @@ export class QueryEngine {
 		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
 		// Break down by property name
-		const mappedKeys = DatasetUtils.requireKeys(body, [
+		const mappedKeys = DatasetUtils.requireExactKeys(body, [
 			[Keywords.Filter.Logic.And, false],
 			[Keywords.Filter.Logic.Or, false],
 			[Keywords.Filter.MComparator.Equal, false],
