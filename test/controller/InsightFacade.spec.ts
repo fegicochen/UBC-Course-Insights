@@ -461,13 +461,14 @@ describe("InsightFacade", function () {
 			let result: InsightResult[];
 			try {
 				result = await facade.performQuery(input);
+				expect(result.length).to.equal(expected.length);
 				expect(result).deep.equals(expected);
 			} catch (err) {
 				if (!errorExpected) {
-					expect.fail(`performQuery threw unexpected error: ${err?.constructor.name} ${/*JSON.stringify(err)*/ ""}`);
+					expect.fail(`performQuery threw unexpected error: ${err?.constructor.name} ${(err as Error).message}`);
 				}
 				if (expected === "InsightError") {
-					expect(err).is.instanceOf(InsightError, JSON.stringify(err));
+					expect(err).is.instanceOf(InsightError, `${err?.constructor.name}: ${JSON.stringify(err)}`);
 				} else if (expected === "ResultTooLargeError") {
 					expect(err).is.instanceOf(ResultTooLargeError);
 				}
@@ -503,27 +504,30 @@ describe("InsightFacade", function () {
 
 		// // Examples demonstrating how to test performQuery using the JSON Test Queries.
 		// // The relative path to the query file must be given in square brackets.
-		// it("[valid/check_gt.json] SELECT dept, avg WHERE avg > 97", checkQuery);
-		// it("[valid/no_results.json] No results", checkQuery);
-		// it("[valid/check_eq.json] Check equal to (EQ)", checkQuery);
-		// it("[valid/check_lt.json] Check less than (LT)", checkQuery);
-		// it("[valid/check_and.json] Check and (AND)", checkQuery);
-		// it("[valid/check_is.json] Check is (IS)", checkQuery);
-		// it("[valid/check_or.json] Check or (OR)", checkQuery);
-		// it("[valid/asterisk_working.json] Asterisk behaving properly", checkQuery);
-		// it("[valid/check_not.json] Check not (NOT)", checkQuery);
-		// it("[valid/all_params.json] Get all params", checkQuery);
-		// it("[valid/double_asterisk.json] Double asterisk", checkQuery);
-		// it("[valid/filter_by_id.json] Filter by section id", checkQuery);
-		// it("[valid/filter_by_instructor.json] Filter by section instructor", checkQuery);
-		// it("[valid/filter_by_title.json] Filter by section title", checkQuery);
-		// it("[valid/filter_by_uuid.json] Filter by section uuid", checkQuery);
-		// it("[valid/filter_by_pass.json] Filter by section pass", checkQuery);
-		// it("[valid/filter_by_fail.json] Filter by section fail", checkQuery);
-		// it("[valid/filter_by_audit.json] Filter by section audit", checkQuery);
-		// it("[valid/filter_by_year.json] Filter by section year", checkQuery);
-		// it("[valid/very_complex.json] Very complex query", checkQuery);
-		// it("[valid/specific_course.json] Select specific course", checkQuery);
+		it("[valid/check_gt.json] SELECT dept, avg WHERE avg > 97", checkQuery);
+		it("[valid/no_results.json] No results", checkQuery);
+		it("[valid/check_eq.json] Check equal to (EQ)", checkQuery);
+		it("[valid/check_lt.json] Check less than (LT)", checkQuery);
+		it("[valid/check_and.json] Check and (AND)", checkQuery);
+		it("[valid/check_is.json] Check is (IS)", checkQuery);
+		it("[valid/check_or.json] Check or (OR)", checkQuery);
+		it("[valid/asterisk_working.json] Asterisk behaving properly", checkQuery);
+		it("[valid/check_not.json] Check not (NOT)", checkQuery);
+		it("[valid/all_params.json] Get all params", checkQuery);
+		it("[valid/double_asterisk.json] Double asterisk", checkQuery);
+		it("[valid/filter_by_id.json] Filter by section id", checkQuery);
+		it("[valid/filter_by_instructor.json] Filter by section instructor", checkQuery);
+		it("[valid/filter_by_title.json] Filter by section title", checkQuery);
+		it("[valid/filter_by_uuid.json] Filter by section uuid", checkQuery);
+		it("[valid/filter_by_pass.json] Filter by section pass", checkQuery);
+		it("[valid/filter_by_fail.json] Filter by section fail", checkQuery);
+		it("[valid/filter_by_audit.json] Filter by section audit", checkQuery);
+		it("[valid/filter_by_year.json] Filter by section year", checkQuery);
+		it("[valid/very_complex.json] Very complex query", checkQuery);
+		it("[valid/specific_course.json] Select specific course", checkQuery);
+		it("[valid/validResult.json] valid complicated results", checkQuery);
+		it("[valid/simple.json] SELECT dept, avg WHERE avg > 97", checkQuery);
+		it("[valid/validEverything.json] valid everything", checkQuery);
 
 		it("[invalid/missing_where.json] Query missing WHERE", checkQuery);
 		it("[invalid/missing_options.json] Query missing OPTIONS", checkQuery);
@@ -548,11 +552,9 @@ describe("InsightFacade", function () {
 		it("[invalid/lt_passed_string.json] LT passed string", checkQuery);
 		it("[invalid/is_passed_number.json] IS passed number", checkQuery);
 		it("[invalid/empty_object.json] Empty object passed", checkQuery);
-		it("[valid/simple.json] SELECT dept, avg WHERE avg > 97", checkQuery);
 		it("[invalid/invalid.json] Query missing WHERE", checkQuery);
 		it("[invalid/invalidString.json] Section avg changed to string", checkQuery);
 		it("[invalid/resultTooBig.json] result too big should send error", checkQuery);
-		it("[valid/validResult.json] valid complicated results", checkQuery);
 		it("[invalid/invalidKey.json] invalid key in IS", checkQuery);
 		it("[invalid/invalidFilter.json] invalid filter key: RANDOM", checkQuery);
 		it("[invalid/invalidOrderKey.json] ORDER key must be in COLUMNS", checkQuery);
@@ -565,24 +567,20 @@ describe("InsightFacade", function () {
 		it("[invalid/invalidNot.json]  NOT must be object", checkQuery);
 		it("[invalid/invalidOr.json]  OR must be a non-empty array", checkQuery);
 		it("[invalid/invalidWhere.json]  WHERE should only have 1 key, has 2", checkQuery);
-
-		// it("[invalid/invalidEQ.json]  EQ should only have 1 key, has 2", checkQuery);
-		// it("[invalid/invalidGT.json]  GT should only have 1 key, has 2", checkQuery);
-		// it("[invalid/invalidLT.json]  LT should only have 1 key, has 2", checkQuery);
-		// it("[invalid/invalidIS.json] Invalid value type in IS, should be string", checkQuery);
-		// it("[invalid/missingColumns.json] Invalid key type in LT, should be string", checkQuery);
-		// it("[invalid/invalidColumns.json] Invalid key sections_it in COLUMNS", checkQuery);
-		// it("[invalid/invalidAnd.json] AND must be a non-empty array", checkQuery);
-		// it("[invalid/invalidEverything.json] Breaking everything", checkQuery);
-		// it("[valid/validEverything.json] valid everything", checkQuery);
-		// it("[invalid/EQ.json] Invalid key sectiear in EQ", checkQuery);
-		// //fsdfsdf
-
-		// it("[invalid/LT.json] Invalid key sectiear in LT", checkQuery);
-		// it("[invalid/GT.json] Invalid key sectiear in GT", checkQuery);
-		// it("[invalid/numberEQ.json] Invalid value type in EQ, should be number", checkQuery);
-		// it("[invalid/numberGT.json] Invalid key sectiear in GT", checkQuery);
-		// it("[invalid/numberLT.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidEQ.json]  EQ should only have 1 key, has 2", checkQuery);
+		it("[invalid/invalidGT.json]  GT should only have 1 key, has 2", checkQuery);
+		it("[invalid/invalidLT.json]  LT should only have 1 key, has 2", checkQuery);
+		it("[invalid/invalidIS.json] Invalid value type in IS, should be string", checkQuery);
+		it("[invalid/missingColumns.json] Invalid key type in LT, should be string", checkQuery);
+		it("[invalid/invalidColumns.json] Invalid key sections_it in COLUMNS", checkQuery);
+		it("[invalid/invalidAnd.json] AND must be a non-empty array", checkQuery);
+		it("[invalid/invalidEverything.json] Breaking everything", checkQuery);
+		it("[invalid/EQ.json] Invalid key sectiear in EQ", checkQuery);
+		it("[invalid/LT.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/GT.json] Invalid key sectiear in GT", checkQuery);
+		it("[invalid/numberEQ.json] Invalid value type in EQ, should be number", checkQuery);
+		it("[invalid/numberGT.json] Invalid key sectiear in GT", checkQuery);
+		it("[invalid/numberLT.json] Invalid key sectiear in LT", checkQuery);
 	});
 });
 
@@ -794,6 +792,15 @@ describe("DatasetUtils", () => {
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
 				expect((e as InsightError).message).to.contain("PQRS");
+			}
+		});
+
+		it("should reject array input", async () => {
+			try {
+				DatasetUtils.checkIsObject("", []);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
 			}
 		});
 

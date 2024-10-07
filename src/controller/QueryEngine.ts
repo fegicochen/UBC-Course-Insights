@@ -37,18 +37,40 @@ export class QueryEngine {
 		this.options = this.processOptions(rootStructure.get(Keywords.Options));
 		const sections = this.processBody(rootStructure.get(Keywords.Body));
 
+		// Sort results if required
+		const sectionsOrdered = this.orderResults(sections);
+
 		// Return only data requested
-		const resultUnsorted = sections.map((section) => {
+		return sectionsOrdered.map((section) => {
 			const result: InsightResult = {};
 			this.options!!.columns.forEach((column) => {
-				result[column.field] = section[column.field];
+				result[this.options!!.datasetId + "_" + column.field] = section[column.field];
 			});
 			return result;
 		});
+	}
 
-		// Sort result and return
-		// TODO
-		return resultUnsorted;
+	/**
+	 *
+	 * @param sections the sections to order
+	 * @returns an ordered list of sections based on this.options ordering
+	 */
+	private orderResults(sections: Section[]): Section[] {
+		// Sort result data
+		if (this.options!!.order !== undefined) {
+			const order = this.options!!.order!!;
+			let comparator: (a: Section, b: Section) => number;
+			if (DatasetUtils.isMKey(order.field)) {
+				comparator = (a, b): number => (a[order.field] as number) - (b[order.field] as number);
+			} else if (DatasetUtils.isSKey(order.field)) {
+				comparator = (a, b): number => (a[order.field] as string).localeCompare(b[order.field] as string);
+			} else {
+				throw new InsightError("Invalid key type! " + order.field);
+			}
+			return sections.sort(comparator);
+		} else {
+			return sections;
+		}
 	}
 
 	/**
@@ -183,7 +205,7 @@ export class QueryEngine {
 		// Retrieve body and ensure it is JSON
 		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
-		// Break down by property name
+		// Break do:wn by property name
 		const mappedKeys = DatasetUtils.requireExactKeys(body, [
 			[Keywords.Filter.Logic.And, false],
 			[Keywords.Filter.Logic.Or, false],
@@ -230,7 +252,7 @@ export class QueryEngine {
 			case Keywords.Filter.MComparator.Equal:
 			case Keywords.Filter.MComparator.GreaterThan:
 			case Keywords.Filter.MComparator.LessThan: {
-				const [columnKey, filterVal] = this.checkKey(key, value);
+				const [columnKey, filterVal] = this.checkKey(key, value, true);
 				const valNum = DatasetUtils.checkIsNumber(key, filterVal);
 				return key === Keywords.Filter.MComparator.Equal
 					? filter.equals(valNum, columnKey)
@@ -241,7 +263,7 @@ export class QueryEngine {
 			case Keywords.Filter.Negation.Not:
 				return filter.not(this.checkSingleFilter(filter, value));
 			case Keywords.Filter.SComparator.Is: {
-				const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value);
+				const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value, false);
 				const valStr = DatasetUtils.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
 				return filter.is(valStr, columnKey);
 			}
@@ -254,9 +276,10 @@ export class QueryEngine {
 	 *
 	 * @param type the key type checking under (ie. Keywords.Filter.MComparator.Equal)
 	 * @param bodyRaw the raw body under this key (ie. { "key": "value" })
+	 * @param mkeyOrSKey true if mkey false if skey
 	 * @returns a tuple of the parsed key and value
 	 */
-	private checkKey(type: string, bodyRaw: unknown): [InsightFacadeKey, unknown] {
+	private checkKey(type: string, bodyRaw: unknown, mkeyOrSKey: boolean): [InsightFacadeKey, unknown] {
 		// Ensure child is an object
 		const keyBody = DatasetUtils.checkIsObject(type, bodyRaw);
 		// Ensure body has a single key value pair
@@ -279,8 +302,14 @@ export class QueryEngine {
 		}
 
 		if (DatasetUtils.isMKey(key)) {
+			if (!mkeyOrSKey) {
+				throw new InsightError("Expected mkey but got skey.");
+			}
 			return [key, keyValue];
 		} else if (DatasetUtils.isSKey(key)) {
+			if (mkeyOrSKey) {
+				throw new InsightError("Expected skey but got mkey.");
+			}
 			return [key, keyValue];
 		} else {
 			throw new InsightError("Unexpected key type: " + type + ", " + bodyEntries[0][0]);

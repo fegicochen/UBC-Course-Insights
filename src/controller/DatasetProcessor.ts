@@ -52,13 +52,31 @@ export default class DatasetProcessor {
 		return sections;
 	}
 
+	private static sectionKeys: [string, boolean][] = [
+		["id", true],
+		["Course", true],
+		["Title", true],
+		["Professor", true],
+		["Subject", true],
+		["Year", true],
+		["Avg", true],
+		["Pass", true],
+		["Fail", true],
+		["Audit", true],
+		["Section", false],
+	];
+
 	public static checkIsSection(sectionLike: unknown): Section | undefined {
 		try {
 			const sectionLikeIsObject = DatasetUtils.checkIsObject("section", sectionLike);
-			const map = DatasetUtils.requireHasKeys(
-				sectionLikeIsObject,
-				["id", "Course", "Title", "Professor", "Subject", "Year", "Avg", "Pass", "Fail", "Audit"].map((x) => [x, true])
-			);
+			const map = DatasetUtils.requireHasKeys(sectionLikeIsObject, this.sectionKeys);
+
+			// Check for overall secton
+			if (map.has("Section") && map.get("Section") === "overall") {
+				const overallSectionYear = 1900;
+				map.set("Year", overallSectionYear);
+			}
+			map.delete("Section");
 
 			const sectionKVP = Array.from(map.entries()).map(([fileKey, val]) => {
 				const dsetKey = this.mapFileToDatasetKey(fileKey);
@@ -71,7 +89,12 @@ export default class DatasetProcessor {
 					}
 					return [dsetKey, numVal];
 				} else if (DatasetUtils.isSKey(dsetKey)) {
-					const strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
+					let strVal: string;
+					try {
+						strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
+					} catch (_e) {
+						strVal = DatasetUtils.checkIsNumber("section " + dsetKey, val).toString();
+					}
 					return [dsetKey, strVal];
 				} else {
 					throw new InsightError("Key value not a number or string");

@@ -39,8 +39,8 @@ export interface DatasetList {
 
 export type DatasetsProvider = () => DatasetList;
 
-export const MFields = [DatasetId.Avg, DatasetId.Pass, DatasetId.Fail, DatasetId.Audit, DatasetId.Year, DatasetId.Uuid];
-export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, DatasetId.Title];
+export const MFields = [DatasetId.Avg, DatasetId.Pass, DatasetId.Fail, DatasetId.Audit, DatasetId.Year];
+export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, DatasetId.Title, DatasetId.Uuid];
 
 export interface InsightFacadeKey {
 	idstring: string;
@@ -323,8 +323,8 @@ export class DatasetUtils {
 	 * @throws InsightError if obj is not an object.
 	 */
 	public static checkIsObject(section: string, obj: unknown): object {
-		if (typeof obj !== "object") {
-			throw new InsightError("JSON format error: " + section + " must be an object, not: " + typeof obj + ".");
+		if (typeof obj !== "object" || Array.isArray(obj) || obj === null || obj === undefined) {
+			throw new InsightError("JSON format error: " + section + " must be an object, not: " + typeof obj + ", " + obj);
 		}
 		return obj as object;
 	}
