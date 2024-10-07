@@ -41,13 +41,21 @@ export class QueryEngine {
 		const sectionsOrdered = this.orderResults(sections);
 
 		// Return only data requested
-		return sectionsOrdered.map((section) => {
-			const result: InsightResult = {};
-			this.options!!.columns.forEach((column) => {
-				result[this.options!!.datasetId + "_" + column.field] = section[column.field];
-			});
-			return result;
+		return sectionsOrdered.map((s) => this.sectionToInsightResult(s));
+	}
+
+	/**
+	 *
+	 * @param section the section to convert
+	 * @returns an InsightResult with only the columns selected and dataset id appended to entries
+	 */
+	private sectionToInsightResult(section: Section): InsightResult {
+		const result: InsightResult = {};
+		this.options!!.columns.forEach((column) => {
+			const sectionValue = section[column.field];
+			result[this.options!!.datasetId + "_" + column.field] = sectionValue;
 		});
+		return result;
 	}
 
 	/**
@@ -67,7 +75,7 @@ export class QueryEngine {
 			} else {
 				throw new InsightError("Invalid key type! " + order.field);
 			}
-			return sections.sort(comparator);
+			return sections.reverse().sort(comparator);
 		} else {
 			return sections;
 		}

@@ -76,34 +76,36 @@ export default class DatasetProcessor {
 				const overallSectionYear = 1900;
 				map.set("Year", overallSectionYear);
 			}
-			map.delete("Section");
+			map["delete"]("Section");
 
-			const sectionKVP = Array.from(map.entries()).map(([fileKey, val]) => {
-				const dsetKey = this.mapFileToDatasetKey(fileKey);
-				if (DatasetUtils.isMKey(dsetKey)) {
-					let numVal: number;
-					try {
-						numVal = DatasetUtils.checkIsNumber("section " + dsetKey, val);
-					} catch (_e) {
-						numVal = Number.parseInt(DatasetUtils.checkIsString("section " + dsetKey, val), 10);
-					}
-					return [dsetKey, numVal];
-				} else if (DatasetUtils.isSKey(dsetKey)) {
-					let strVal: string;
-					try {
-						strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
-					} catch (_e) {
-						strVal = DatasetUtils.checkIsNumber("section " + dsetKey, val).toString();
-					}
-					return [dsetKey, strVal];
-				} else {
-					throw new InsightError("Key value not a number or string");
-				}
-			});
+			const sectionKVP = Array.from(map.entries()).map(([fileKey, val]) => this.parseSectionKeys(fileKey, val));
 
-			return Object.fromEntries(sectionKVP) as Section;
+			return Object.fromEntries(sectionKVP) as unknown as Section;
 		} catch (_e) {
 			return undefined;
+		}
+	}
+
+	private static parseSectionKeys(fileKey: string, val: unknown): [DatasetId, string | number] {
+		const dsetKey = this.mapFileToDatasetKey(fileKey);
+		if (DatasetUtils.isMKey(dsetKey)) {
+			let numVal: number;
+			try {
+				numVal = DatasetUtils.checkIsNumber("section " + dsetKey, val);
+			} catch (_e) {
+				numVal = Number.parseInt(DatasetUtils.checkIsString("section " + dsetKey, val), 10);
+			}
+			return [dsetKey, numVal];
+		} else if (DatasetUtils.isSKey(dsetKey)) {
+			let strVal: string;
+			try {
+				strVal = DatasetUtils.checkIsString("section " + dsetKey, val);
+			} catch (_e) {
+				strVal = DatasetUtils.checkIsNumber("section " + dsetKey, val).toString();
+			}
+			return [dsetKey, strVal];
+		} else {
+			throw new InsightError("Key value not a number or string");
 		}
 	}
 
