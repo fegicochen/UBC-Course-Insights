@@ -1,5 +1,5 @@
 import { Dataset, DatasetList, DatasetUtils } from "./Dataset";
-import { IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, InsightResult } from "./IInsightFacade";
+import { IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, InsightResult, NotFoundError } from "./IInsightFacade";
 import { QueryEngine } from "./QueryEngine";
 import DatasetProcessor from "../../src/controller/DatasetProcessor";
 
@@ -41,8 +41,21 @@ export default class InsightFacade implements IInsightFacade {
 	}
 
 	public async removeDataset(id: string): Promise<string> {
-		// TODO: Remove this once you implement the methods!
-		throw new Error(`InsightFacadeImpl::removeDataset() is unimplemented! - id=${id};`);
+		// TODO: persistant data
+		if (!DatasetUtils.isValidIdString(id)) {
+			throw new InsightError("Invalid id: " + id);
+		}
+		const newDatasets: Dataset[] = [];
+		this.datasets.datasets.forEach(dataset => {
+			if (dataset.id !== id) {
+				newDatasets.push(dataset);
+			}
+		});
+		if (this.datasets.datasets.length === newDatasets.length) {
+			throw new NotFoundError("Dataset with id " + id + " not found.");
+		}
+		this.datasets.datasets = newDatasets;
+		return id;
 	}
 
 	public async performQuery(query: unknown): Promise<InsightResult[]> {
