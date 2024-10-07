@@ -1,5 +1,12 @@
 import { Dataset, DatasetList, DatasetUtils } from "./Dataset";
-import { IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, InsightResult, NotFoundError } from "./IInsightFacade";
+import {
+	IInsightFacade,
+	InsightDataset,
+	InsightDatasetKind,
+	InsightError,
+	InsightResult,
+	NotFoundError,
+} from "./IInsightFacade";
 import { QueryEngine } from "./QueryEngine";
 import DatasetProcessor from "../../src/controller/DatasetProcessor";
 
@@ -46,7 +53,7 @@ export default class InsightFacade implements IInsightFacade {
 			throw new InsightError("Invalid id: " + id);
 		}
 		const newDatasets: Dataset[] = [];
-		this.datasets.datasets.forEach(dataset => {
+		this.datasets.datasets.forEach((dataset) => {
 			if (dataset.id !== id) {
 				newDatasets.push(dataset);
 			}

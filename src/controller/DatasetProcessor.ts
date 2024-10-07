@@ -40,9 +40,11 @@ export default class DatasetProcessor {
 				return [];
 			}
 		});
-		// Wait for all promises to resolve and flatten the results
-		const courseSectionsArrays = await Promise.all(courseFilePromises);
-		const sections = courseSectionsArrays.flat();
+		// Wait for all promises to fulfill or reject, filter results for fulfilled promises and flatten the section arrays
+		const courseSectionsArrays = await Promise.allSettled(courseFilePromises);
+		const sections = courseSectionsArrays
+			.filter((result) => result.status === "fulfilled")
+			.flatMap((result) => (result as PromiseFulfilledResult<Section[]>).value);
 
 		// Check if there's at least one valid section
 		if (sections.length === 0) {
