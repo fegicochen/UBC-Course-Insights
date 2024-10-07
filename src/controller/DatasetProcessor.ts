@@ -36,8 +36,8 @@ export default class DatasetProcessor {
 				const sectionFilteredArray = sectionArray.filter((x) => x !== undefined) as Section[];
 
 				return sectionFilteredArray; // Return the valid sections
-			} catch (e) {
-				throw new InsightError("Failed to parse JSON in file: " + e);
+			} catch (_e) {
+				return [];
 			}
 		});
 		// Wait for all promises to resolve and flatten the results
