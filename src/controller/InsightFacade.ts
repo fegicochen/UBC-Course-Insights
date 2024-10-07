@@ -16,10 +16,6 @@ export default class InsightFacade implements IInsightFacade {
 		this.datasets = { datasets: [] };
 	}
 
-	private getDatasets(): DatasetList {
-		return this.datasets;
-	}
-
 	public async addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
 		// Check id valid
 		if (!DatasetUtils.isValidIdString(id)) {
@@ -50,7 +46,7 @@ export default class InsightFacade implements IInsightFacade {
 	}
 
 	public async performQuery(query: unknown): Promise<InsightResult[]> {
-		const qe = new QueryEngine(this.getDatasets);
+		const qe = new QueryEngine(() => this.datasets);
 		const sections = await qe.processQuery(query);
 		return sections;
 	}

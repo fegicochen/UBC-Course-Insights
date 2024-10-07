@@ -1,5 +1,7 @@
 import { InsightError } from "./IInsightFacade";
 
+export const maxResults = 5000;
+
 export enum DatasetId {
 	Uuid = "uuid",
 	Id = "id",
@@ -206,19 +208,20 @@ export class DatasetUtils {
 	 */
 	public static requireExactKeys(obj: object, keys: [string, boolean][]): Map<string, unknown> {
 		// Check for extra keys
-		const keyFound: boolean[] = Array.of(...keys).map(() => false);
-		Object.getOwnPropertyNames(obj).forEach((key, index) => {
-			if (keys.find((pair) => pair[0] === key) !== undefined) {
-				keyFound[index] = true;
+		const keysFound = new Set<string>();
+		Object.keys(obj).forEach((key) => {
+			if (keys.find(([searchKey, _searchKeyRequired]) => searchKey === key) !== undefined) {
+				keysFound.add(key);
 			} else {
 				throw new InsightError("Extraneous key: " + key + ".");
 			}
 		});
 		// Check for missing keys
 		let missingKeys: string[] = [];
-		keys.forEach((pair, index) => {
-			if (pair[1] && !keyFound[index]) {
-				missingKeys = missingKeys.concat(pair[0]);
+		keys.forEach(([searchKey, searchKeyRequired]) => {
+			// If key is reuqired and it is not found
+			if (searchKeyRequired && !keysFound.has(searchKey)) {
+				missingKeys = missingKeys.concat(searchKey);
 			}
 		});
 		if (missingKeys.length !== 0) {
@@ -227,9 +230,10 @@ export class DatasetUtils {
 
 		// Map keys to values in object
 		const keyValueMap = new Map<string, unknown>();
-		keys.forEach((key, index) => {
-			if (keyFound[index]) {
-				keyValueMap.set(key[0], obj[key[0] as keyof typeof obj]);
+		keys.forEach(([searchKey, _searchKeyRequired]) => {
+			const value = obj[searchKey as keyof typeof obj];
+			if (keysFound.has(searchKey) && value !== undefined) {
+				keyValueMap.set(searchKey, value);
 			}
 		});
 		return keyValueMap;

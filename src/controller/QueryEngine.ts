@@ -1,9 +1,18 @@
-import { Section, DatasetsProvider, DatasetUtils, InsightFacadeKey, Keywords, OptionsState } from "./Dataset";
-import { Filter, FilterOperation } from "./Filter";
+import {
+	Section,
+	DatasetsProvider,
+	DatasetUtils,
+	InsightFacadeKey,
+	Keywords,
+	OptionsState,
+	maxResults,
+} from "./Dataset";
+import { FilterBySection, FilterOperation, FilterStrategy } from "./Filter";
 import { InsightError, InsightResult, ResultTooLargeError } from "./IInsightFacade";
 
 export class QueryEngine {
 	private readonly datasets: DatasetsProvider;
+	private options?: OptionsState;
 
 	constructor(datasets: DatasetsProvider) {
 		this.datasets = datasets;
@@ -25,13 +34,13 @@ export class QueryEngine {
 		]);
 
 		// Split into processing body and options
-		const options = this.processOptions(rootStructure.get(Keywords.Options));
-		const sections = this.processBody(rootStructure.get(Keywords.Body), options);
+		this.options = this.processOptions(rootStructure.get(Keywords.Options));
+		const sections = this.processBody(rootStructure.get(Keywords.Body));
 
 		// Return only data requested
 		const resultUnsorted = sections.map((section) => {
 			const result: InsightResult = {};
-			options.columns.forEach((column) => {
+			this.options!!.columns.forEach((column) => {
 				result[column.field] = section[column.field];
 			});
 			return result;
@@ -58,6 +67,13 @@ export class QueryEngine {
 
 		const [columnsForState, datasetIdForState] = this.parseColumns(optionsStructure);
 		const orderForState = this.processOrder(optionsStructure, datasetIdForState);
+		// Ensure order field is selected in columns
+		if (
+			orderForState !== undefined &&
+			columnsForState.find((col) => col.field === orderForState?.field) === undefined
+		) {
+			throw new InsightError("Order field not selected in columns.");
+		}
 
 		return {
 			columns: columnsForState,
@@ -132,14 +148,22 @@ export class QueryEngine {
 	 * @param options the options state computed
 	 * @throws InsightError if body is malformed.
 	 */
-	private processBody(bodyRaw: unknown, options: OptionsState): Section[] {
-		const filter = new Filter(this.datasets, options);
+	private processBody(bodyRaw: unknown): Section[] {
+		// Find dataset
+		const dataset = DatasetUtils.findDataset(this.datasets, this.options!!.datasetId);
+		if (dataset === undefined) {
+			throw new InsightError("Could not find dataset with id: " + this.options!!.datasetId + ".");
+		}
 
-		const filterFunction = QueryEngine.checkSingleFilter(filter, bodyRaw);
+		// Create filter object
+		const filter = new FilterBySection(dataset);
 
-		const sections = filterFunction();
+		// Start constructing filter function
+		const filterFunction = this.checkSingleFilter(filter, bodyRaw);
 
-		const maxResults = 5000;
+		// Execute filter function
+		const sections = filterFunction.apply();
+
 		if (sections.length > maxResults) {
 			throw new ResultTooLargeError();
 		}
@@ -155,7 +179,7 @@ export class QueryEngine {
 	 * @returns A filter operation representing the given body and filter
 	 * @throws InsightError if bodyRaw is improperly formatted
 	 */
-	private static checkSingleFilter(filter: Filter, bodyRaw: unknown): FilterOperation {
+	private checkSingleFilter(filter: FilterStrategy<any>, bodyRaw: unknown): FilterOperation {
 		// Retrieve body and ensure it is JSON
 		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
@@ -192,33 +216,37 @@ export class QueryEngine {
 	 * @returns A filter operation for the given key and children
 	 * @throws InsightError if the provided key could not be processed correctly
 	 */
-	private static processFilter(filter: Filter, key: string, value: unknown): FilterOperation {
-		if (key === Keywords.Filter.Logic.And) {
-			const array = DatasetUtils.checkIsArray(Keywords.Filter.Logic.And, value);
-			return filter.and(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
-		} else if (key === Keywords.Filter.Logic.Or) {
-			const array = DatasetUtils.checkIsArray(Keywords.Filter.Logic.And, value);
-			return filter.or(array.map((elem) => QueryEngine.checkSingleFilter(filter, elem)));
-		} else if (key === Keywords.Filter.MComparator.Equal) {
-			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.Equal, value);
-			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.Equal, filterVal);
-			return filter.equals(valNum, columnKey);
-		} else if (key === Keywords.Filter.MComparator.GreaterThan) {
-			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.GreaterThan, value);
-			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.GreaterThan, filterVal);
-			return filter.greaterThan(valNum, columnKey);
-		} else if (key === Keywords.Filter.MComparator.LessThan) {
-			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.MComparator.LessThan, value);
-			const valNum = DatasetUtils.checkIsNumber(Keywords.Filter.MComparator.LessThan, filterVal);
-			return filter.lessThan(valNum, columnKey);
-		} else if (key === Keywords.Filter.Negation.Not) {
-			return filter.not(QueryEngine.checkSingleFilter(filter, value));
-		} else if (key === Keywords.Filter.SComparator.Is) {
-			const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value);
-			const valStr = DatasetUtils.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
-			return filter.is(valStr, columnKey);
-		} else {
-			throw new InsightError("Filter key not recognized: " + key);
+	private processFilter(filter: FilterStrategy<any>, key: string, value: unknown): FilterOperation {
+		switch (key) {
+			case Keywords.Filter.Logic.And:
+			case Keywords.Filter.Logic.Or: {
+				const array = DatasetUtils.checkIsArray(key, value);
+				const children = array.map((elem) => this.checkSingleFilter(filter, elem));
+				if (children.length === 0) {
+					throw new InsightError(key + " must have children");
+				}
+				return key === Keywords.Filter.Logic.And ? filter.and(children) : filter.or(children);
+			}
+			case Keywords.Filter.MComparator.Equal:
+			case Keywords.Filter.MComparator.GreaterThan:
+			case Keywords.Filter.MComparator.LessThan: {
+				const [columnKey, filterVal] = this.checkKey(key, value);
+				const valNum = DatasetUtils.checkIsNumber(key, filterVal);
+				return key === Keywords.Filter.MComparator.Equal
+					? filter.equals(valNum, columnKey)
+					: key === Keywords.Filter.MComparator.LessThan
+					? filter.lessThan(valNum, columnKey)
+					: filter.greaterThan(valNum, columnKey);
+			}
+			case Keywords.Filter.Negation.Not:
+				return filter.not(this.checkSingleFilter(filter, value));
+			case Keywords.Filter.SComparator.Is: {
+				const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value);
+				const valStr = DatasetUtils.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
+				return filter.is(valStr, columnKey);
+			}
+			default:
+				throw new InsightError("Filter key not recognized: " + key);
 		}
 	}
 
@@ -228,7 +256,7 @@ export class QueryEngine {
 	 * @param bodyRaw the raw body under this key (ie. { "key": "value" })
 	 * @returns a tuple of the parsed key and value
 	 */
-	private static checkKey(type: string, bodyRaw: unknown): [InsightFacadeKey, unknown] {
+	private checkKey(type: string, bodyRaw: unknown): [InsightFacadeKey, unknown] {
 		// Ensure child is an object
 		const keyBody = DatasetUtils.checkIsObject(type, bodyRaw);
 		// Ensure body has a single key value pair
@@ -243,7 +271,14 @@ export class QueryEngine {
 
 		if (key === undefined) {
 			throw new InsightError("Improper structure of key: " + bodyEntries[0][0]);
-		} else if (DatasetUtils.isMKey(key)) {
+		}
+
+		// Check for multi datasets used
+		if (this.options!!.datasetId !== key.idstring) {
+			throw new InsightError("Only one dataset can be used in a query.");
+		}
+
+		if (DatasetUtils.isMKey(key)) {
 			return [key, keyValue];
 		} else if (DatasetUtils.isSKey(key)) {
 			return [key, keyValue];
