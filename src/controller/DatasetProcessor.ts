@@ -78,7 +78,7 @@ export default class DatasetProcessor {
 				const overallSectionYear = 1900;
 				map.set("Year", overallSectionYear);
 			}
-			map["delete"]("Section");
+			map.delete("Section");
 
 			const sectionKVP = Array.from(map.entries()).map(([fileKey, val]) => this.parseSectionKeys(fileKey, val));
 
