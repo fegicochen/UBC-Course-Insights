@@ -1,0 +1,140 @@
+{
+	"title": "Filter by sections_id",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"IS": {
+						"sections_id": "596"
+					}
+				},
+				{
+					"GT": {
+						"sections_avg": 92
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_id",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 92.09
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 92.13
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_id": "596",
+			"sections_avg": 92.33
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_id": "596",
+			"sections_avg": 92.33
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_id": "596",
+			"sections_avg": 92.61
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 92.7
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 92.85
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 92.88
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 92.94
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 93.06
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 93.28
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 93.29
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 93.31
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 93.56
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 93.69
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 93.82
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 94.06
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 94.18
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_id": "596",
+			"sections_avg": 94.27
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 95.33
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 97.09
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "596",
+			"sections_avg": 97.09
+		}
+	]
+}

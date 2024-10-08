@@ -1,0 +1,37 @@
+{
+	"title": "Filter by sections uuid",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"IS": {
+						"sections_uuid": "84718"
+					}
+				},
+				{
+					"GT": {
+						"sections_avg": 90
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_uuid",
+				"sections_title",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "ceen",
+			"sections_uuid": "84718",
+			"sections_title": "project & report",
+			"sections_avg": 90.4
+		}
+	]
+}

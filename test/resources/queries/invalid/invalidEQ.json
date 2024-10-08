@@ -1,0 +1,20 @@
+{
+	"title": "EQ should only have 1 key, has 2",
+	"input": {
+		"WHERE": {
+			"EQ": {
+				"sections_avg": 97,
+				"sections_dept": 97
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

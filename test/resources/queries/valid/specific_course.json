@@ -1,0 +1,93 @@
+{
+	"title": "Select specific course exactly",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"IS": {
+						"sections_dept": "bmeg"
+					}
+				},
+				{
+					"IS": {
+						"sections_id": "597"
+					}
+				},
+				{
+					"IS": {
+						"sections_uuid": "75931"
+					}
+				},
+				{
+					"IS": {
+						"sections_instructor": "hodgson, antony"
+					}
+				},
+				{
+					"EQ": {
+						"sections_year": 2015
+					}
+				},
+				{
+					"EQ": {
+						"sections_pass": 6
+					}
+				},
+				{
+					"EQ": {
+						"sections_fail": 0
+					}
+				},
+				{
+					"EQ": {
+						"sections_audit": 0
+					}
+				},
+				{
+					"IS": {
+						"sections_title": "master eng proj"
+					}
+				},
+				{
+					"GT": {
+						"sections_avg": 83
+					}
+				},
+				{
+					"LT": {
+						"sections_avg": 84
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_id",
+				"sections_avg",
+				"sections_pass",
+				"sections_fail",
+				"sections_uuid",
+				"sections_year",
+				"sections_instructor",
+				"sections_audit",
+				"sections_title"
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "bmeg",
+			"sections_id": "597",
+			"sections_avg": 83.83,
+			"sections_pass": 6,
+			"sections_fail": 0,
+			"sections_uuid": "75931",
+			"sections_year": 2015,
+			"sections_instructor": "hodgson, antony",
+			"sections_audit": 0,
+			"sections_title": "master eng proj"
+		}
+	]
+}

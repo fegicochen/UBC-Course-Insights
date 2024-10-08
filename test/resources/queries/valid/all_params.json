@@ -1,0 +1,77 @@
+{
+	"title": "Get all params",
+	"input": {
+		"WHERE": {
+			"NOT": {
+				"GT": {
+					"sections_avg": 1
+				}
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_uuid",
+				"sections_id",
+				"sections_title",
+				"sections_instructor",
+				"sections_dept",
+				"sections_year",
+				"sections_avg",
+				"sections_pass",
+				"sections_fail",
+				"sections_audit"
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_uuid": "89536",
+			"sections_id": "202",
+			"sections_title": "forest ecology",
+			"sections_instructor": "",
+			"sections_dept": "frst",
+			"sections_year": 1900,
+			"sections_avg": 0,
+			"sections_pass": 0,
+			"sections_fail": 1,
+			"sections_audit": 0
+		},
+		{
+			"sections_uuid": "56402",
+			"sections_id": "100",
+			"sections_title": "in land food com",
+			"sections_instructor": "",
+			"sections_dept": "lfs",
+			"sections_year": 2009,
+			"sections_avg": 0,
+			"sections_pass": 0,
+			"sections_fail": 1,
+			"sections_audit": 0
+		},
+		{
+			"sections_uuid": "56403",
+			"sections_id": "100",
+			"sections_title": "in land food com",
+			"sections_instructor": "",
+			"sections_dept": "lfs",
+			"sections_year": 1900,
+			"sections_avg": 0,
+			"sections_pass": 0,
+			"sections_fail": 1,
+			"sections_audit": 0
+		},
+		{
+			"sections_uuid": "49835",
+			"sections_id": "475",
+			"sections_title": "prpty,ident&uses",
+			"sections_instructor": "",
+			"sections_dept": "wood",
+			"sections_year": 1900,
+			"sections_avg": 1,
+			"sections_pass": 0,
+			"sections_fail": 2,
+			"sections_audit": 0
+		}
+	]
+}

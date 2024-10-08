@@ -1,0 +1,67 @@
+{
+	"title": "Check less than (LT)",
+	"input": {
+		"WHERE": {
+			"LT": {
+				"sections_avg": 40
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_avg",
+				"sections_uuid"
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_avg": 4,
+			"sections_uuid": "16427"
+		},
+		{
+			"sections_avg": 4,
+			"sections_uuid": "16428"
+		},
+		{
+			"sections_avg": 33,
+			"sections_uuid": "53284"
+		},
+		{
+			"sections_avg": 39.03,
+			"sections_uuid": "50477"
+		},
+		{
+			"sections_avg": 39.03,
+			"sections_uuid": "50478"
+		},
+		{
+			"sections_avg": 4.5,
+			"sections_uuid": "84769"
+		},
+		{
+			"sections_avg": 0,
+			"sections_uuid": "89536"
+		},
+		{
+			"sections_avg": 34,
+			"sections_uuid": "14375"
+		},
+		{
+			"sections_avg": 0,
+			"sections_uuid": "56402"
+		},
+		{
+			"sections_avg": 0,
+			"sections_uuid": "56403"
+		},
+		{
+			"sections_avg": 33.2,
+			"sections_uuid": "51675"
+		},
+		{
+			"sections_avg": 1,
+			"sections_uuid": "49835"
+		}
+	]
+}

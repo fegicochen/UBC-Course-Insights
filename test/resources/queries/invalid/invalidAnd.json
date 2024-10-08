@@ -1,0 +1,70 @@
+{
+	"title": "AND must be a non-empty array",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"OR": [
+						{
+							"AND": [
+								{
+									"LT": {
+										"sections_avg": 80
+									}
+								},
+								{
+									"IS": {
+										"sections_dept": "comm"
+									}
+								},
+								{
+									"NOT": {
+										"IS": {
+											"sections_instructor": "*johnson*"
+										}
+									}
+								}
+							]
+						},
+						{
+							"AND": [
+								{
+									"AND": {
+										"sections_year": 2020
+									}
+								},
+								{
+									"IS": {
+										"sections_title": "*data*"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"LT": {
+						"sections_pass": 100
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_avg",
+				"sections_instructor",
+				"sections_title",
+				"sections_year",
+				"sections_pass",
+				"sections_audit",
+				"sections_fail",
+				"sections_id",
+				"sections_uuid"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

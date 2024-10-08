@@ -1,0 +1,69 @@
+{
+	"title": "invalidQuery",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"OR": [
+						{
+							"AND": [
+								{
+									"GT": {}
+								},
+								{
+									"LT": {
+										"sections_avg": 90
+									}
+								},
+								{
+									"IS": {
+										"sections_dept": "cpsc"
+									}
+								},
+								{
+									"NOT": {
+										"IS": {
+											"sections_instructor": "*joh*nson*"
+										}
+									}
+								}
+							]
+						},
+						{
+							"AND": [
+								{
+									"EQ": {
+										"sections_year": 2020
+									}
+								},
+								{
+									"IS": {
+										"sections_title": "*data*"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"LT": {
+						"sections_pass": 100
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_avg",
+				"sections_instructor",
+				"sections_title",
+				"sections_year",
+				"sections_pass"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

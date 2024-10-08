@@ -1,0 +1,40 @@
+{
+	"title": "Filter by instructor",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"IS": {
+						"sections_instructor": "mazzi, eric"
+					}
+				},
+				{
+					"GT": {
+						"sections_avg": 92
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_instructor",
+				"sections_avg"
+			],
+			"ORDER": "sections_avg"
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "mazzi, eric",
+			"sections_avg": 92.33
+		},
+		{
+			"sections_dept": "ceen",
+			"sections_instructor": "mazzi, eric",
+			"sections_avg": 94.27
+		}
+	]
+}

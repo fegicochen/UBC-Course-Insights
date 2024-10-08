@@ -1,0 +1,12 @@
+{
+	"title": "COLUMNS is an empty array",
+	"input": {
+		"WHERE": {},
+		"OPTIONS": {
+			"COLUMNS": [
+			]
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

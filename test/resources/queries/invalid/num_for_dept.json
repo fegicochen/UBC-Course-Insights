@@ -1,0 +1,21 @@
+{
+	"title": "Put number where string should be for dept",
+	"input": {
+		"WHERE": {
+			"NOT": {
+				"EQ": {
+					"sections_dept": 1231
+				}
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_id",
+				"sections_avg",
+				"sections_dept"
+			]
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}
