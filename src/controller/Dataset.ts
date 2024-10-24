@@ -1,3 +1,4 @@
+import JSZip from "jszip";
 import { InsightError } from "./IInsightFacade";
 
 export const maxResults = 5000;
@@ -347,5 +348,21 @@ export class DatasetUtils {
 			throw new InsightError("JSON format error: " + section + " must be an object, not: " + typeof obj + ", " + obj);
 		}
 		return obj as object;
+	}
+
+	/**
+	 *
+	 * @param content base64 content to unzip
+	 * @returns a JSZip of the content
+	 * @throws InsightError if the content cannot be properly parsed
+	 */
+	public static async unzipBase64Content(content: string): Promise<JSZip> {
+		let unzipped: JSZip;
+		try {
+			unzipped = await new JSZip().loadAsync(content, { base64: true });
+		} catch (e) {
+			throw new InsightError("Error parsing content " + e);
+		}
+		return unzipped;
 	}
 }

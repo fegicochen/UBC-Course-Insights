@@ -1,4 +1,3 @@
-import JSZip from "jszip";
 import { DatasetId, DatasetUtils, Section } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
 export default class SectionsDatasetProcessor {
@@ -8,15 +7,11 @@ export default class SectionsDatasetProcessor {
 	 * @returns Returns the valid sections from zip file
 	 */
 	public static async getValidSections(content: string): Promise<Section[]> {
-		let unzipped;
-		try {
-			unzipped = await new JSZip().loadAsync(content, { base64: true });
-		} catch (e) {
-			throw new InsightError("Error parsing content " + e);
-		}
+		const unzipped = await DatasetUtils.unzipBase64Content(content);
 
 		// Check if unzipped file has courses folder
-		if (unzipped.folder("courses") === null) {
+		const coursesFolder = unzipped.folder("courses");
+		if (coursesFolder === null) {
 			throw new InsightError("No courses folder!");
 		}
 
