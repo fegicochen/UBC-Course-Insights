@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { InsightError } from "./IInsightFacade";
+import { InsightDatasetKind, InsightError } from "./IInsightFacade";
 
 export const maxResults = 5000;
 
@@ -43,18 +43,17 @@ export interface Room {
 	href: string;
 }
 
-export interface SectionDataset {
+export interface Dataset<T> {
 	id: string;
-	members: Section[];
+	members: T[];
+	type: InsightDatasetKind;
 }
 
-export interface RoomsDataset {
-	id: string;
-	members: Room[];
-}
+export type SectionsDataset = Dataset<Section>;
+export type RoomsDataset = Dataset<Room>;
 
 export interface DatasetList {
-	sections: SectionDataset[];
+	sections: SectionsDataset[];
 	rooms: RoomsDataset[];
 }
 
@@ -117,7 +116,7 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDataset(provider: DatasetsProvider, id: string): SectionDataset | undefined {
+	public static findDataset(provider: DatasetsProvider, id: string): SectionsDataset | undefined {
 		const datasets = provider();
 		return datasets.sections.find((dataset) => dataset.id === id);
 	}
@@ -364,5 +363,24 @@ export class DatasetUtils {
 			throw new InsightError("Error parsing content " + e);
 		}
 		return unzipped;
+	}
+
+
+	/**
+	 *
+	 * @param datasets datasets to get ids from
+	 * @returns all ids in the given datasets
+	 */
+	public static getAllIDs(datasets: DatasetList): string[] {
+		return this.combineDatasets(datasets).map(x => x.id);
+	}
+
+	/**
+	 *
+	 * @param datasets datasets to combine
+	 * @returns list of datasets combined
+	 */
+	public static combineDatasets(datasets: DatasetList): Dataset<Section | Room>[] {
+		return (datasets.rooms as Dataset<Section | Room>[]).concat(datasets.sections);
 	}
 }

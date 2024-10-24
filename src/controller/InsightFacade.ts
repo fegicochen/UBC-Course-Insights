@@ -1,4 +1,4 @@
-import { SectionDataset, DatasetUtils, RoomsDataset } from "./Dataset";
+import { SectionsDataset, DatasetUtils, RoomsDataset } from "./Dataset";
 import {
 	IInsightFacade,
 	InsightDataset,
@@ -10,6 +10,7 @@ import {
 import { QueryEngine } from "./QueryEngine";
 import PersistantData from "./PersistantData";
 import SectionsDatasetProcessor from "./SectionsDatasetProcessor";
+import { RoomsDatasetProcessor } from "./RoomsDatasetProcessor";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -37,24 +38,26 @@ export default class InsightFacade implements IInsightFacade {
 		// Check kind
 		if (kind === InsightDatasetKind.Sections) {
 			const validSections = await SectionsDatasetProcessor.getValidSections(content);
-			const dataset: SectionDataset = { id: id, members: validSections };
-			await this.data.addDataset(dataset);
+			const dataset: SectionsDataset = { id: id, members: validSections, type: InsightDatasetKind.Sections };
+			await this.data.addSectionsDataset(dataset);
 		} else {
-			throw new InsightError("InsightDatasetKind.Rooms not supported yet.");
+			const validRooms = await RoomsDatasetProcessor.getValidRooms(content);
+			const dataset: RoomsDataset = { id: id, members: validRooms, type: InsightDatasetKind.Rooms };
+			await this.data.addRoomsDataset(dataset);
 		}
 
 		// Save to disc
 		await this.data.writeData();
 
 		// Return list of valid datasets
-		return (await this.data.getDatasets()).sections.map((dataset) => dataset.id);
+		return DatasetUtils.getAllIDs(await this.data.getDatasets());
 	}
 
 	public async removeDataset(id: string): Promise<string> {
 		if (!DatasetUtils.isValidIdString(id)) {
 			throw new InsightError("Invalid id: " + id);
 		}
-		const newSections: SectionDataset[] = [];
+		const newSections: SectionsDataset[] = [];
 		const newRooms: RoomsDataset[] = [];
 		const datasets = await this.data.getDatasets();
 		datasets.sections.forEach((dataset) => {
@@ -86,9 +89,9 @@ export default class InsightFacade implements IInsightFacade {
 	}
 
 	public async listDatasets(): Promise<InsightDataset[]> {
-		return (await this.data.getDatasets()).sections.map((dataset) => ({
+		return DatasetUtils.combineDatasets(await this.data.getDatasets()).map((dataset) => ({
 			id: dataset.id,
-			kind: InsightDatasetKind.Sections,
+			kind: dataset.type,
 			numRows: dataset.members.length,
 		}));
 	}

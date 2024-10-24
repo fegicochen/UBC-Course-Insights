@@ -1,12 +1,12 @@
 import { parse } from "parse5";
-import { DatasetUtils } from "./Dataset";
+import { DatasetUtils, Room } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
 
 const roomsHtmlFileName = "index.htm";
 
 export class RoomsDatasetProcessor {
 
-	public async getValidRooms(content: string): Promise<Room[]> {
+	public static async getValidRooms(content: string): Promise<Room[]> {
 		const unzipped = await DatasetUtils.unzipBase64Content(content);
 
 		// Get file describing the rooms

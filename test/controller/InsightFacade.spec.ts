@@ -1,3 +1,4 @@
+import { DatasetId, DatasetUtils, Keywords } from "../../src/controller/Dataset";
 import {
 	IInsightFacade,
 	InsightDatasetKind,
@@ -10,8 +11,7 @@ import InsightFacade from "../../src/controller/InsightFacade";
 import { clearDisk, getContentFromArchives, loadTestQuery } from "../TestUtil";
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
-// import { DatasetId, DatasetUtils, Keywords } from "../../src/controller/Dataset";
-// import { QueryEngine } from "../../src/controller/QueryEngine";
+import { QueryEngine } from "../../src/controller/QueryEngine";
 
 use(chaiAsPromised);
 
@@ -37,7 +37,9 @@ describe("InsightFacade", function () {
 	let noYearManySections: string;
 	let improperStructureCourses: string;
 	let coursesInWrongFolder: string;
+	let allRooms: string;
 
+	const roomsInAllRooms = 364;
 	const sectionsInOne = 20;
 	const sectionsInTwo = 99;
 	const sectionsInFour = 242;
@@ -55,6 +57,7 @@ describe("InsightFacade", function () {
 		noYearManySections = await getContentFromArchives("noYearManySections.zip");
 		improperStructureCourses = await getContentFromArchives("improperStructure.zip");
 		coursesInWrongFolder = await getContentFromArchives("courseWrongFolder.zip");
+		allRooms = await getContentFromArchives("campus.zip");
 
 		// Just in case there is anything hanging around from a previous run of the test suite
 		await clearDisk();
@@ -102,7 +105,7 @@ describe("InsightFacade", function () {
 		});
 
 		it("should accept one character as idstring", async () => {
-			const result = await facade.addDataset("a", sections, InsightDatasetKind.Sections);
+			const result = await facade.addDataset("a", fourCourses, InsightDatasetKind.Sections);
 			expect(result).to.be.length(1);
 			expect(result[0]).to.equal("a");
 		});
@@ -118,7 +121,7 @@ describe("InsightFacade", function () {
 
 		it("should return id of single active dataset", async () => {
 			try {
-				const ids = await facade.addDataset("abcd", sections, InsightDatasetKind.Sections);
+				const ids = await facade.addDataset("abcd", twoCourses, InsightDatasetKind.Sections);
 				expect(ids).to.be.length(1);
 				expect(ids).to.contain("abcd");
 			} catch (_err) {
@@ -128,7 +131,7 @@ describe("InsightFacade", function () {
 
 		it("should reject repeat ids", async () => {
 			try {
-				const res = await facade.addDataset("pqrs", sections, InsightDatasetKind.Sections);
+				const res = await facade.addDataset("pqrs", fourCourses, InsightDatasetKind.Sections);
 				expect(res).to.be.length(1);
 				expect(res).to.contain("pqrs");
 			} catch (_err) {
@@ -147,7 +150,7 @@ describe("InsightFacade", function () {
 
 		it("should accept different ids", async () => {
 			try {
-				await facade.addDataset("pqrs", sections, InsightDatasetKind.Sections);
+				await facade.addDataset("pqrs", fourCourses, InsightDatasetKind.Sections);
 			} catch (_e) {
 				expect.fail("Should not have thrown on first add.");
 			}
@@ -291,6 +294,37 @@ describe("InsightFacade", function () {
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
 			}
+		});
+
+		it("should properly add a rooms dataset", async () => {
+			const res = await facade.addDataset("pqrs", allRooms, InsightDatasetKind.Rooms);
+			expect(res).to.be.length(1);
+			expect(res[0]).to.equal("pqrs");
+
+			const datasetInfo = await facade.listDatasets();
+			expect(datasetInfo).to.be.length(1);
+			expect(datasetInfo[0].id).to.equal("pqrs");
+			expect(datasetInfo[0].numRows).to.equal(roomsInAllRooms);
+		});
+
+		it("should add both rooms and sections datasets together", async () => {
+			const res1 = await facade.addDataset("a", allRooms, InsightDatasetKind.Rooms);
+			expect(res1).to.be.length(1);
+			expect(res1[0]).to.equal("a");
+			const nDts = 2;
+			const res2 = await facade.addDataset("b", fourCourses, InsightDatasetKind.Sections);
+			expect(res2).to.be.length(nDts);
+			expect(res2).to.contain("a");
+			expect(res2).to.contain("b");
+
+			const info = await facade.listDatasets();
+			expect(info).to.be.length(nDts);
+			const infoA = info.find(x => x.id === "a");
+			const infoB = info.find(x => x.id === "b");
+			expect(infoA?.kind).to.equal(InsightDatasetKind.Rooms);
+			expect(infoA?.numRows).to.equal(roomsInAllRooms);
+			expect(infoB?.kind).to.equal(InsightDatasetKind.Sections);
+			expect(infoB?.numRows).to.equal(sectionsInFour);
 		});
 	});
 
@@ -588,291 +622,291 @@ describe("InsightFacade", function () {
 	});
 });
 
-// describe("DatasetUtils", () => {
-// 	describe("isValidIDString", () => {
-// 		it("should reject empty string", () => {
-// 			expect(DatasetUtils.isValidIdString("")).equals(false);
-// 			expect(DatasetUtils.isValidIdString("  ")).equals(false);
-// 		});
+describe("DatasetUtils", () => {
+	describe("isValidIDString", () => {
+		it("should reject empty string", () => {
+			expect(DatasetUtils.isValidIdString("")).equals(false);
+			expect(DatasetUtils.isValidIdString("  ")).equals(false);
+		});
 
-// 		it("should reject underscores", () => {
-// 			expect(DatasetUtils.isValidIdString("_")).equals(false);
-// 			expect(DatasetUtils.isValidIdString(" _ ")).equals(false);
-// 			expect(DatasetUtils.isValidIdString("ab_cd")).equals(false);
-// 			expect(DatasetUtils.isValidIdString("PQRS_")).equals(false);
-// 			expect(DatasetUtils.isValidIdString("_ADSD")).equals(false);
-// 		});
+		it("should reject underscores", () => {
+			expect(DatasetUtils.isValidIdString("_")).equals(false);
+			expect(DatasetUtils.isValidIdString(" _ ")).equals(false);
+			expect(DatasetUtils.isValidIdString("ab_cd")).equals(false);
+			expect(DatasetUtils.isValidIdString("PQRS_")).equals(false);
+			expect(DatasetUtils.isValidIdString("_ADSD")).equals(false);
+		});
 
-// 		it("should accept proper strings", () => {
-// 			expect(DatasetUtils.isValidIdString("ABC")).equals(true);
-// 			expect(DatasetUtils.isValidIdString("JDKSD2391i")).equals(true);
-// 		});
-// 	});
+		it("should accept proper strings", () => {
+			expect(DatasetUtils.isValidIdString("ABC")).equals(true);
+			expect(DatasetUtils.isValidIdString("JDKSD2391i")).equals(true);
+		});
+	});
 
-// 	describe("parseSKey", () => {
-// 		it("should reject invalid ids in skeys", () => {
-// 			expect(DatasetUtils.parseSKey("abc_def_avg")).equals(undefined);
-// 			expect(DatasetUtils.parseSKey("_year")).equals(undefined);
-// 			expect(DatasetUtils.parseSKey("A__B_AD_DAS")).equals(undefined);
-// 		});
+	describe("parseSKey", () => {
+		it("should reject invalid ids in skeys", () => {
+			expect(DatasetUtils.parseSKey("abc_def_avg")).equals(undefined);
+			expect(DatasetUtils.parseSKey("_year")).equals(undefined);
+			expect(DatasetUtils.parseSKey("A__B_AD_DAS")).equals(undefined);
+		});
 
-// 		it("should accept skeys", () => {
-// 			expect(DatasetUtils.parseSKey("abc_dept")).to.deep.equal({
-// 				idstring: "abc",
-// 				field: DatasetId.Dept,
-// 			});
-// 			expect(DatasetUtils.parseSKey("123_instructor")).to.deep.equal({
-// 				idstring: "123",
-// 				field: DatasetId.Instructor,
-// 			});
-// 		});
+		it("should accept skeys", () => {
+			expect(DatasetUtils.parseSKey("abc_dept")).to.deep.equal({
+				idstring: "abc",
+				field: DatasetId.Dept,
+			});
+			expect(DatasetUtils.parseSKey("123_instructor")).to.deep.equal({
+				idstring: "123",
+				field: DatasetId.Instructor,
+			});
+		});
 
-// 		it("should reject mkeys", () => {
-// 			expect(DatasetUtils.parseSKey("abc_avg")).equals(undefined);
-// 			expect(DatasetUtils.parseSKey("123_fail")).equals(undefined);
-// 		});
+		it("should reject mkeys", () => {
+			expect(DatasetUtils.parseSKey("abc_avg")).equals(undefined);
+			expect(DatasetUtils.parseSKey("123_fail")).equals(undefined);
+		});
 
-// 		it("should reject nonsense", () => {
-// 			expect(DatasetUtils.parseSKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).equals(undefined);
-// 			expect(DatasetUtils.parseSKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).equals(undefined);
-// 		});
-// 	});
+		it("should reject nonsense", () => {
+			expect(DatasetUtils.parseSKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).equals(undefined);
+			expect(DatasetUtils.parseSKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).equals(undefined);
+		});
+	});
 
-// 	describe("parseMKey", () => {
-// 		it("should reject invalid ids in mkeys", () => {
-// 			expect(DatasetUtils.parseMKey("abc_def_avg")).equals(undefined);
-// 			expect(DatasetUtils.parseMKey("_year")).equals(undefined);
-// 			expect(DatasetUtils.parseMKey("A__B_AD_DAS")).equals(undefined);
-// 		});
+	describe("parseMKey", () => {
+		it("should reject invalid ids in mkeys", () => {
+			expect(DatasetUtils.parseMKey("abc_def_avg")).equals(undefined);
+			expect(DatasetUtils.parseMKey("_year")).equals(undefined);
+			expect(DatasetUtils.parseMKey("A__B_AD_DAS")).equals(undefined);
+		});
 
-// 		it("should reject skeys", () => {
-// 			expect(DatasetUtils.parseMKey("abc_dept")).equals(undefined);
-// 			expect(DatasetUtils.parseMKey("123_instructor")).equals(undefined);
-// 		});
+		it("should reject skeys", () => {
+			expect(DatasetUtils.parseMKey("abc_dept")).equals(undefined);
+			expect(DatasetUtils.parseMKey("123_instructor")).equals(undefined);
+		});
 
-// 		it("should accept proper mkeys", () => {
-// 			expect(DatasetUtils.parseMKey("abc_avg")).to.deep.equal({
-// 				idstring: "abc",
-// 				field: DatasetId.Avg,
-// 			});
-// 			expect(DatasetUtils.parseMKey("123_fail")).to.deep.equal({
-// 				idstring: "123",
-// 				field: DatasetId.Fail,
-// 			});
-// 		});
+		it("should accept proper mkeys", () => {
+			expect(DatasetUtils.parseMKey("abc_avg")).to.deep.equal({
+				idstring: "abc",
+				field: DatasetId.Avg,
+			});
+			expect(DatasetUtils.parseMKey("123_fail")).to.deep.equal({
+				idstring: "123",
+				field: DatasetId.Fail,
+			});
+		});
 
-// 		it("should reject nonsense", () => {
-// 			expect(DatasetUtils.parseMKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).equals(undefined);
-// 			expect(DatasetUtils.parseMKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).equals(undefined);
-// 		});
-// 	});
-// });
+		it("should reject nonsense", () => {
+			expect(DatasetUtils.parseMKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).equals(undefined);
+			expect(DatasetUtils.parseMKey("DKlandan(*09213_@03_+@)__#@i23jo1n")).equals(undefined);
+		});
+	});
+});
 
-// describe("DatasetUtils", () => {
-// 	let qe: QueryEngine;
+describe("DatasetUtils", () => {
+	let qe: QueryEngine;
 
-// 	before(() => {
-// 		qe = new QueryEngine(() => ({ datasets: [] }));
-// 	});
+	before(() => {
+		qe = new QueryEngine(() => ({ sections: [], rooms: [] }));
+	});
 
-// 	describe("requireExactKeys", () => {
-// 		it("should throw if there are extra keys", () => {
-// 			try {
-// 				DatasetUtils.requireExactKeys({ B: 12, C: 3 }, [["A", true]]);
-// 				expect.fail("Should have thrown");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
+	describe("requireExactKeys", () => {
+		it("should throw if there are extra keys", () => {
+			try {
+				DatasetUtils.requireExactKeys({ B: 12, C: 3 }, [["A", true]]);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
 
-// 		it("should throw if there are missing keys", () => {
-// 			try {
-// 				DatasetUtils.requireExactKeys({ B: 4, A: "d" }, [
-// 					["A", true],
-// 					["B", true],
-// 					["C", true],
-// 				]);
-// 				expect.fail("Should have thrown");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
+		it("should throw if there are missing keys", () => {
+			try {
+				DatasetUtils.requireExactKeys({ B: 4, A: "d" }, [
+					["A", true],
+					["B", true],
+					["C", true],
+				]);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
 
-// 		it("should return proper values start of array", () => {
-// 			const result = DatasetUtils.requireExactKeys({ AND: { A: "1" } }, [
-// 				[Keywords.Filter.Logic.And, false],
-// 				[Keywords.Filter.Logic.Or, false],
-// 				[Keywords.Filter.MComparator.Equal, false],
-// 				[Keywords.Filter.MComparator.GreaterThan, false],
-// 				[Keywords.Filter.MComparator.LessThan, false],
-// 				[Keywords.Filter.Negation.Not, false],
-// 				[Keywords.Filter.SComparator.Is, false],
-// 			]);
-// 			expect(result.has("AND")).to.equal(true);
-// 			expect(result.has(Keywords.Filter.Logic.Or)).to.equal(false);
-// 			expect(result.get("AND")).to.deep.equal({ A: "1" });
-// 			expect(result.size).to.equal(1);
-// 		});
+		it("should return proper values start of array", () => {
+			const result = DatasetUtils.requireExactKeys({ AND: { A: "1" } }, [
+				[Keywords.Filter.Logic.And, false],
+				[Keywords.Filter.Logic.Or, false],
+				[Keywords.Filter.MComparator.Equal, false],
+				[Keywords.Filter.MComparator.GreaterThan, false],
+				[Keywords.Filter.MComparator.LessThan, false],
+				[Keywords.Filter.Negation.Not, false],
+				[Keywords.Filter.SComparator.Is, false],
+			]);
+			expect(result.has("AND")).to.equal(true);
+			expect(result.has(Keywords.Filter.Logic.Or)).to.equal(false);
+			expect(result.get("AND")).to.deep.equal({ A: "1" });
+			expect(result.size).to.equal(1);
+		});
 
-// 		it("should return proper values later in array", () => {
-// 			const result = DatasetUtils.requireExactKeys({ LT: { A: "1" } }, [
-// 				[Keywords.Filter.Logic.And, false],
-// 				[Keywords.Filter.Logic.Or, false],
-// 				[Keywords.Filter.MComparator.Equal, false],
-// 				[Keywords.Filter.MComparator.GreaterThan, false],
-// 				[Keywords.Filter.MComparator.LessThan, false],
-// 				[Keywords.Filter.Negation.Not, false],
-// 				[Keywords.Filter.SComparator.Is, false],
-// 			]);
-// 			expect(result.size).to.equal(1);
-// 			expect(result.has("LT")).to.equal(true);
-// 			expect(result.has(Keywords.Filter.Logic.Or)).to.equal(false);
-// 			expect(result.get("LT")).to.deep.equal({ A: "1" });
-// 		});
+		it("should return proper values later in array", () => {
+			const result = DatasetUtils.requireExactKeys({ LT: { A: "1" } }, [
+				[Keywords.Filter.Logic.And, false],
+				[Keywords.Filter.Logic.Or, false],
+				[Keywords.Filter.MComparator.Equal, false],
+				[Keywords.Filter.MComparator.GreaterThan, false],
+				[Keywords.Filter.MComparator.LessThan, false],
+				[Keywords.Filter.Negation.Not, false],
+				[Keywords.Filter.SComparator.Is, false],
+			]);
+			expect(result.size).to.equal(1);
+			expect(result.has("LT")).to.equal(true);
+			expect(result.has(Keywords.Filter.Logic.Or)).to.equal(false);
+			expect(result.get("LT")).to.deep.equal({ A: "1" });
+		});
 
-// 		it("should not throw if missing keys are optional", () => {
-// 			let ret;
-// 			try {
-// 				ret = DatasetUtils.requireExactKeys({ A: "A" }, [
-// 					["A", true],
-// 					["B", false],
-// 				]);
-// 			} catch (e) {
-// 				expect.fail("Shouldn't have thrown: " + e);
-// 			}
-// 			expect(ret.get("A")).to.equal("A");
-// 			expect(ret.get("B")).equals(undefined);
-// 		});
+		it("should not throw if missing keys are optional", () => {
+			let ret;
+			try {
+				ret = DatasetUtils.requireExactKeys({ A: "A" }, [
+					["A", true],
+					["B", false],
+				]);
+			} catch (e) {
+				expect.fail("Shouldn't have thrown: " + e);
+			}
+			expect(ret.get("A")).to.equal("A");
+			expect(ret.get("B")).equals(undefined);
+		});
 
-// 		it("should return key values if present", () => {
-// 			const pVal = 22;
-// 			const ret = DatasetUtils.requireExactKeys({ P: pVal, Q: "ABC" }, [
-// 				["P", false],
-// 				["Q", true],
-// 			]);
-// 			expect(ret.get("P")).to.equal(pVal);
-// 			expect(ret.get("Q")).to.equal("ABC");
-// 		});
-// 	});
+		it("should return key values if present", () => {
+			const pVal = 22;
+			const ret = DatasetUtils.requireExactKeys({ P: pVal, Q: "ABC" }, [
+				["P", false],
+				["Q", true],
+			]);
+			expect(ret.get("P")).to.equal(pVal);
+			expect(ret.get("Q")).to.equal("ABC");
+		});
+	});
 
-// 	describe("requireHasKeys", () => {
-// 		it("should fail if a required key is missing", () => {
-// 			try {
-// 				DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
-// 					["a", true],
-// 					["q", true],
-// 				]);
-// 				expect.fail("Should have thrown.");
-// 			} catch (e) {
-// 				expect(e).is.instanceOf(InsightError);
-// 			}
-// 		});
+	describe("requireHasKeys", () => {
+		it("should fail if a required key is missing", () => {
+			try {
+				DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
+					["a", true],
+					["q", true],
+				]);
+				expect.fail("Should have thrown.");
+			} catch (e) {
+				expect(e).is.instanceOf(InsightError);
+			}
+		});
 
-// 		it("should pass if not required key missing", () => {
-// 			const result = DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
-// 				["a", true],
-// 				["q", false],
-// 			]);
-// 			expect(result.get("a")).to.equal("bc");
-// 			expect(result.has("q")).to.equal(false);
-// 			expect(result.has("d")).to.equal(false);
-// 		});
+		it("should pass if not required key missing", () => {
+			const result = DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
+				["a", true],
+				["q", false],
+			]);
+			expect(result.get("a")).to.equal("bc");
+			expect(result.has("q")).to.equal(false);
+			expect(result.has("d")).to.equal(false);
+		});
 
-// 		it("should pass if match is exact", () => {
-// 			const result = DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
-// 				["a", true],
-// 				["d", true],
-// 			]);
-// 			expect(result.get("a")).to.equal("bc");
-// 			expect(result.get("d")).to.equal("ef");
-// 		});
-// 	});
+		it("should pass if match is exact", () => {
+			const result = DatasetUtils.requireHasKeys({ a: "bc", d: "ef" }, [
+				["a", true],
+				["d", true],
+			]);
+			expect(result.get("a")).to.equal("bc");
+			expect(result.get("d")).to.equal("ef");
+		});
+	});
 
-// 	describe("checkIsObject", () => {
-// 		it("should reject a string input", async () => {
-// 			try {
-// 				DatasetUtils.checkIsObject("PQRS", "abcd");
-// 				expect.fail("Should have thrown.");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 				expect((e as InsightError).message).to.contain("PQRS");
-// 			}
-// 		});
+	describe("checkIsObject", () => {
+		it("should reject a string input", async () => {
+			try {
+				DatasetUtils.checkIsObject("PQRS", "abcd");
+				expect.fail("Should have thrown.");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+				expect((e as InsightError).message).to.contain("PQRS");
+			}
+		});
 
-// 		it("should reject array input", async () => {
-// 			try {
-// 				DatasetUtils.checkIsObject("", []);
-// 				expect.fail("Should have thrown");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
+		it("should reject array input", async () => {
+			try {
+				DatasetUtils.checkIsObject("", []);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
 
-// 		it("should accept an onject input", async () => {
-// 			try {
-// 				DatasetUtils.checkIsObject("", { abc: "def" });
-// 			} catch (e) {
-// 				expect.fail("Should not have thrown: " + e);
-// 			}
-// 		});
-// 	});
+		it("should accept an onject input", async () => {
+			try {
+				DatasetUtils.checkIsObject("", { abc: "def" });
+			} catch (e) {
+				expect.fail("Should not have thrown: " + e);
+			}
+		});
+	});
 
-// 	describe("checkIsArray", () => {
-// 		it("should reject a number input", async () => {
-// 			try {
-// 				const num = 12;
-// 				DatasetUtils.checkIsArray("ABC", num);
-// 				expect.fail("Should have thrown");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 				expect((e as InsightError).message).to.contain("ABC");
-// 			}
-// 		});
+	describe("checkIsArray", () => {
+		it("should reject a number input", async () => {
+			try {
+				const num = 12;
+				DatasetUtils.checkIsArray("ABC", num);
+				expect.fail("Should have thrown");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+				expect((e as InsightError).message).to.contain("ABC");
+			}
+		});
 
-// 		it("should accept empty array input", async () => {
-// 			try {
-// 				DatasetUtils.checkIsArray("", []);
-// 			} catch (e) {
-// 				expect.fail("Should not have thrown: " + e);
-// 			}
-// 		});
-// 	});
+		it("should accept empty array input", async () => {
+			try {
+				DatasetUtils.checkIsArray("", []);
+			} catch (e) {
+				expect.fail("Should not have thrown: " + e);
+			}
+		});
+	});
 
-// 	describe("processQuery", () => {
-// 		it("should reject non-json", async () => {
-// 			try {
-// 				await qe.processQuery("ABC");
-// 				expect.fail("Should have thrown.");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
+	describe("processQuery", () => {
+		it("should reject non-json", async () => {
+			try {
+				await qe.processQuery("ABC");
+				expect.fail("Should have thrown.");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
 
-// 		it("should reject with invalid key", async () => {
-// 			try {
-// 				await qe.processQuery({ PLUS: "ABCD" });
-// 				expect.fail("Should have failed");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
+		it("should reject with invalid key", async () => {
+			try {
+				await qe.processQuery({ PLUS: "ABCD" });
+				expect.fail("Should have failed");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
 
-// 		it("should reject query without options or where", async () => {
-// 			try {
-// 				await qe.processQuery({});
-// 				expect.fail("Should have failed.");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
+		it("should reject query without options or where", async () => {
+			try {
+				await qe.processQuery({});
+				expect.fail("Should have failed.");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
 
-// 		it("should reject empty options", async () => {
-// 			try {
-// 				await qe.processQuery({ OPTIONS: {} });
-// 				expect.fail("Should have failed");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
-// 	});
-// });
+		it("should reject empty options", async () => {
+			try {
+				await qe.processQuery({ OPTIONS: {} });
+				expect.fail("Should have failed");
+			} catch (e) {
+				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
+	});
+});
