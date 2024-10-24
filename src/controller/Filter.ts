@@ -1,4 +1,4 @@
-import { Dataset, InsightFacadeKey, maxResults, Section } from "./Dataset";
+import { SectionDataset, InsightFacadeKey, maxResults, Section } from "./Dataset";
 import { InsightError, ResultTooLargeError } from "./IInsightFacade";
 
 enum FilterName {
@@ -29,7 +29,7 @@ export interface FilterStrategy<FO extends FilterOperation> {
 }
 
 class FilterOperationBySection implements FilterOperation {
-	private readonly dataset: Dataset;
+	private readonly dataset: SectionDataset;
 	public readonly name: FilterName;
 	private readonly children?: FilterOperationBySection[];
 	private readonly num?: number;
@@ -46,7 +46,7 @@ class FilterOperationBySection implements FilterOperation {
 	 * @param key a key argument if this filter has one (EQ, LT, GT, IS)
 	 */
 	constructor(params: {
-		dataset: Dataset;
+		dataset: SectionDataset;
 		name: FilterName;
 		children?: FilterOperationBySection[];
 		num?: number;
@@ -151,14 +151,14 @@ class FilterOperationBySection implements FilterOperation {
 }
 
 export class FilterBySection implements FilterStrategy<FilterOperationBySection> {
-	private dataset: Dataset;
+	private dataset: SectionDataset;
 
 	/**
 	 *
 	 * @param dp the datasets provider
 	 * @param options the options for the given query
 	 */
-	constructor(dataset: Dataset) {
+	constructor(dataset: SectionDataset) {
 		this.dataset = dataset;
 	}
 

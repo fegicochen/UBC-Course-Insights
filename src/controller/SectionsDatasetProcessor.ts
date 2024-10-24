@@ -1,7 +1,7 @@
 import JSZip from "jszip";
 import { DatasetId, DatasetUtils, Section } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
-export default class DatasetProcessor {
+export default class SectionsDatasetProcessor {
 	/**
 	 *
 	 * @param content zip file

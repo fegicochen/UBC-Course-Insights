@@ -28,13 +28,33 @@ export interface Section {
 	audit: number;
 }
 
-export interface Dataset {
+export interface Room {
+	fullname: string;
+	shortname: string;
+	number: string;
+	name: string;
+	address: string;
+	lat: number;
+	lon: number;
+	seats: number;
+	type: string;
+	furniture: StorageManager;
+	href: string;
+}
+
+export interface SectionDataset {
 	id: string;
 	members: Section[];
 }
 
+export interface RoomsDataset {
+	id: string;
+	members: Room[];
+}
+
 export interface DatasetList {
-	datasets: Dataset[];
+	sections: SectionDataset[];
+	rooms: RoomsDataset[];
 }
 
 export type DatasetsProvider = () => DatasetList;
@@ -96,9 +116,9 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDataset(provider: DatasetsProvider, id: string): Dataset | undefined {
+	public static findDataset(provider: DatasetsProvider, id: string): SectionDataset | undefined {
 		const datasets = provider();
-		return datasets.datasets.find((dataset) => dataset.id === id);
+		return datasets.sections.find((dataset) => dataset.id === id);
 	}
 
 	/**
