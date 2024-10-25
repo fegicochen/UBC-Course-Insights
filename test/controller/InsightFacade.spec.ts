@@ -319,8 +319,8 @@ describe("InsightFacade", function () {
 
 			const info = await facade.listDatasets();
 			expect(info).to.be.length(nDts);
-			const infoA = info.find(x => x.id === "a");
-			const infoB = info.find(x => x.id === "b");
+			const infoA = info.find((x) => x.id === "a");
+			const infoB = info.find((x) => x.id === "b");
 			expect(infoA?.kind).to.equal(InsightDatasetKind.Rooms);
 			expect(infoA?.numRows).to.equal(roomsInAllRooms);
 			expect(infoB?.kind).to.equal(InsightDatasetKind.Sections);

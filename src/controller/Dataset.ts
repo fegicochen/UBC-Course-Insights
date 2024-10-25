@@ -365,14 +365,13 @@ export class DatasetUtils {
 		return unzipped;
 	}
 
-
 	/**
 	 *
 	 * @param datasets datasets to get ids from
 	 * @returns all ids in the given datasets
 	 */
 	public static getAllIDs(datasets: DatasetList): string[] {
-		return this.combineDatasets(datasets).map(x => x.id);
+		return this.combineDatasets(datasets).map((x) => x.id);
 	}
 
 	/**
