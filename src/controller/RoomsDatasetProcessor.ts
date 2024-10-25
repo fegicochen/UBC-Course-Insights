@@ -7,6 +7,7 @@ import {
 } from "parse5/dist/tree-adapters/default";
 import { DatasetUtils, Room } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
+import JSZip from "jszip";
 
 const roomsHtmlFileName = "index.htm";
 
@@ -39,34 +40,89 @@ export class RoomsDatasetProcessor {
 
 		// Extract address data from table in index.htm
 		const roomsTable = this.findRoomsTable(roomsFileJSON);
-		const roomsTableData = this.parseRoomsTable(roomsTable as Element)
-		console.log(JSON.stringify(roomsTableData))
+		const roomsTableData = this.parseRoomsTable(roomsTable as Element);
+
+		// Check valid data
+		if (roomsTableData.length === 0) {
+			throw new InsightError("No valid rooms!");
+		}
 
 		// Parse room files deeper in zip
+		const allRooms = await this.parseRoomsFiles(unzipped, roomsTableData);
 
-		// TODO: finish implementation
-		return [];
+		return allRooms;
 	}
 
+	/**
+	 *
+	 * @param unzipped the unzipped root folder
+	 * @param addresses room addresses from index.htm
+	 * @returns valid rooms from files
+	 */
+	private static async parseRoomsFiles(unzipped: JSZip, addresses: RoomsRow[]): Promise<Room[]> {
+		const folder = unzipped.folder("campus/discover/buildings-and-classrooms");
+		if (folder === null) {
+			throw new InsightError("Rooms folder not found.");
+		}
+		const rooms: Room[] = [];
+		const files = await Promise.all(Object.values(folder.files).map(async (x) => x.async("string")));
+		for (const file of files) {
+			const fileContentParsed = parse(file);
+			const roomData = this.parseSingleRoomFile(fileContentParsed, addresses);
+			if (roomData !== undefined) {
+				rooms.push(roomData);
+			}
+		}
+		return rooms;
+	}
+
+	/**
+	 *
+	 * @param content parsed file content
+	 * @param addresses rooms and their addresses
+	 * @returns room from file or undefined if file is invalid
+	 */
+	private static parseSingleRoomFile(content: ParseDoc, addresses: RoomsRow[]): Room | undefined {
+		try {
+			const roomsTable = this.findRoomsTable(content) as Element;
+			for (const row of roomsTable.childNodes) {
+				const rowCast = row as Element;
+				// TODO
+			}
+		} catch (e) {
+			if (e instanceof InsightError) {
+				return undefined;
+			}
+			throw e;
+		}
+	}
+
+	/**
+	 *
+	 * @param roomsTable the rooms table in index.htm
+	 * @returns valid rooms rows with info
+	 */
 	private static parseRoomsTable(roomsTable: Element): RoomsRow[] {
-		return roomsTable.childNodes
-			// Ensure child nodes present and cast
-			.map((trChildUncast) => {
-				const trChildCast = trChildUncast as Element;
-				if (trChildCast.childNodes === undefined) {
-					return undefined;
-				}
-				return trChildCast;
-			})
-			// Remove ones without child nodes
-			.filter((child) => child !== undefined)
-			// Remove ones that aren't <tr>
-			.filter((child) => child?.nodeName === "tr")
-			// Map to undefined if internal format wrong, otherwise map to RoomsRow
-			.map((trChild) => this.parseSingleTr(trChild!!))
-			// Remove invalid <tr>'s
-			.filter(x => x !== undefined)
-			.map(x => x!!);
+		return (
+			roomsTable.childNodes
+				// Ensure child nodes present and cast
+				.map((trChildUncast) => {
+					const trChildCast = trChildUncast as Element;
+					if (trChildCast.childNodes === undefined) {
+						return undefined;
+					}
+					return trChildCast;
+				})
+				// Remove ones without child nodes
+				.filter((child) => child !== undefined)
+				// Remove ones that aren't <tr>
+				.filter((child) => child?.nodeName === "tr")
+				// Map to undefined if internal format wrong, otherwise map to RoomsRow
+				.map((trChild) => this.parseSingleTr(trChild!!))
+				// Remove invalid <tr>'s
+				.filter((x) => x !== undefined)
+				.map((x) => x!!)
+		);
 	}
 
 	/**
