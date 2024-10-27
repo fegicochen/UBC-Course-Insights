@@ -59,8 +59,11 @@ export class RoomsDatasetProcessor {
 			throw new InsightError("No valid rooms!");
 		}
 
+		// Get building info
+		const buildingInfoMap = this.createAllBuildingInfo(roomsTableData);
+
 		// Parse room files deeper in zip
-		const allRooms = await this.parseRoomsFiles(unzipped, roomsTableData);
+		const allRooms = await this.parseRoomsFiles(unzipped, buildingInfoMap);
 
 		return allRooms;
 	}
@@ -72,36 +75,38 @@ export class RoomsDatasetProcessor {
 	 * @returns valid rooms from files
 	 */
 	private static async parseRoomsFiles(unzipped: JSZip, buildingInfoMap: BuildingInfoMap): Promise<Room[]> {
-		let rooms: Room[] = [];
 		const files = await Promise.all(
 			Object.values(unzipped.files)
 				.filter((x) => x.name.startsWith("campus/discover/buildings-and-classrooms"))
 				.map(async (x) => ({ name: x.name, data: await x.async("string") }))
 		);
-		for (const file of files) {
-			const fileContentParsed = parse(file.data);
-			const fileRoomCode = file.name
-				.replaceAll(".htm", "")
-				.split("/")
-				.find((_, idx, arr) => idx === arr.length - 1)!!;
-			if (!buildingInfoMap.has(fileRoomCode)) {
-				console.log("Building info doesn't have: " + fileRoomCode);
-				continue;
-			}
-			const buildingInfo = await buildingInfoMap.get(fileRoomCode)!!;
-			if (buildingInfo === undefined) {
-				console.log("Building info request failed: " + fileRoomCode);
-				continue;
-			}
-			const roomData = this.parseSingleRoomFile(fileRoomCode, fileContentParsed, buildingInfo);
-			if (roomData !== undefined) {
-				console.log(roomData[0]);
-				rooms = rooms.concat(roomData);
-			}
-		}
-		return rooms;
+		const parsedRoomLists = await Promise.all(
+			files.map(async (file): Promise<Room[]> => {
+				const fileContentParsed = parse(file.data);
+				const fileRoomCode = file.name
+					.replaceAll(".htm", "")
+					.split("/")
+					.find((_, idx, arr) => idx === arr.length - 1)!!;
+				if (!buildingInfoMap.has(fileRoomCode)) {
+					console.log("Building info doesn't have: " + fileRoomCode);
+					return [];
+				}
+				const buildingInfo = await buildingInfoMap.get(fileRoomCode)!!;
+				if (buildingInfo === undefined) {
+					console.log("Building info request failed: " + fileRoomCode);
+					return [];
+				}
+				return this.parseSingleRoomFile(fileRoomCode, fileContentParsed, buildingInfo);
+			})
+		);
+		return parsedRoomLists.flat();
 	}
 
+	/**
+	 *
+	 * @param addresses addresses, titles, and room codes from index.htm
+	 * @returns the building info map
+	 */
 	private static createAllBuildingInfo(addresses: RoomsRow[]): BuildingInfoMap {
 		const map = new Map<string, Promise<BuildingInfo | undefined>>();
 
@@ -155,6 +160,12 @@ export class RoomsDatasetProcessor {
 		return rooms;
 	}
 
+	/**
+	 *
+	 * @param tr the tr element inside the table body contianing the tds to look for attributes on
+	 * @param buildingInfo the building info for the current building
+	 * @returns a room from this tr and the given building info
+	 */
 	private static parseSingleRoomInRoomFile(tr: Element, buildingInfo: BuildingInfo): Room | undefined {
 		// Child is a tr containing the tds with data
 		let seats: number | undefined;
