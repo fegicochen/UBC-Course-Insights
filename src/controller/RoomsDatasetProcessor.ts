@@ -8,7 +8,7 @@ import {
 import { DatasetUtils, Room } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
 import JSZip from "jszip";
-import { Attribute } from "parse5/dist/common/token";
+import * as http from "node:http";
 
 const roomsHtmlFileName = "index.htm";
 
@@ -20,12 +20,10 @@ interface RoomsRow {
 	address: string;
 }
 
-interface BuildingInfo {
-	title: string;
-	code: string;
-	address: string;
-	lat: number;
-	lon: number;
+interface GeoResponse {
+	lat?: number;
+	lon?: number;
+	error?: string;
 }
 
 export class RoomsDatasetProcessor {
@@ -396,5 +394,34 @@ export class RoomsDatasetProcessor {
 			}
 		}
 		return undefined;
+	}
+
+	/**
+	 *
+	 * @param address the unzipped root folder
+	 * @param address room addresses from index.htm
+	 * @returns GeoResponse object that has lat and lon or error
+	 */
+	public static async getGeoLocation(
+		address: string
+	): Promise<{ lat: number | undefined; lon: number | undefined; error: string | undefined }> {
+		const encodedAddress = encodeURIComponent(address);
+		const url = `http://cs310.students.cs.ubc.ca:11316/api/v1/project_team085/${encodedAddress}`;
+
+		const response = await (async (): Promise<any> =>
+			new Promise((resolve, reject) => {
+				const req = http.get(url);
+				req.on("response", (res) => resolve(res));
+
+				req.on("error", (err) => reject(err));
+
+				req.end();
+			}))();
+
+		let body = "";
+		for await (const chunk of response) {
+			body += chunk;
+		}
+		return JSON.parse(body);
 	}
 }
