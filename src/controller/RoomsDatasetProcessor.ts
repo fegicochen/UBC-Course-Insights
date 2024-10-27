@@ -9,8 +9,17 @@ import { DatasetUtils, Room } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
 import JSZip from "jszip";
 import * as http from "node:http";
+import { Attribute } from "parse5/dist/common/token";
 
 const roomsHtmlFileName = "index.htm";
+
+interface BuildingInfo {
+	title: string;
+	code: string;
+	address: string;
+	lat: number;
+	lon: number;
+}
 
 type BuildingInfoMap = Map<string, Promise<BuildingInfo | undefined>>;
 
@@ -63,6 +72,8 @@ export class RoomsDatasetProcessor {
 		// Parse room files deeper in zip
 		const allRooms = await this.parseRoomsFiles(unzipped, buildingInfoMap);
 
+		console.log(allRooms[10]);
+
 		return allRooms;
 	}
 
@@ -86,15 +97,15 @@ export class RoomsDatasetProcessor {
 					.split("/")
 					.find((_, idx, arr) => idx === arr.length - 1)!!;
 				if (!buildingInfoMap.has(fileRoomCode)) {
-					console.log("Building info doesn't have: " + fileRoomCode);
+					// console.log("Building info doesn't have: " + fileRoomCode);
 					return [];
 				}
 				const buildingInfo = await buildingInfoMap.get(fileRoomCode)!!;
 				if (buildingInfo === undefined) {
-					console.log("Building info request failed: " + fileRoomCode);
+					// console.log("Building info request failed: " + fileRoomCode);
 					return [];
 				}
-				return this.parseSingleRoomFile(fileRoomCode, fileContentParsed, buildingInfo);
+				return this.parseSingleRoomFile(fileContentParsed, buildingInfo);
 			})
 		);
 		return parsedRoomLists.flat();
@@ -135,12 +146,12 @@ export class RoomsDatasetProcessor {
 	 * @param addresses rooms and their addresses
 	 * @returns room from file or undefined if file is invalid
 	 */
-	private static parseSingleRoomFile(roomCode: string, content: ParseDoc, buildingInfo: BuildingInfo): Room[] {
+	private static parseSingleRoomFile(content: ParseDoc, buildingInfo: BuildingInfo): Room[] {
 		let roomsTable: Element;
 		try {
 			roomsTable = this.findRoomsTable(content);
 		} catch (_e) {
-			console.log("Could not find rooms table in: " + roomCode);
+			// console.log("Could not find rooms table in: " + roomCode);
 			return [];
 		}
 		const rooms: Room[] = [];
@@ -198,7 +209,7 @@ export class RoomsDatasetProcessor {
 			fullname: buildingInfo.title,
 			shortname: buildingInfo.code,
 			href: href?.trim()!!,
-			name: buildingInfo.code + roomNumber?.trim()!!,
+			name: buildingInfo.code + "_" + roomNumber?.trim()!!,
 		};
 	}
 
@@ -402,9 +413,7 @@ export class RoomsDatasetProcessor {
 	 * @param address room addresses from index.htm
 	 * @returns GeoResponse object that has lat and lon or error
 	 */
-	public static async getGeoLocation(
-		address: string
-	): Promise<{ lat: number | undefined; lon: number | undefined; error: string | undefined }> {
+	public static async getGeoLocation(address: string): Promise<GeoResponse> {
 		const encodedAddress = encodeURIComponent(address);
 		const url = `http://cs310.students.cs.ubc.ca:11316/api/v1/project_team085/${encodedAddress}`;
 
