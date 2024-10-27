@@ -12,6 +12,7 @@ import { clearDisk, getContentFromArchives, loadTestQuery } from "../TestUtil";
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { QueryEngine } from "../../src/controller/QueryEngine";
+import { RoomsDatasetProcessor } from "../../src/controller/RoomsDatasetProcessor";
 
 use(chaiAsPromised);
 
@@ -906,6 +907,21 @@ describe("DatasetUtils", () => {
 				expect.fail("Should have failed");
 			} catch (e) {
 				expect(e).to.be.instanceOf(InsightError);
+			}
+		});
+	});
+
+	describe("getGeoLocation", () => {
+		afterEach(async function () {
+			await clearDisk();
+		});
+
+		it("check valid GeoLocation", async () => {
+			try {
+				const response = await RoomsDatasetProcessor.getGeoLocation("6245 Agronomy Road V6T 1Z4");
+				expect(response).to.deep.equal({ lat: 49.26125, lon: -123.24807 });
+			} catch (_e) {
+				expect.fail("Should not throw error.");
 			}
 		});
 	});
