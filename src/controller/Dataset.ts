@@ -39,7 +39,7 @@ export interface Room {
 	lon: number;
 	seats: number;
 	type: string;
-	furniture: StorageManager;
+	furniture: string;
 	href: string;
 }
 
