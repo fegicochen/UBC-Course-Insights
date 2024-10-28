@@ -32,6 +32,7 @@ export class QueryEngine {
 		const rootStructure = DatasetUtils.requireExactKeys(query, [
 			[Keywords.Options, true],
 			[Keywords.Body, true],
+			[Keywords.Transformations, false],
 		]);
 
 		// Split into processing body and options
@@ -323,5 +324,27 @@ export class QueryEngine {
 		} else {
 			throw new InsightError("Unexpected key type: " + type + ", " + bodyEntries[0][0]);
 		}
+	}
+
+	/**
+	 *
+	 * @param data the array of objects to be grouped
+	 * @param groupKeys the keys on which to base the grouping
+	 * @returns a map where each key is a unique string made up of values from groupkeys
+	 */
+	private groupData(data: any[], groupKeys: string[]): Map<string, any[]> {
+		const grouped = new Map<string, any[]>();
+
+		for (const item of data) {
+			// Create a unique key based on groupKeys values
+			const key = groupKeys.map((keyofgroup) => item[keyofgroup]).join("-");
+
+			if (!grouped.has(key)) {
+				grouped.set(key, []);
+			}
+			grouped.get(key)!.push(item);
+		}
+
+		return grouped;
 	}
 }

@@ -70,6 +70,7 @@ export interface InsightFacadeKey {
 export const Keywords = {
 	Body: "WHERE",
 	Options: "OPTIONS",
+	Transformations: "TRANSFORMATIONS",
 	Filter: {
 		Logic: {
 			And: "AND",
@@ -87,8 +88,21 @@ export const Keywords = {
 			Not: "NOT",
 		},
 	},
+	Direction: {
+		Up: "UP",
+		Down: "DOWN",
+	},
+	ApplyToken: {
+		Max: "MAX",
+		Min: "MIN",
+		Avg: "AVG",
+		Count: "COUNT",
+		Sum: "SUM",
+	},
 	Columns: "COLUMNS",
 	Order: "ORDER",
+	Group: "GROUP",
+	Apply: "APPLY",
 };
 
 export interface OptionsState {
