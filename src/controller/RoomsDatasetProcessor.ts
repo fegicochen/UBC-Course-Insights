@@ -161,7 +161,6 @@ export class RoomsDatasetProcessor {
 				}
 			} catch (_e) {
 				// Moving on ...
-				console.log(_e);
 			}
 		});
 		return rooms;
@@ -209,7 +208,6 @@ export class RoomsDatasetProcessor {
 			href: href?.trim()!!,
 			name: buildingInfo.code + "_" + roomNumber?.trim()!!,
 		};
-
 	}
 	/**
 	 *
