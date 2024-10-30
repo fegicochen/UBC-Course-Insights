@@ -14,6 +14,17 @@ export enum DatasetId {
 	Pass = "pass",
 	Fail = "fail",
 	Audit = "audit",
+	// Lat = "lat",
+	// Lon = "lon",
+	// Seats = "seats",
+	// Fullname = "fullname",
+	// Shortname = "shortname",
+	// Number = "number",
+	// Name = "name",
+	// Address = "address",
+	// Type = "type",
+	// Furniture = "furniture",
+	// Href = "href",
 }
 
 export interface Section {
@@ -60,8 +71,31 @@ export interface DatasetList {
 
 export type DatasetsProvider = () => DatasetList;
 
-export const MFields = [DatasetId.Avg, DatasetId.Pass, DatasetId.Fail, DatasetId.Audit, DatasetId.Year];
-export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, DatasetId.Title, DatasetId.Uuid];
+export const MFields = [
+	DatasetId.Avg,
+	DatasetId.Pass,
+	DatasetId.Fail,
+	DatasetId.Audit,
+	DatasetId.Year,
+	// DatasetId.Lat,
+	// DatasetId.Lon,
+	// DatasetId.Seats,
+];
+export const SFields = [
+	DatasetId.Dept,
+	DatasetId.Id,
+	DatasetId.Instructor,
+	DatasetId.Title,
+	DatasetId.Uuid,
+	// DatasetId.Fullname, // Added for rooms
+	// DatasetId.Shortname, // Added for rooms
+	// DatasetId.Number, // Added for rooms
+	// DatasetId.Name, // Added for rooms
+	// DatasetId.Address, // Added for rooms
+	// DatasetId.Type, // Added for rooms
+	// DatasetId.Furniture, // Added for rooms
+	// DatasetId.Shortname, // Added for rooms
+];
 
 export interface InsightFacadeKey {
 	idstring: string;
@@ -114,7 +148,10 @@ export interface Transformations {
 }
 
 export interface OptionsState {
-	order: InsightFacadeKey | undefined;
+	order?: {
+		dir: "UP" | "DOWN";
+		keys: string[];
+	};
 	columns: InsightFacadeKey[];
 	datasetId: string;
 }

@@ -20,14 +20,13 @@ export class OptionsProcessor {
 
 		const [columnsForState, datasetIdForState] = this.parseColumns(optionsStructure);
 		this.datasetId = datasetIdForState;
-		const orderForState = this.processOrder(optionsStructure, datasetIdForState);
 
-		if (
-			orderForState !== undefined &&
-			columnsForState.find((col) => col.field === orderForState?.field) === undefined
-		) {
-			throw new InsightError("Order field not selected in columns.");
-		}
+		// Create a set of column keys for validation
+		const columnsSet = new Set(
+			columnsForState.map((col) => (col.idstring ? `${col.idstring}_${col.field}` : col.field))
+		);
+
+		const orderForState = this.processOrder(optionsStructure, datasetIdForState, columnsSet);
 
 		return {
 			columns: columnsForState,
@@ -53,7 +52,6 @@ export class OptionsProcessor {
 
 			// Check if column is an apply key
 			if (this.applyKeys.includes(column)) {
-				// Store apply key with an empty idstring since it doesn’t belong to a dataset
 				columnsForState.push({ idstring: "", field: column as any });
 			} else {
 				// Try parsing as a dataset key (mkey or skey)
@@ -72,15 +70,12 @@ export class OptionsProcessor {
 			}
 		});
 
-		// Ensure at least one valid dataset key or apply key is selected
-		if (
-			columnsForState.length === 0 ||
-			(datasetIdForState === undefined && columnsForState.every((col) => col.idstring === ""))
-		) {
+		// Ensure at least one valid dataset key is selected
+		if (columnsForState.length === 0 || datasetIdForState === undefined) {
 			throw new InsightError("Query must select at least one valid column.");
 		}
 
-		return [columnsForState, datasetIdForState || ""];
+		return [columnsForState, datasetIdForState];
 	}
 
 	/**
@@ -92,22 +87,54 @@ export class OptionsProcessor {
 	 */
 	private processOrder(
 		optionsStructure: Map<string, unknown>,
-		datasetIdForState: string
-	): InsightFacadeKey | undefined {
-		let orderForState: InsightFacadeKey | undefined;
+		datasetIdForState: string,
+		columnsSet: Set<string>
+	): { dir: "UP" | "DOWN"; keys: string[] } | undefined {
 		if (optionsStructure.has(Keywords.Order) && optionsStructure.get(Keywords.Order) !== undefined) {
-			const order = DatasetUtils.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
-			const orderKey = DatasetUtils.parseMOrSKey(order);
-			if (orderKey !== undefined) {
-				orderForState = orderKey;
-				if (orderKey.idstring !== datasetIdForState) {
-					throw new InsightError("Multiple datasets used in query. Only one allowed.");
+			const orderRaw = optionsStructure.get(Keywords.Order);
+			if (typeof orderRaw === "string") {
+				// Simple ORDER syntax
+				const orderKey = this.parseOrderKey(orderRaw, datasetIdForState, columnsSet);
+				return { dir: "UP", keys: [orderKey] };
+			} else if (typeof orderRaw === "object" && orderRaw !== null) {
+				// Complex ORDER syntax
+				const orderObj = orderRaw as any;
+				const dir = orderObj.dir;
+				const keys = orderObj.keys;
+
+				if ((dir === "UP" || dir === "DOWN") && Array.isArray(keys) && keys.length > 0) {
+					// Validate that all keys are in columns
+					keys.forEach((key: string) => {
+						this.parseOrderKey(key, datasetIdForState, columnsSet);
+					});
+					return { dir, keys };
+				} else {
+					throw new InsightError("Invalid ORDER format.");
 				}
 			} else {
-				throw new InsightError("Order is not a valid ID string: " + order + ".");
+				throw new InsightError("ORDER must be a string or an object.");
 			}
 		}
-		return orderForState;
+		return undefined;
+	}
+
+	private parseOrderKey(key: string, datasetIdForState: string, columnsSet: Set<string>): string {
+		if (!columnsSet.has(key)) {
+			throw new InsightError(`Sort key ${key} must be included in COLUMNS.`);
+		}
+		// Check if key is an apply key
+		if (this.applyKeys.includes(key)) {
+			return key;
+		}
+		const orderKey = DatasetUtils.parseMOrSKey(key);
+		if (orderKey !== undefined) {
+			if (orderKey.idstring !== datasetIdForState) {
+				throw new InsightError("Multiple datasets used in query. Only one allowed.");
+			}
+			return key;
+		} else {
+			throw new InsightError(`Order key ${key} is not a valid key.`);
+		}
 	}
 
 	/**

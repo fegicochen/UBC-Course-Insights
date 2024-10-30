@@ -93,21 +93,48 @@ export class QueryEngine {
 	 * @returns an ordered list of sections based on this.options ordering
 	 */
 	private orderResults(sections: Section[]): Section[] {
-		// Sort result data
-		if (this.options!!.order !== undefined) {
-			const order = this.options!!.order!!;
-			let comparator: (a: Section, b: Section) => number;
-			if (DatasetUtils.isMKey(order.field)) {
-				comparator = (a, b): number => (a[order.field] as number) - (b[order.field] as number);
-			} else if (DatasetUtils.isSKey(order.field)) {
-				comparator = (a, b): number => (a[order.field] as string).localeCompare(b[order.field] as string);
-			} else {
-				throw new InsightError("Invalid key type! " + order.field);
-			}
-			return sections.reverse().sort(comparator);
-		} else {
-			return sections;
+		if (this.options!.order) {
+			const { dir, keys } = this.options!.order!;
+			const direction = dir === "UP" ? 1 : -1;
+
+			sections.sort((a, b) => {
+				for (const key of keys) {
+					const aValue = this.extractValue(a, key);
+					const bValue = this.extractValue(b, key);
+
+					let comparison = 0;
+
+					if (typeof aValue === "number" && typeof bValue === "number") {
+						comparison = aValue - bValue;
+					} else if (typeof aValue === "string" && typeof bValue === "string") {
+						if (aValue < bValue) {
+							comparison = -1;
+						} else if (aValue > bValue) {
+							comparison = 1;
+						} else {
+							comparison = 0;
+						}
+					} else {
+						throw new InsightError();
+					}
+
+					if (comparison !== 0) {
+						return comparison * direction;
+					}
+				}
+				return 0;
+			});
 		}
+
+		return sections;
+	}
+
+	// Helper method to extract the value from a section based on the key
+	private extractValue(section: Section, key: string): any {
+		const fieldName = key.startsWith(this.options!.datasetId + "_")
+			? key.substring(this.options!.datasetId.length + 1)
+			: key;
+		return (section as SectionWithDynamicKeys)[fieldName];
 	}
 
 	/**

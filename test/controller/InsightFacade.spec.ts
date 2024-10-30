@@ -13,6 +13,7 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { QueryEngine } from "../../src/controller/QueryEngine";
 import { RoomsDatasetProcessor } from "../../src/controller/RoomsDatasetProcessor";
+// import * as fs from "fs";
 
 use(chaiAsPromised);
 
@@ -496,6 +497,14 @@ describe("InsightFacade", function () {
 			let result: InsightResult[];
 			try {
 				result = await facade.performQuery(input);
+
+				// if (result.length !== expected.length) {
+				// 	console.log(`Expected length: ${expected.length}, Actual length: ${result.length}`);
+				// }
+				// Log expected and actual results
+				// fs.writeFileSync("expected_result.json", JSON.stringify(expected, null, 2));
+				// fs.writeFileSync("actual_result.json", JSON.stringify(result, null, 2));
+
 				expect(result.length).to.equal(expected.length);
 				expect(result).deep.equals(expected);
 			} catch (err) {
@@ -572,6 +581,14 @@ describe("InsightFacade", function () {
 		it("[valid/applyCase2.json] calculate the average of sections avg grouped by dept", checkQuery);
 		it("[valid/applyCase3.json] calculate the average of sections avg grouped by dept", checkQuery);
 		it("[valid/sort_case.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase2.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase3.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase4.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase5.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase6.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase7.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase8.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase9.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 
 		it("[invalid/missing_where.json] Query missing WHERE", checkQuery);
 		it("[invalid/missing_options.json] Query missing OPTIONS", checkQuery);
