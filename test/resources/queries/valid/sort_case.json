@@ -7,16 +7,10 @@
 			}
 		},
 		"OPTIONS": {
-			"COLUMNS": [
-				"sections_dept",
-				"sections_id",
-				"sections_avg"
-			],
+			"COLUMNS": ["sections_dept", "sections_id", "sections_avg"],
 			"ORDER": {
 				"dir": "DOWN",
-				"keys": [
-					"sections_avg"
-				]
+				"keys": ["sections_avg"]
 			}
 		}
 	},

@@ -6,10 +6,14 @@ import {
 	Keywords,
 	OptionsState,
 	maxResults,
+	Transformations,
+	ApplyRule,
+	SectionWithDynamicKeys,
 } from "./Dataset";
 import { FilterBySection, FilterOperation, FilterStrategy } from "./Filter";
 import { InsightError, InsightResult, ResultTooLargeError } from "./IInsightFacade";
-// import Decimal from "decimal.js";
+import { calculateMax, calculateMin, calculateSum, calculateCount, calculateAvg } from "./Calculations";
+import { OptionsProcessor } from "./OptionsProcessor";
 
 export class QueryEngine {
 	private readonly datasets: DatasetsProvider;
@@ -22,27 +26,41 @@ export class QueryEngine {
 	/**
 	 *
 	 * @param query The query object in accordance with IInsightFacade.performQuery
-	 * @throws InsightError if query is improprly formed
+	 * @throws InsightError if query is improperly formed
 	 */
 	public async processQuery(queryRaw: unknown): Promise<InsightResult[]> {
-		// Ensure query is obect and update type
 		const query = DatasetUtils.checkIsObject("Query", queryRaw);
-
-		// Ensure only keys are body and options
 		const rootStructure = DatasetUtils.requireExactKeys(query, [
 			[Keywords.Options, true],
 			[Keywords.Body, true],
 			[Keywords.Transformations, false],
 		]);
 
-		// Split into processing body and options
-		this.options = this.processOptions(rootStructure.get(Keywords.Options));
+		let applyKeys: string[] = [];
+
+		if (rootStructure.has(Keywords.Transformations)) {
+			const transformations = rootStructure.get(Keywords.Transformations) as Transformations;
+			applyKeys = this.extractApplyKeys(transformations.APPLY);
+		}
+
+		const optionsProcessor = new OptionsProcessor(rootStructure.get(Keywords.Options), applyKeys);
+		this.options = optionsProcessor.processOptions();
+
 		const sections = this.processBody(rootStructure.get(Keywords.Body));
 
-		// Sort results if required
-		const sectionsOrdered = this.orderResults(sections);
+		let transformedSections = sections;
 
-		// Return only data requested
+		if (rootStructure.has(Keywords.Transformations)) {
+			const transformations = rootStructure.get(Keywords.Transformations) as Transformations;
+			transformedSections = this.applyTransformations(sections, transformations);
+		}
+
+		if (transformedSections.length > maxResults) {
+			throw new ResultTooLargeError();
+		}
+
+		const sectionsOrdered = this.orderResults(transformedSections);
+
 		return sectionsOrdered.map((s) => this.sectionToInsightResult(s));
 	}
 
@@ -53,9 +71,18 @@ export class QueryEngine {
 	 */
 	private sectionToInsightResult(section: Section): InsightResult {
 		const result: InsightResult = {};
-		this.options!!.columns.forEach((column) => {
-			const sectionValue = section[column.field];
-			result[this.options!!.datasetId + "_" + column.field] = sectionValue;
+		const sectionWithKeys = section as SectionWithDynamicKeys;
+
+		this.options!.columns.forEach((column) => {
+			let value: any;
+			if (column.idstring === "") {
+				value = sectionWithKeys[column.field];
+				result[column.field] = value;
+			} else {
+				const fieldName = column.field;
+				value = sectionWithKeys[fieldName];
+				result[column.idstring + "_" + column.field] = value;
+			}
 		});
 		return result;
 	}
@@ -87,99 +114,6 @@ export class QueryEngine {
 	 * @param query query object to take body from.
 	 * @throws InsightError if options are malformed.
 	 */
-	private processOptions(optionsRaw: unknown): OptionsState {
-		// Retrieve options and ensure it is JSON
-		const options = DatasetUtils.checkIsObject(Keywords.Options, optionsRaw);
-
-		// Break down by property name
-		const optionsStructure = DatasetUtils.requireExactKeys(options, [
-			[Keywords.Columns, true],
-			[Keywords.Order, false],
-		]);
-
-		const [columnsForState, datasetIdForState] = this.parseColumns(optionsStructure);
-		const orderForState = this.processOrder(optionsStructure, datasetIdForState);
-		// Ensure order field is selected in columns
-		if (
-			orderForState !== undefined &&
-			columnsForState.find((col) => col.field === orderForState?.field) === undefined
-		) {
-			throw new InsightError("Order field not selected in columns.");
-		}
-
-		return {
-			columns: columnsForState,
-			order: orderForState,
-			datasetId: datasetIdForState,
-		};
-	}
-
-	/**
-	 *
-	 * @param optionsStructure the parsed key-value structure of data in the options field
-	 * @returns parsed columns as InsightFacadeKeys and the dataset id used in the query
-	 */
-	private parseColumns(optionsStructure: Map<string, unknown>): [InsightFacadeKey[], string] {
-		let columnsForState: InsightFacadeKey[] = [];
-		let datasetIdForState: string | undefined;
-
-		// Process columns key list
-		const columns = DatasetUtils.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
-		columns.forEach((columnRaw) => {
-			// Ensure column key has proper formatting
-			const column = DatasetUtils.checkIsString(Keywords.Columns, columnRaw);
-			const columnKey = DatasetUtils.parseMOrSKey(column);
-			if (columnKey === undefined) {
-				throw new InsightError("Improper column key formatting: " + column + ".");
-			}
-			// Ensure multiple datasets not used in column keys
-			if (datasetIdForState !== undefined && datasetIdForState !== columnKey.idstring) {
-				throw new InsightError("Multiple datasets used in query. Only one allowed.");
-			} else {
-				datasetIdForState = columnKey.idstring;
-			}
-			columnsForState = columnsForState.concat(columnKey);
-		});
-
-		// Query must have columns selected
-		if (datasetIdForState === undefined) {
-			throw new InsightError("Query must select at least one column.");
-		}
-
-		return [columnsForState, datasetIdForState];
-	}
-
-	/**
-	 *
-	 * @param optionsStructure the parsed key-value structure of data in the options field
-	 * @returns an order if present, otherwise undefined
-	 */
-	private processOrder(
-		optionsStructure: Map<string, unknown>,
-		datasetIdForState: string
-	): InsightFacadeKey | undefined {
-		let orderForState: InsightFacadeKey | undefined;
-		if (optionsStructure.has(Keywords.Order) && optionsStructure.get(Keywords.Order) !== undefined) {
-			const order = DatasetUtils.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
-			const orderKey = DatasetUtils.parseMOrSKey(order);
-			if (orderKey !== undefined) {
-				orderForState = orderKey;
-				if (orderKey.idstring !== datasetIdForState) {
-					throw new InsightError("Mutliple datasets used in query. Only one allowed.");
-				}
-			} else {
-				throw new InsightError("Order is not a valid ID string: " + order + ".");
-			}
-		}
-		return orderForState;
-	}
-
-	/**
-	 *
-	 * @param query query object to take body from.
-	 * @param options the options state computed
-	 * @throws InsightError if body is malformed.
-	 */
 	private processBody(bodyRaw: unknown): Section[] {
 		// Find dataset
 		const dataset = DatasetUtils.findDataset(this.datasets, this.options!!.datasetId);
@@ -195,10 +129,6 @@ export class QueryEngine {
 
 		// Execute filter function
 		const sections = filterFunction.apply();
-
-		if (sections.length > maxResults) {
-			throw new ResultTooLargeError();
-		}
 
 		return sections;
 	}
@@ -336,8 +266,16 @@ export class QueryEngine {
 		const grouped = new Map<string, any[]>();
 
 		for (const item of data) {
-			// Create a unique key based on groupKeys values
-			const key = groupKeys.map((keyofgroup) => item[keyofgroup]).join("-");
+			const itemWithKeys = item as SectionWithDynamicKeys;
+			const key = groupKeys
+				.map((keyofgroup) => {
+					// Remove dataset ID prefix from group key if present
+					const fieldName = keyofgroup.startsWith(this.options!.datasetId + "_")
+						? keyofgroup.substring(this.options!.datasetId.length + 1)
+						: keyofgroup;
+					return itemWithKeys[fieldName];
+				})
+				.join("-");
 
 			if (!grouped.has(key)) {
 				grouped.set(key, []);
@@ -346,5 +284,77 @@ export class QueryEngine {
 		}
 
 		return grouped;
+	}
+
+	private applyTransformations(data: any[], transformations: Transformations): any[] {
+		const { GROUP, APPLY } = transformations;
+		const groupedData = this.groupData(data, GROUP);
+
+		const results: any[] = [];
+		for (const [, items] of groupedData.entries()) {
+			const result = this.initializeGroupResult(GROUP, items);
+
+			// Process each APPLY rule
+			for (const applyRule of APPLY) {
+				this.processApplyRule(applyRule, items, result);
+			}
+
+			results.push(result);
+		}
+
+		return results;
+	}
+
+	// Initializes the result object with group keys
+	private initializeGroupResult(GROUP: string[], items: any[]): any {
+		const result: any = {};
+		const itemWithKeys = items[0] as SectionWithDynamicKeys;
+		GROUP.forEach((groupKey) => {
+			// Remove dataset ID prefix from group key if present
+			const fieldName = groupKey.startsWith(this.options!.datasetId + "_")
+				? groupKey.substring(this.options!.datasetId.length + 1)
+				: groupKey;
+			// Store the field in result without dataset ID prefix
+			result[fieldName] = itemWithKeys[fieldName];
+		});
+		return result;
+	}
+
+	// Processes a single APPLY rule and modifies the result object
+	private processApplyRule(applyRule: ApplyRule, items: any[], result: any): void {
+		const applyKey = Object.keys(applyRule)[0];
+		const applyObject = applyRule[applyKey];
+		const [operation, field] = Object.entries(applyObject)[0];
+
+		// Remove dataset ID prefix from field name if present
+		const fieldName = field.startsWith(this.options!.datasetId + "_")
+			? field.substring(this.options!.datasetId.length + 1)
+			: field;
+
+		const values = items.map((item) => (item as SectionWithDynamicKeys)[fieldName]);
+
+		switch (operation) {
+			case Keywords.ApplyToken.Max:
+				result[applyKey] = calculateMax(values);
+				break;
+			case Keywords.ApplyToken.Min:
+				result[applyKey] = calculateMin(values);
+				break;
+			case Keywords.ApplyToken.Sum:
+				result[applyKey] = calculateSum(values);
+				break;
+			case Keywords.ApplyToken.Count:
+				result[applyKey] = calculateCount(values);
+				break;
+			case Keywords.ApplyToken.Avg:
+				result[applyKey] = calculateAvg(values);
+				break;
+			default:
+				throw new InsightError(`Invalid APPLY token: ${operation}`);
+		}
+	}
+
+	private extractApplyKeys(applyArray: ApplyRule[]): string[] {
+		return applyArray.map((applyRule) => Object.keys(applyRule)[0]);
 	}
 }

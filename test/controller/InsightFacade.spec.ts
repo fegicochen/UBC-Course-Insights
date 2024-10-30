@@ -568,8 +568,10 @@ describe("InsightFacade", function () {
 		it("[valid/simple.json] SELECT dept, avg WHERE avg > 97", checkQuery);
 		it("[valid/validEverything.json] valid everything", checkQuery);
 		// Tests for apply and sort in C2
+		it("[valid/applyCase1.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applyCase2.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applyCase3.json] calculate the average of sections avg grouped by dept", checkQuery);
 		it("[valid/sort_case.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/apply_case.json] calculate the average of sections avg grouped by dept", checkQuery);
 
 		it("[invalid/missing_where.json] Query missing WHERE", checkQuery);
 		it("[invalid/missing_options.json] Query missing OPTIONS", checkQuery);

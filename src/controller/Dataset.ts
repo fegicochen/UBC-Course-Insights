@@ -28,6 +28,7 @@ export interface Section {
 	fail: number;
 	audit: number;
 }
+export type SectionWithDynamicKeys = Section & Record<string, any>;
 
 export interface Room {
 	fullname: string;
@@ -104,6 +105,13 @@ export const Keywords = {
 	Group: "GROUP",
 	Apply: "APPLY",
 };
+
+export type ApplyRule = Record<string, Record<string, string>>;
+
+export interface Transformations {
+	GROUP: string[];
+	APPLY: ApplyRule[];
+}
 
 export interface OptionsState {
 	order: InsightFacadeKey | undefined;

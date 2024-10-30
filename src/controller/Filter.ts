@@ -1,5 +1,5 @@
-import { SectionsDataset, InsightFacadeKey, maxResults, Section } from "./Dataset";
-import { InsightError, ResultTooLargeError } from "./IInsightFacade";
+import { SectionsDataset, InsightFacadeKey, Section } from "./Dataset";
+import { InsightError } from "./IInsightFacade";
 
 enum FilterName {
 	And,
@@ -65,9 +65,9 @@ class FilterOperationBySection implements FilterOperation {
 		const selected: Section[] = [];
 		for (const section of this.dataset.members) {
 			// Early abort if too many
-			if (selected.length > maxResults) {
-				throw new ResultTooLargeError();
-			}
+			// if (selected.length > maxResults) {
+			// 	throw new ResultTooLargeError();
+			// }
 			// Check section valid under filter
 			if (FilterOperationBySection.test(this, section)) {
 				selected.push(section);
