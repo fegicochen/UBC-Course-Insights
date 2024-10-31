@@ -13,7 +13,6 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { QueryEngine } from "../../src/controller/QueryEngine";
 import { RoomsDatasetProcessor } from "../../src/controller/RoomsDatasetProcessor";
-// import * as fs from "fs";
 
 use(chaiAsPromised);
 
@@ -502,8 +501,6 @@ describe("InsightFacade", function () {
 				// 	console.log(`Expected length: ${expected.length}, Actual length: ${result.length}`);
 				// }
 				// Log expected and actual results
-				// fs.writeFileSync("expected_result.json", JSON.stringify(expected, null, 2));
-				// fs.writeFileSync("actual_result.json", JSON.stringify(result, null, 2));
 
 				expect(result.length).to.equal(expected.length);
 				expect(result).deep.equals(expected);
