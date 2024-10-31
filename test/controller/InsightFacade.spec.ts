@@ -530,8 +530,8 @@ describe("InsightFacade", function () {
 			// Add the datasets to InsightFacade once.
 			// Will *fail* if there is a problem reading ANY dataset.
 			const loadDatasetPromises: Promise<string[]>[] = [
-				facade.addDataset("anything", sections, InsightDatasetKind.Sections),
-				facade.addDataset("hi", allRooms, InsightDatasetKind.Rooms),
+				facade.addDataset("sections", sections, InsightDatasetKind.Sections),
+				facade.addDataset("rooms", allRooms, InsightDatasetKind.Rooms),
 			];
 
 			try {
@@ -550,6 +550,7 @@ describe("InsightFacade", function () {
 		it("[valid/check_gt.json] SELECT dept, avg WHERE avg > 97", checkQuery);
 		it("[valid/no_results.json] No results", checkQuery);
 		it("[valid/check_eq.json] Check equal to (EQ)", checkQuery);
+		it("[valid/checkeq.json] Check equal to (EQ)", checkQuery);
 		it("[valid/check_lt.json] Check less than (LT)", checkQuery);
 		it("[valid/check_and.json] Check and (AND)", checkQuery);
 		it("[valid/check_is.json] Check is (IS)", checkQuery);
