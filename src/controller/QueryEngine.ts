@@ -111,7 +111,6 @@ export class QueryEngine {
 						if (aValue > bValue) {
 							return 1 * direction;
 						}
-						// If equal, continue to next sort key
 					} else if (typeof aValue === "string" && typeof bValue === "string") {
 						if (aValue < bValue) {
 							return -1 * direction;
@@ -119,12 +118,10 @@ export class QueryEngine {
 						if (aValue > bValue) {
 							return 1 * direction;
 						}
-						// If equal, continue to next sort key
 					} else {
 						throw new InsightError("Incompatible types for ordering.");
 					}
 				}
-				// All sort keys are equal; maintain original order
 				return 0;
 			});
 		}
@@ -134,11 +131,12 @@ export class QueryEngine {
 
 	// Helper method to extract the value from an item based on the key
 	private extractValue(item: any, key: string): any {
-		// 'any' because it can be Section or Room
-		const fieldName = key.startsWith(this.options!.datasetId + "_")
-			? key.substring(this.options!.datasetId.length + 1)
-			: key;
-		return item[fieldName];
+		const datasetPrefix = this.options!.datasetKind + "_";
+		if (key.startsWith(datasetPrefix)) {
+			const fieldName = key.substring(datasetPrefix.length);
+			return item[fieldName];
+		}
+		return item[key];
 	}
 
 	/**
@@ -157,7 +155,7 @@ export class QueryEngine {
 
 		// Extract dataset kind from the first column
 		const firstColumn = columns[0];
-		const datasetKind = firstColumn.kind; // Changed from 'idstring' to 'kind'
+		const datasetKind = firstColumn.kind;
 		const dataset = DatasetUtils.findDatasetByKind(this.datasets, datasetKind);
 
 		if (dataset === undefined) {
@@ -290,7 +288,7 @@ export class QueryEngine {
 		}
 
 		// Check for multi datasets used
-		if (this.options!.datasetId !== key.kind) {
+		if (this.options!.datasetKind !== key.kind) {
 			throw new InsightError("Only one dataset can be used in a query.");
 		}
 
@@ -321,8 +319,8 @@ export class QueryEngine {
 		for (const item of data) {
 			const key = groupKeys
 				.map((keyOfGroup) => {
-					const fieldName = keyOfGroup.startsWith(this.options!.datasetId + "_")
-						? keyOfGroup.substring(this.options!.datasetId.length + 1)
+					const fieldName = keyOfGroup.startsWith(this.options!.datasetKind + "_")
+						? keyOfGroup.substring(this.options!.datasetKind.length + 1)
 						: keyOfGroup;
 					return (item as Record<string, any>)[fieldName];
 				})
@@ -363,8 +361,8 @@ export class QueryEngine {
 		const result: any = {};
 		const itemWithKeys = items[0] as Record<string, any>;
 		GROUP.forEach((groupKey) => {
-			const fieldName = groupKey.startsWith(this.options!.datasetId + "_")
-				? groupKey.substring(this.options!.datasetId.length + 1)
+			const fieldName = groupKey.startsWith(this.options!.datasetKind + "_")
+				? groupKey.substring(this.options!.datasetKind.length + 1)
 				: groupKey;
 			result[fieldName] = itemWithKeys[fieldName];
 		});
@@ -379,8 +377,8 @@ export class QueryEngine {
 		const [operation, field] = Object.entries(applyObject)[0];
 
 		// Remove dataset ID prefix from field name if present
-		const fieldName = field.startsWith(this.options!.datasetId + "_")
-			? field.substring(this.options!.datasetId.length + 1)
+		const fieldName = field.startsWith(this.options!.datasetKind + "_")
+			? field.substring(this.options!.datasetKind.length + 1)
 			: field;
 
 		const values = items.map((item) => (item as Record<string, any>)[fieldName]);

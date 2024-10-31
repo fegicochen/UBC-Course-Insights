@@ -29,7 +29,7 @@ export class OptionsProcessor {
 		return {
 			columns: columnsForState,
 			order: orderForState,
-			datasetId: datasetIdForState,
+			datasetKind: datasetIdForState,
 		};
 	}
 

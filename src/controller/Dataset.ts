@@ -152,7 +152,7 @@ export interface OptionsState {
 		keys: string[];
 	};
 	columns: InsightFacadeKey[];
-	datasetId: string;
+	datasetKind: string;
 }
 
 export class DatasetUtils {
@@ -196,10 +196,7 @@ export class DatasetUtils {
 	 * @returns false if string is improperly formatted (only whitespace or contains underscoare), true otherwise
 	 */
 	public static isValidIdString(idstring: string): boolean {
-		if (idstring.trim() === "" || idstring.includes("_")) {
-			return false;
-		}
-		return true;
+		return idstring.trim() !== "" && !idstring.includes("_");
 	}
 
 	/**

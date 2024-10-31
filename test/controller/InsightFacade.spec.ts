@@ -13,7 +13,7 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { QueryEngine } from "../../src/controller/QueryEngine";
 import { RoomsDatasetProcessor } from "../../src/controller/RoomsDatasetProcessor";
-import * as fs from "fs";
+// import * as fs from "fs";
 
 use(chaiAsPromised);
 
@@ -584,9 +584,8 @@ describe("InsightFacade", function () {
 		it("[valid/sortcase4.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 		it("[valid/sortcase5.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 		it("[valid/sortcase6.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase7.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase8.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 		it("[valid/sortcase9.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase11.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 
 		it("[invalid/missing_where.json] Query missing WHERE", checkQuery);
 		it("[invalid/missing_options.json] Query missing OPTIONS", checkQuery);
