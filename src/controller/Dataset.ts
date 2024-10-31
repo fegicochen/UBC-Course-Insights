@@ -14,17 +14,17 @@ export enum DatasetId {
 	Pass = "pass",
 	Fail = "fail",
 	Audit = "audit",
-	// Lat = "lat",
-	// Lon = "lon",
-	// Seats = "seats",
-	// Fullname = "fullname",
-	// Shortname = "shortname",
-	// Number = "number",
-	// Name = "name",
-	// Address = "address",
-	// Type = "type",
-	// Furniture = "furniture",
-	// Href = "href",
+	Lat = "lat",
+	Lon = "lon",
+	Seats = "seats",
+	Fullname = "fullname",
+	Shortname = "shortname",
+	Number = "number",
+	Name = "name",
+	Address = "address",
+	Type = "type",
+	Furniture = "furniture",
+	Href = "href",
 }
 
 export interface Section {
@@ -77,9 +77,9 @@ export const MFields = [
 	DatasetId.Fail,
 	DatasetId.Audit,
 	DatasetId.Year,
-	// DatasetId.Lat,
-	// DatasetId.Lon,
-	// DatasetId.Seats,
+	DatasetId.Lat,
+	DatasetId.Lon,
+	DatasetId.Seats,
 ];
 export const SFields = [
 	DatasetId.Dept,
@@ -87,14 +87,13 @@ export const SFields = [
 	DatasetId.Instructor,
 	DatasetId.Title,
 	DatasetId.Uuid,
-	// DatasetId.Fullname, // Added for rooms
-	// DatasetId.Shortname, // Added for rooms
-	// DatasetId.Number, // Added for rooms
-	// DatasetId.Name, // Added for rooms
-	// DatasetId.Address, // Added for rooms
-	// DatasetId.Type, // Added for rooms
-	// DatasetId.Furniture, // Added for rooms
-	// DatasetId.Shortname, // Added for rooms
+	DatasetId.Fullname,
+	DatasetId.Shortname,
+	DatasetId.Number,
+	DatasetId.Name,
+	DatasetId.Address,
+	DatasetId.Type,
+	DatasetId.Furniture,
 ];
 
 export interface InsightFacadeKey {
@@ -175,9 +174,17 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDataset(provider: DatasetsProvider, id: string): SectionsDataset | undefined {
+	public static findDataset(provider: DatasetsProvider, id: string): SectionsDataset | RoomsDataset | undefined {
 		const datasets = provider();
-		return datasets.sections.find((dataset) => dataset.id === id);
+		const section = datasets.sections.find((dataset) => dataset.id === id);
+		if (section !== undefined) {
+			return section;
+		}
+		const room = datasets.rooms.find((dataset) => dataset.id === id);
+		if (room !== undefined) {
+			return room;
+		}
+		return undefined;
 	}
 
 	/**
