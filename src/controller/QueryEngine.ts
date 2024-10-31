@@ -72,19 +72,18 @@ export class QueryEngine {
 	 * @returns The formatted InsightResult
 	 */
 	private toInsightResult(item: any): InsightResult {
-		// 'any' because it can be Section or Room
 		const result: InsightResult = {};
 		const itemWithKeys = item as Record<string, any>;
 
 		this.options!.columns.forEach((column) => {
 			let value: any;
-			if (column.idstring === "") {
+			if (column.kind === "") {
 				value = itemWithKeys[column.field];
 				result[column.field] = value;
 			} else {
 				const fieldName = column.field;
 				value = itemWithKeys[fieldName];
-				result[`${column.idstring}_${fieldName}`] = value;
+				result[`${column.kind}_${fieldName}`] = value;
 			}
 		});
 		return result;
@@ -148,11 +147,21 @@ export class QueryEngine {
 	 * @returns The filtered data
 	 */
 	private processBody(bodyRaw: unknown): any[] {
-		// 'any' because it can be Section or Room
-		// Find dataset
-		const dataset = DatasetUtils.findDataset(this.datasets, this.options!.datasetId);
+		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
+
+		// Determine the dataset based on the fields used in the query
+		const columns = this.options!.columns;
+		if (columns.length === 0) {
+			throw new InsightError("No columns specified in the query.");
+		}
+
+		// Extract dataset kind from the first column
+		const firstColumn = columns[0];
+		const datasetKind = firstColumn.kind; // Changed from 'idstring' to 'kind'
+		const dataset = DatasetUtils.findDatasetByKind(this.datasets, datasetKind);
+
 		if (dataset === undefined) {
-			throw new InsightError("Could not find dataset with id: " + this.options!.datasetId + ".");
+			throw new InsightError(`Could not find dataset with kind: ${datasetKind}.`);
 		}
 
 		let filter: FilterStrategy<any, FilterOperationByDataset<any>>;
@@ -165,10 +174,8 @@ export class QueryEngine {
 			throw new InsightError("Unsupported dataset kind.");
 		}
 
-		// Start constructing filter function
-		const filterFunction = this.checkSingleFilter(filter, bodyRaw);
+		const filterFunction = this.checkSingleFilter(filter, body);
 
-		// Execute filter function
 		const filteredData = filterFunction.apply();
 
 		return filteredData;
@@ -283,7 +290,7 @@ export class QueryEngine {
 		}
 
 		// Check for multi datasets used
-		if (this.options!.datasetId !== key.idstring) {
+		if (this.options!.datasetId !== key.kind) {
 			throw new InsightError("Only one dataset can be used in a query.");
 		}
 
