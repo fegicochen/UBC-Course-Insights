@@ -6,9 +6,16 @@ import {
 	Keywords,
 	OptionsState,
 	maxResults,
+	Transformations,
+	ApplyRule,
+	RoomsDataset,
+	SectionsDataset,
+	Room,
 } from "./Dataset";
-import { FilterBySection, FilterOperation, FilterStrategy } from "./Filter";
-import { InsightError, InsightResult, ResultTooLargeError } from "./IInsightFacade";
+import { FilterByDataset, FilterStrategy, FilterOperationByDataset } from "./Filter";
+import { InsightError, InsightResult, ResultTooLargeError, InsightDatasetKind } from "./IInsightFacade";
+import { calculateMax, calculateMin, calculateSum, calculateCount, calculateAvg } from "./Calculations";
+import { OptionsProcessor } from "./OptionsProcessor";
 
 export class QueryEngine {
 	private readonly datasets: DatasetsProvider;
@@ -21,199 +28,173 @@ export class QueryEngine {
 	/**
 	 *
 	 * @param query The query object in accordance with IInsightFacade.performQuery
-	 * @throws InsightError if query is improprly formed
+	 * @throws InsightError if query is improperly formed
 	 */
 	public async processQuery(queryRaw: unknown): Promise<InsightResult[]> {
-		// Ensure query is obect and update type
 		const query = DatasetUtils.checkIsObject("Query", queryRaw);
-
-		// Ensure only keys are body and options
 		const rootStructure = DatasetUtils.requireExactKeys(query, [
 			[Keywords.Options, true],
 			[Keywords.Body, true],
+			[Keywords.Transformations, false],
 		]);
 
-		// Split into processing body and options
-		this.options = this.processOptions(rootStructure.get(Keywords.Options));
-		const sections = this.processBody(rootStructure.get(Keywords.Body));
+		let applyKeys: string[] = [];
 
-		// Sort results if required
-		const sectionsOrdered = this.orderResults(sections);
+		if (rootStructure.has(Keywords.Transformations)) {
+			const transformations = rootStructure.get(Keywords.Transformations) as Transformations;
+			applyKeys = this.extractApplyKeys(transformations.APPLY);
+		}
 
-		// Return only data requested
-		return sectionsOrdered.map((s) => this.sectionToInsightResult(s));
+		const optionsProcessor = new OptionsProcessor(rootStructure.get(Keywords.Options), applyKeys);
+		this.options = optionsProcessor.processOptions();
+
+		const data = this.processBody(rootStructure.get(Keywords.Body));
+
+		let transformedData = data;
+
+		if (rootStructure.has(Keywords.Transformations)) {
+			const transformations = rootStructure.get(Keywords.Transformations) as Transformations;
+			transformedData = this.applyTransformations(data, transformations);
+		}
+
+		if (transformedData.length > maxResults) {
+			throw new ResultTooLargeError();
+		}
+
+		const orderedData = this.orderResults(transformedData);
+
+		return orderedData.map((item) => this.toInsightResult(item));
 	}
 
 	/**
-	 *
-	 * @param section the section to convert
-	 * @returns an InsightResult with only the columns selected and dataset id appended to entries
+	 * Converts an item to an InsightResult based on selected columns.
+	 * @param item The data item (Section or Room)
+	 * @returns The formatted InsightResult
 	 */
-	private sectionToInsightResult(section: Section): InsightResult {
+	private toInsightResult(item: any): InsightResult {
 		const result: InsightResult = {};
-		this.options!!.columns.forEach((column) => {
-			const sectionValue = section[column.field];
-			result[this.options!!.datasetId + "_" + column.field] = sectionValue;
+		const itemWithKeys = item as Record<string, any>;
+
+		this.options!.columns.forEach((column) => {
+			let value: any;
+			if (column.kind === "") {
+				value = itemWithKeys[column.field];
+				result[column.field] = value;
+			} else {
+				const fieldName = column.field;
+				value = itemWithKeys[fieldName];
+				result[`${column.kind}_${fieldName}`] = value;
+			}
 		});
 		return result;
 	}
 
 	/**
-	 *
-	 * @param sections the sections to order
-	 * @returns an ordered list of sections based on this.options ordering
+	 * Orders the data based on the ORDER specification.
+	 * @param data The data to sort
+	 * @returns The sorted data
 	 */
-	private orderResults(sections: Section[]): Section[] {
-		// Sort result data
-		if (this.options!!.order !== undefined) {
-			const order = this.options!!.order!!;
-			let comparator: (a: Section, b: Section) => number;
-			if (DatasetUtils.isMKey(order.field)) {
-				comparator = (a, b): number => (a[order.field] as number) - (b[order.field] as number);
-			} else if (DatasetUtils.isSKey(order.field)) {
-				comparator = (a, b): number => (a[order.field] as string).localeCompare(b[order.field] as string);
-			} else {
-				throw new InsightError("Invalid key type! " + order.field);
-			}
-			return sections.reverse().sort(comparator);
-		} else {
-			return sections;
-		}
-	}
+	private orderResults(data: any[]): any[] {
+		if (this.options!.order) {
+			const { dir, keys } = this.options!.order!;
+			const direction = dir === "UP" ? 1 : -1;
 
-	/**
-	 * @param query query object to take body from.
-	 * @throws InsightError if options are malformed.
-	 */
-	private processOptions(optionsRaw: unknown): OptionsState {
-		// Retrieve options and ensure it is JSON
-		const options = DatasetUtils.checkIsObject(Keywords.Options, optionsRaw);
+			data.sort((a, b) => {
+				for (const key of keys) {
+					const aValue = this.extractValue(a, key);
+					const bValue = this.extractValue(b, key);
 
-		// Break down by property name
-		const optionsStructure = DatasetUtils.requireExactKeys(options, [
-			[Keywords.Columns, true],
-			[Keywords.Order, false],
-		]);
-
-		const [columnsForState, datasetIdForState] = this.parseColumns(optionsStructure);
-		const orderForState = this.processOrder(optionsStructure, datasetIdForState);
-		// Ensure order field is selected in columns
-		if (
-			orderForState !== undefined &&
-			columnsForState.find((col) => col.field === orderForState?.field) === undefined
-		) {
-			throw new InsightError("Order field not selected in columns.");
-		}
-
-		return {
-			columns: columnsForState,
-			order: orderForState,
-			datasetId: datasetIdForState,
-		};
-	}
-
-	/**
-	 *
-	 * @param optionsStructure the parsed key-value structure of data in the options field
-	 * @returns parsed columns as InsightFacadeKeys and the dataset id used in the query
-	 */
-	private parseColumns(optionsStructure: Map<string, unknown>): [InsightFacadeKey[], string] {
-		let columnsForState: InsightFacadeKey[] = [];
-		let datasetIdForState: string | undefined;
-
-		// Process columns key list
-		const columns = DatasetUtils.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
-		columns.forEach((columnRaw) => {
-			// Ensure column key has proper formatting
-			const column = DatasetUtils.checkIsString(Keywords.Columns, columnRaw);
-			const columnKey = DatasetUtils.parseMOrSKey(column);
-			if (columnKey === undefined) {
-				throw new InsightError("Improper column key formatting: " + column + ".");
-			}
-			// Ensure multiple datasets not used in column keys
-			if (datasetIdForState !== undefined && datasetIdForState !== columnKey.idstring) {
-				throw new InsightError("Multiple datasets used in query. Only one allowed.");
-			} else {
-				datasetIdForState = columnKey.idstring;
-			}
-			columnsForState = columnsForState.concat(columnKey);
-		});
-
-		// Query must have columns selected
-		if (datasetIdForState === undefined) {
-			throw new InsightError("Query must select at least one column.");
-		}
-
-		return [columnsForState, datasetIdForState];
-	}
-
-	/**
-	 *
-	 * @param optionsStructure the parsed key-value structure of data in the options field
-	 * @returns an order if present, otherwise undefined
-	 */
-	private processOrder(
-		optionsStructure: Map<string, unknown>,
-		datasetIdForState: string
-	): InsightFacadeKey | undefined {
-		let orderForState: InsightFacadeKey | undefined;
-		if (optionsStructure.has(Keywords.Order) && optionsStructure.get(Keywords.Order) !== undefined) {
-			const order = DatasetUtils.checkIsString(Keywords.Order, optionsStructure.get(Keywords.Order));
-			const orderKey = DatasetUtils.parseMOrSKey(order);
-			if (orderKey !== undefined) {
-				orderForState = orderKey;
-				if (orderKey.idstring !== datasetIdForState) {
-					throw new InsightError("Mutliple datasets used in query. Only one allowed.");
+					if (typeof aValue === "number" && typeof bValue === "number") {
+						if (aValue < bValue) {
+							return -1 * direction;
+						}
+						if (aValue > bValue) {
+							return 1 * direction;
+						}
+					} else if (typeof aValue === "string" && typeof bValue === "string") {
+						if (aValue < bValue) {
+							return -1 * direction;
+						}
+						if (aValue > bValue) {
+							return 1 * direction;
+						}
+					} else {
+						throw new InsightError("Incompatible types for ordering.");
+					}
 				}
-			} else {
-				throw new InsightError("Order is not a valid ID string: " + order + ".");
-			}
+				return 0;
+			});
 		}
-		return orderForState;
+
+		return data;
+	}
+
+	// Helper method to extract the value from an item based on the key
+	private extractValue(item: any, key: string): any {
+		const datasetPrefix = this.options!.datasetKind + "_";
+		if (key.startsWith(datasetPrefix)) {
+			const fieldName = key.substring(datasetPrefix.length);
+			return item[fieldName];
+		}
+		return item[key];
 	}
 
 	/**
-	 *
-	 * @param query query object to take body from.
-	 * @param options the options state computed
-	 * @throws InsightError if body is malformed.
+	 * Processes the WHERE part of the query to filter data.
+	 * @param bodyRaw The raw WHERE object
+	 * @returns The filtered data
 	 */
-	private processBody(bodyRaw: unknown): Section[] {
-		// Find dataset
-		const dataset = DatasetUtils.findDataset(this.datasets, this.options!!.datasetId);
+	private processBody(bodyRaw: unknown): any[] {
+		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
+
+		// Determine the dataset based on the fields used in the query
+		const columns = this.options!.columns;
+		if (columns.length === 0) {
+			throw new InsightError("No columns specified in the query.");
+		}
+
+		// Extract dataset kind from the first column
+		const firstColumn = columns[0];
+		const datasetKind = firstColumn.kind;
+		const dataset = DatasetUtils.findDatasetByKind(this.datasets, datasetKind);
+
 		if (dataset === undefined) {
-			throw new InsightError("Could not find dataset with id: " + this.options!!.datasetId + ".");
+			throw new InsightError(`Could not find dataset with kind: ${datasetKind}.`);
 		}
 
-		// Create filter object
-		const filter = new FilterBySection(dataset);
+		let filter: FilterStrategy<any, FilterOperationByDataset<any>>;
 
-		// Start constructing filter function
-		const filterFunction = this.checkSingleFilter(filter, bodyRaw);
-
-		// Execute filter function
-		const sections = filterFunction.apply();
-
-		if (sections.length > maxResults) {
-			throw new ResultTooLargeError();
+		if (dataset.type === InsightDatasetKind.Sections) {
+			filter = new FilterByDataset<Section>(dataset as SectionsDataset);
+		} else if (dataset.type === InsightDatasetKind.Rooms) {
+			filter = new FilterByDataset<Room>(dataset as RoomsDataset);
+		} else {
+			throw new InsightError("Unsupported dataset kind.");
 		}
 
-		return sections;
+		const filterFunction = this.checkSingleFilter(filter, body);
+
+		const filteredData = filterFunction.apply();
+
+		return filteredData;
 	}
 
 	/**
-	 * Takes a section of the body and checks that a single filter is correctly applied within it.
+	 * Takes a query body and constructs a filter operation.
 	 *
 	 * @param filter the filter object used
 	 * @param bodyRaw the raw body to check
 	 * @returns A filter operation representing the given body and filter
 	 * @throws InsightError if bodyRaw is improperly formatted
 	 */
-	private checkSingleFilter(filter: FilterStrategy<any>, bodyRaw: unknown): FilterOperation {
-		// Retrieve body and ensure it is JSON
+	private checkSingleFilter(
+		filter: FilterStrategy<any, FilterOperationByDataset<any>>,
+		bodyRaw: unknown
+	): FilterOperationByDataset<any> {
+		// Retrieve body and ensure it is an object
 		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
-		// Break do:wn by property name
+		// Break down by property name
 		const mappedKeys = DatasetUtils.requireExactKeys(body, [
 			[Keywords.Filter.Logic.And, false],
 			[Keywords.Filter.Logic.Or, false],
@@ -246,14 +227,17 @@ export class QueryEngine {
 	 * @returns A filter operation for the given key and children
 	 * @throws InsightError if the provided key could not be processed correctly
 	 */
-	private processFilter(filter: FilterStrategy<any>, key: string, value: unknown): FilterOperation {
+	private processFilter(
+		filter: FilterStrategy<any, FilterOperationByDataset<any>>,
+		key: string,
+		value: unknown
+	): FilterOperationByDataset<any> {
 		switch (key) {
 			case Keywords.Filter.Logic.And:
 			case Keywords.Filter.Logic.Or: {
-				const array = DatasetUtils.checkIsArray(key, value);
-				const children = array.map((elem) => this.checkSingleFilter(filter, elem));
+				const children = DatasetUtils.checkIsArray(key, value).map((e) => this.checkSingleFilter(filter, e));
 				if (children.length === 0) {
-					throw new InsightError(key + " must have children");
+					throw new InsightError(`${key} must have children`);
 				}
 				return key === Keywords.Filter.Logic.And ? filter.and(children) : filter.or(children);
 			}
@@ -272,11 +256,10 @@ export class QueryEngine {
 				return filter.not(this.checkSingleFilter(filter, value));
 			case Keywords.Filter.SComparator.Is: {
 				const [columnKey, filterVal] = this.checkKey(Keywords.Filter.SComparator.Is, value, false);
-				const valStr = DatasetUtils.checkIsString(Keywords.Filter.SComparator.Is, filterVal);
-				return filter.is(valStr, columnKey);
+				return filter.is(DatasetUtils.checkIsString(Keywords.Filter.SComparator.Is, filterVal), columnKey);
 			}
 			default:
-				throw new InsightError("Filter key not recognized: " + key);
+				throw new InsightError(`Filter key not recognized: ${key}`);
 		}
 	}
 
@@ -305,7 +288,7 @@ export class QueryEngine {
 		}
 
 		// Check for multi datasets used
-		if (this.options!!.datasetId !== key.idstring) {
+		if (this.options!.datasetKind !== key.kind) {
 			throw new InsightError("Only one dataset can be used in a query.");
 		}
 
@@ -322,5 +305,106 @@ export class QueryEngine {
 		} else {
 			throw new InsightError("Unexpected key type: " + type + ", " + bodyEntries[0][0]);
 		}
+	}
+
+	/**
+	 *
+	 * @param data the array of objects to be grouped
+	 * @param groupKeys the keys on which to base the grouping
+	 * @returns a map where each key is a unique string made up of values from groupkeys
+	 */
+	private groupData<T extends object>(data: T[], groupKeys: string[]): Map<string, T[]> {
+		const grouped = new Map<string, T[]>();
+
+		for (const item of data) {
+			const key = groupKeys
+				.map((keyOfGroup) => {
+					const fieldName = keyOfGroup.startsWith(this.options!.datasetKind + "_")
+						? keyOfGroup.substring(this.options!.datasetKind.length + 1)
+						: keyOfGroup;
+					return (item as Record<string, any>)[fieldName];
+				})
+				.join("-");
+
+			if (!grouped.has(key)) {
+				grouped.set(key, []);
+			}
+			grouped.get(key)!.push(item);
+		}
+
+		return grouped;
+	}
+
+	private applyTransformations(data: any[], transformations: Transformations): any[] {
+		// 'any' because it can be Section or Room
+		const { GROUP, APPLY } = transformations;
+		const groupedData = this.groupData(data, GROUP);
+
+		const results: any[] = [];
+		for (const [, items] of groupedData.entries()) {
+			const result = this.initializeGroupResult(GROUP, items);
+
+			// Process each APPLY rule
+			for (const applyRule of APPLY) {
+				this.processApplyRule(applyRule, items, result);
+			}
+
+			results.push(result);
+		}
+
+		return results;
+	}
+
+	// Initializes the result object with group keys
+	private initializeGroupResult<T extends object>(GROUP: string[], items: T[]): any {
+		// 'any' because it can be Section or Room
+		const result: any = {};
+		const itemWithKeys = items[0] as Record<string, any>;
+		GROUP.forEach((groupKey) => {
+			const fieldName = groupKey.startsWith(this.options!.datasetKind + "_")
+				? groupKey.substring(this.options!.datasetKind.length + 1)
+				: groupKey;
+			result[fieldName] = itemWithKeys[fieldName];
+		});
+		return result;
+	}
+
+	// Processes a single APPLY rule and modifies the result object
+	private processApplyRule(applyRule: ApplyRule, items: any[], result: any): void {
+		// 'any' because it can be Section or Room
+		const applyKey = Object.keys(applyRule)[0];
+		const applyObject = applyRule[applyKey];
+		const [operation, field] = Object.entries(applyObject)[0];
+
+		// Remove dataset ID prefix from field name if present
+		const fieldName = field.startsWith(this.options!.datasetKind + "_")
+			? field.substring(this.options!.datasetKind.length + 1)
+			: field;
+
+		const values = items.map((item) => (item as Record<string, any>)[fieldName]);
+
+		switch (operation) {
+			case Keywords.ApplyToken.Max:
+				result[applyKey] = calculateMax(values);
+				break;
+			case Keywords.ApplyToken.Min:
+				result[applyKey] = calculateMin(values);
+				break;
+			case Keywords.ApplyToken.Sum:
+				result[applyKey] = calculateSum(values);
+				break;
+			case Keywords.ApplyToken.Count:
+				result[applyKey] = calculateCount(values);
+				break;
+			case Keywords.ApplyToken.Avg:
+				result[applyKey] = calculateAvg(values);
+				break;
+			default:
+				throw new InsightError(`Invalid APPLY token: ${operation}`);
+		}
+	}
+
+	private extractApplyKeys(applyArray: ApplyRule[]): string[] {
+		return applyArray.map((applyRule) => Object.keys(applyRule)[0]);
 	}
 }
