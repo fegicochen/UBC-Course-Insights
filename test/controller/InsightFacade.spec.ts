@@ -576,6 +576,10 @@ describe("InsightFacade", function () {
 		it("[valid/applyCase1.json] calculate the average of sections avg grouped by dept", checkQuery);
 		it("[valid/applyCase2.json] calculate the average of sections avg grouped by dept", checkQuery);
 		it("[valid/applyCase3.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applymax.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applymin.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applysum.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applycount.json] calculate the average of sections avg grouped by dept", checkQuery);
 		it("[valid/sort_case.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 		it("[valid/sortcase2.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 		it("[valid/sortcase3.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
