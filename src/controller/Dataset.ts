@@ -97,7 +97,7 @@ export const SFields = [
 ];
 
 export interface InsightFacadeKey {
-	kind: string;
+	idstring: string;
 	field: DatasetId;
 }
 
@@ -174,17 +174,15 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDatasetByKind(
-		provider: DatasetsProvider,
-		kind: string
-	): SectionsDataset | RoomsDataset | undefined {
+	public static findDataset(provider: DatasetsProvider, id: string): SectionsDataset | RoomsDataset | undefined {
 		const datasets = provider();
-		if (kind === InsightDatasetKind.Sections) {
-			// Assuming only one Sections dataset exists
-			return datasets.sections[0];
-		} else if (kind === InsightDatasetKind.Rooms) {
-			// Assuming only one Rooms dataset exists
-			return datasets.rooms[0];
+		const section = datasets.sections.find((dataset) => dataset.id === id);
+		if (section !== undefined) {
+			return section;
+		}
+		const room = datasets.rooms.find((dataset) => dataset.id === id);
+		if (room !== undefined) {
+			return room;
 		}
 		return undefined;
 	}
@@ -206,17 +204,17 @@ export class DatasetUtils {
 	 */
 	public static parseMKey(key: string): InsightFacadeKey | undefined {
 		const splitUnderscore = key.split("_");
-		const expectedParts = 2;
-		if (splitUnderscore.length !== expectedParts) {
+		const beforeAndAfterUnderscoreLength = 2;
+		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
-		const mfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !MFields.includes(mfield as DatasetId)) {
+		const idstring = splitUnderscore[0],
+			mfield = splitUnderscore[1];
+		if (!this.isValidIdString(idstring) || !MFields.find((x) => x === mfield)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: idstring,
 			field: mfield as DatasetId,
 		};
 	}
@@ -228,24 +226,19 @@ export class DatasetUtils {
 	 */
 	public static parseSKey(key: string): InsightFacadeKey | undefined {
 		const splitUnderscore = key.split("_");
-		const expectedParts = 2;
-		if (splitUnderscore.length !== expectedParts) {
+		const beforeAndAfterUnderscoreLength = 2;
+		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
-		const sfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !SFields.includes(sfield as DatasetId)) {
+		const idstring = splitUnderscore[0],
+			sfield = splitUnderscore[1];
+		if (!this.isValidIdString(idstring) || !SFields.find((x) => x === sfield)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: idstring,
 			field: sfield as DatasetId,
 		};
-	}
-
-	// New helper function to validate kind
-	public static isValidKind(kind: string): boolean {
-		return kind === InsightDatasetKind.Sections || kind === InsightDatasetKind.Rooms;
 	}
 
 	/**
