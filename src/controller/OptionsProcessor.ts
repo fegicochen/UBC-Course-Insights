@@ -21,11 +21,6 @@ export class OptionsProcessor {
 		const [columnsForState, datasetIdForState] = this.parseColumns(optionsStructure);
 		this.datasetId = datasetIdForState;
 
-		// Create a set of column keys for validation
-		const columnsSet = new Set(columnsForState.map((col) => (col.kind ? `${col.kind}_${col.field}` : col.field)));
-
-		const orderForState = this.processOrder(optionsStructure, datasetIdForState, columnsSet);
-
 		// If transformations are present, validate that all columns are in GROUP or APPLY
 		if (transformations) {
 			const groupKeys = new Set(transformations.GROUP);
@@ -35,16 +30,22 @@ export class OptionsProcessor {
 				if (column.kind === "") {
 					// APPLY keys
 					if (!applyKeysSet.has(column.field)) {
-						throw new InsightError(`APPLY key ${column.field} not found.`);
+						throw new InsightError(`APPLY key "${column.field}" not found.`);
 					}
 				} else {
 					// GROUP keys
-					if (!groupKeys.has(`${column.kind}_${column.field}`)) {
-						throw new InsightError(`GROUP key ${column.kind}_${column.field} not found.`);
+					const groupKey = `${column.kind}_${column.field}`;
+					if (!groupKeys.has(groupKey) && !applyKeysSet.has(column.field)) {
+						throw new InsightError(`Key "${groupKey}" must be present in GROUP or as an APPLY key.`);
 					}
 				}
 			});
 		}
+
+		// Create a set of column keys for validation in ORDER
+		const columnsSet = new Set(columnsForState.map((col) => (col.kind ? `${col.kind}_${col.field}` : col.field)));
+
+		const orderForState = this.processOrder(optionsStructure, datasetIdForState, columnsSet);
 
 		return {
 			columns: columnsForState,

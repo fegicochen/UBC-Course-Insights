@@ -1,9 +1,10 @@
+// QueryEngine.ts
+
 import {
 	Section,
 	DatasetsProvider,
 	DatasetUtils,
 	InsightFacadeKey,
-	Keywords,
 	OptionsState,
 	maxResults,
 	Transformations,
@@ -11,15 +12,17 @@ import {
 	RoomsDataset,
 	SectionsDataset,
 	Room,
+	Keywords,
 } from "./Dataset";
 import { FilterByDataset, FilterStrategy, FilterOperationByDataset } from "./Filter";
 import { InsightError, InsightResult, ResultTooLargeError, InsightDatasetKind } from "./IInsightFacade";
-import { calculateMax, calculateMin, calculateSum, calculateCount, calculateAvg } from "./Calculations";
 import { OptionsProcessor } from "./OptionsProcessor";
+import { ApplyProcessor } from "./ApplyProcessor";
 
 export class QueryEngine {
 	private readonly datasets: DatasetsProvider;
 	private options?: OptionsState;
+	private applyProcessor?: ApplyProcessor;
 
 	constructor(datasets: DatasetsProvider) {
 		this.datasets = datasets;
@@ -47,6 +50,11 @@ export class QueryEngine {
 
 		const optionsProcessor = new OptionsProcessor(rootStructure.get(Keywords.Options), applyKeys);
 		this.options = optionsProcessor.processOptions();
+
+		// Initialize ApplyProcessor if APPLY rules exist
+		if (applyKeys.length > 0) {
+			this.applyProcessor = new ApplyProcessor(this.options.datasetKind);
+		}
 
 		const data = this.processBody(rootStructure.get(Keywords.Body));
 
@@ -131,7 +139,7 @@ export class QueryEngine {
 
 	// Helper method to extract the value from an item based on the key
 	private extractValue(item: any, key: string): any {
-		const datasetPrefix = this.options!.datasetKind + "_";
+		const datasetPrefix = `${this.options!.datasetKind}_`;
 		if (key.startsWith(datasetPrefix)) {
 			const fieldName = key.substring(datasetPrefix.length);
 			return item[fieldName];
@@ -276,35 +284,37 @@ export class QueryEngine {
 		// Ensure body has a single key value pair
 		const bodyEntries = Array.from(Object.entries(keyBody));
 		if (bodyEntries.length !== 1) {
-			throw new InsightError("Expected one entry in an mkey field.");
+			throw new InsightError(`Expected exactly one key in "${type}" operation, but found ${bodyEntries.length}.`);
 		}
 
-		// Check that entry has properly formatted key and value
-		const key = DatasetUtils.parseMOrSKey(bodyEntries[0][0]);
-		const keyValue = bodyEntries[0][1];
+		// Extract key and value
+		const [rawKey, keyValue] = bodyEntries[0];
 
-		if (key === undefined) {
-			throw new InsightError("Improper structure of key: " + bodyEntries[0][0]);
+		// Parse the key
+		const key = DatasetUtils.parseMOrSKey(rawKey);
+		if (!key) {
+			throw new InsightError(`Invalid key format: "${rawKey}". Expected format "dataset_field".`);
 		}
 
-		// Check for multi datasets used
+		// Ensure the key belongs to the correct dataset
 		if (this.options!.datasetKind !== key.kind) {
-			throw new InsightError("Only one dataset can be used in a query.");
+			throw new InsightError("Key does not belong to the dataset kind");
 		}
 
+		// Validate key type based on operation
 		if (DatasetUtils.isMKey(key)) {
 			if (!mkeyOrSKey) {
-				throw new InsightError("Expected mkey but got skey.");
+				throw new InsightError("Expected a string key , but got a numeric key");
 			}
-			return [key, keyValue];
 		} else if (DatasetUtils.isSKey(key)) {
 			if (mkeyOrSKey) {
-				throw new InsightError("Expected skey but got mkey.");
+				throw new InsightError("Expected a numeric key got a string key");
 			}
-			return [key, keyValue];
 		} else {
-			throw new InsightError("Unexpected key type: " + type + ", " + bodyEntries[0][0]);
+			throw new InsightError(`Key "${rawKey}" is neither a valid MKey nor an SKey.`);
 		}
+
+		return [key, keyValue];
 	}
 
 	/**
@@ -319,7 +329,7 @@ export class QueryEngine {
 		for (const item of data) {
 			const key = groupKeys
 				.map((keyOfGroup) => {
-					const fieldName = keyOfGroup.startsWith(this.options!.datasetKind + "_")
+					const fieldName = keyOfGroup.startsWith(`${this.options!.datasetKind}_`)
 						? keyOfGroup.substring(this.options!.datasetKind.length + 1)
 						: keyOfGroup;
 					return (item as Record<string, any>)[fieldName];
@@ -335,6 +345,12 @@ export class QueryEngine {
 		return grouped;
 	}
 
+	/**
+	 * Applies transformations (GROUP and APPLY) to the data.
+	 * @param data The data to transform.
+	 * @param transformations The transformations to apply.
+	 * @returns The transformed data.
+	 */
 	private applyTransformations(data: any[], transformations: Transformations): any[] {
 		const { GROUP, APPLY } = transformations;
 
@@ -368,7 +384,7 @@ export class QueryEngine {
 		const result: any = {};
 		const itemWithKeys = items[0] as Record<string, any>;
 		GROUP.forEach((groupKey) => {
-			const fieldName = groupKey.startsWith(this.options!.datasetKind + "_")
+			const fieldName = groupKey.startsWith(`${this.options!.datasetKind}_`)
 				? groupKey.substring(this.options!.datasetKind.length + 1)
 				: groupKey;
 			result[fieldName] = itemWithKeys[fieldName];
@@ -376,42 +392,29 @@ export class QueryEngine {
 		return result;
 	}
 
-	// Processes a single APPLY rule and modifies the result object
+	/**
+	 * Processes a single APPLY rule and modifies the result object
+	 * Now delegates to ApplyProcessor
+	 */
 	private processApplyRule(applyRule: ApplyRule, items: any[], result: any): void {
-		// 'any' because it can be Section or Room
-		const applyKey = Object.keys(applyRule)[0];
-		const applyObject = applyRule[applyKey];
-		const [operation, field] = Object.entries(applyObject)[0];
-
-		// Remove dataset ID prefix from field name if present
-		const fieldName = field.startsWith(this.options!.datasetKind + "_")
-			? field.substring(this.options!.datasetKind.length + 1)
-			: field;
-
-		const values = items.map((item) => (item as Record<string, any>)[fieldName]);
-
-		switch (operation) {
-			case Keywords.ApplyToken.Max:
-				result[applyKey] = calculateMax(values);
-				break;
-			case Keywords.ApplyToken.Min:
-				result[applyKey] = calculateMin(values);
-				break;
-			case Keywords.ApplyToken.Sum:
-				result[applyKey] = calculateSum(values);
-				break;
-			case Keywords.ApplyToken.Count:
-				result[applyKey] = calculateCount(values);
-				break;
-			case Keywords.ApplyToken.Avg:
-				result[applyKey] = calculateAvg(values);
-				break;
-			default:
-				throw new InsightError(`Invalid APPLY token: ${operation}`);
+		if (!this.applyProcessor) {
+			throw new InsightError("ApplyProcessor is not initialized.");
 		}
+		result[Object.keys(applyRule)[0]] = this.applyProcessor.processApplyRule(applyRule, items);
 	}
 
-	private extractApplyKeys(applyArray: ApplyRule[]): string[] {
-		return applyArray.map((applyRule) => Object.keys(applyRule)[0]);
+	/**
+	 * Extracts APPLY keys from the APPLY array.
+	 * @param applyArray The array of APPLY rules.
+	 * @returns An array of APPLY keys.
+	 * @throws InsightError if duplicate APPLY keys are detected.
+	 */
+	public extractApplyKeys(applyArray: ApplyRule[]): string[] {
+		const applyKeys = applyArray.map((applyRule) => Object.keys(applyRule)[0]);
+		const uniqueApplyKeys = Array.from(new Set(applyKeys));
+		if (applyKeys.length !== uniqueApplyKeys.length) {
+			throw new InsightError("Duplicate APPLY keys detected.");
+		}
+		return uniqueApplyKeys;
 	}
 }
