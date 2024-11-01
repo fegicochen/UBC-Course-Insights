@@ -1,5 +1,5 @@
 {
-	"title": "check_or",
+	"title": "Check or (OR)",
 	"input": {
 		"WHERE": {
 			"OR": [
@@ -163,12 +163,12 @@
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "329",
+			"sections_id": "330",
 			"sections_avg": 77
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "330",
+			"sections_id": "329",
 			"sections_avg": 77
 		},
 		{
@@ -228,12 +228,12 @@
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "327",
+			"sections_id": "412",
 			"sections_avg": 78
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "412",
+			"sections_id": "327",
 			"sections_avg": 78
 		},
 		{
@@ -568,12 +568,12 @@
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "329",
+			"sections_id": "330",
 			"sections_avg": 83.45
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "330",
+			"sections_id": "329",
 			"sections_avg": 83.45
 		},
 		{
@@ -728,12 +728,12 @@
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "327",
+			"sections_id": "330",
 			"sections_avg": 85.04
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "330",
+			"sections_id": "327",
 			"sections_avg": 85.04
 		},
 		{
@@ -753,17 +753,17 @@
 		},
 		{
 			"sections_dept": "adhe",
+			"sections_id": "412",
+			"sections_avg": 85.2
+		},
+		{
+			"sections_dept": "adhe",
+			"sections_id": "412",
+			"sections_avg": 85.2
+		},
+		{
+			"sections_dept": "adhe",
 			"sections_id": "330",
-			"sections_avg": 85.2
-		},
-		{
-			"sections_dept": "adhe",
-			"sections_id": "412",
-			"sections_avg": 85.2
-		},
-		{
-			"sections_dept": "adhe",
-			"sections_id": "412",
 			"sections_avg": 85.2
 		},
 		{
@@ -918,22 +918,22 @@
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "327",
-			"sections_avg": 86.59
-		},
-		{
-			"sections_dept": "adhe",
-			"sections_id": "327",
-			"sections_avg": 86.59
-		},
-		{
-			"sections_dept": "adhe",
-			"sections_id": "327",
-			"sections_avg": 86.59
-		},
-		{
-			"sections_dept": "adhe",
 			"sections_id": "329",
+			"sections_avg": 86.59
+		},
+		{
+			"sections_dept": "adhe",
+			"sections_id": "327",
+			"sections_avg": 86.59
+		},
+		{
+			"sections_dept": "adhe",
+			"sections_id": "327",
+			"sections_avg": 86.59
+		},
+		{
+			"sections_dept": "adhe",
+			"sections_id": "327",
 			"sections_avg": 86.59
 		},
 		{
@@ -1098,12 +1098,12 @@
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "330",
+			"sections_id": "412",
 			"sections_avg": 89.55
 		},
 		{
 			"sections_dept": "adhe",
-			"sections_id": "412",
+			"sections_id": "330",
 			"sections_avg": 89.55
 		},
 		{
@@ -1182,143 +1182,8 @@
 			"sections_avg": 93.33
 		},
 		{
-			"sections_dept": "arst",
-			"sections_id": "500",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "arst",
-			"sections_id": "500",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "audi",
-			"sections_id": "515",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "audi",
-			"sections_id": "515",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "audi",
-			"sections_id": "568",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "audi",
-			"sections_id": "568",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "cnps",
-			"sections_id": "584",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "cnps",
-			"sections_id": "584",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "cnps",
-			"sections_id": "584",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "cpsc",
-			"sections_id": "501",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "cpsc",
-			"sections_id": "501",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "crwr",
-			"sections_id": "599",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "crwr",
-			"sections_id": "599",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "crwr",
-			"sections_id": "599",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "edst",
-			"sections_id": "501",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "educ",
-			"sections_id": "500",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "epse",
-			"sections_id": "553",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "etec",
-			"sections_id": "531",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "etec",
-			"sections_id": "531",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "etec",
-			"sections_id": "532",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "fish",
-			"sections_id": "500",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "fish",
-			"sections_id": "500",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "musc",
-			"sections_id": "563",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "musc",
-			"sections_id": "563",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "nurs",
-			"sections_id": "423",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "nurs",
-			"sections_id": "423",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "nurs",
-			"sections_id": "510",
-			"sections_avg": 94
-		},
-		{
-			"sections_dept": "nurs",
-			"sections_id": "510",
+			"sections_dept": "rhsc",
+			"sections_id": "509",
 			"sections_avg": 94
 		},
 		{
@@ -1327,8 +1192,143 @@
 			"sections_avg": 94
 		},
 		{
-			"sections_dept": "rhsc",
-			"sections_id": "509",
+			"sections_dept": "nurs",
+			"sections_id": "510",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_id": "510",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_id": "423",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_id": "423",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "musc",
+			"sections_id": "563",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "musc",
+			"sections_id": "563",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "fish",
+			"sections_id": "500",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "fish",
+			"sections_id": "500",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "etec",
+			"sections_id": "532",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "etec",
+			"sections_id": "531",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "etec",
+			"sections_id": "531",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "epse",
+			"sections_id": "553",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "educ",
+			"sections_id": "500",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "edst",
+			"sections_id": "501",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_id": "599",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_id": "599",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_id": "599",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_id": "501",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_id": "501",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_id": "584",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_id": "584",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_id": "584",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "audi",
+			"sections_id": "568",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "audi",
+			"sections_id": "568",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "audi",
+			"sections_id": "515",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "audi",
+			"sections_id": "515",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "arst",
+			"sections_id": "500",
+			"sections_avg": 94
+		},
+		{
+			"sections_dept": "arst",
+			"sections_id": "500",
 			"sections_avg": 94
 		},
 		{

@@ -1,5 +1,5 @@
-import { InsightFacadeKey, Dataset } from "./Dataset";
-import { InsightError } from "./IInsightFacade";
+import { SectionsDataset, InsightFacadeKey, maxResults, Section } from "./Dataset";
+import { InsightError, ResultTooLargeError } from "./IInsightFacade";
 
 enum FilterName {
 	And,
@@ -12,12 +12,12 @@ enum FilterName {
 	All,
 }
 
-export interface FilterOperation<T extends object> {
+export interface FilterOperation {
 	name: FilterName;
-	apply: () => T[];
+	apply: () => Section[];
 }
 
-export interface FilterStrategy<T extends object, FO extends FilterOperation<T>> {
+export interface FilterStrategy<FO extends FilterOperation> {
 	or(children: FO[]): FO;
 	and(children: FO[]): FO;
 	lessThan(limit: number, mkey: InsightFacadeKey): FO;
@@ -28,10 +28,10 @@ export interface FilterStrategy<T extends object, FO extends FilterOperation<T>>
 	all(): FO;
 }
 
-export class FilterOperationByDataset<T extends object> implements FilterOperation<T> {
-	private readonly dataset: Dataset<T>;
+class FilterOperationBySection implements FilterOperation {
+	private readonly dataset: SectionsDataset;
 	public readonly name: FilterName;
-	private readonly children?: FilterOperationByDataset<T>[];
+	private readonly children?: FilterOperationBySection[];
 	private readonly num?: number;
 	private readonly str?: string;
 	private readonly key?: InsightFacadeKey;
@@ -46,9 +46,9 @@ export class FilterOperationByDataset<T extends object> implements FilterOperati
 	 * @param key a key argument if this filter has one (EQ, LT, GT, IS)
 	 */
 	constructor(params: {
-		dataset: Dataset<T>;
+		dataset: SectionsDataset;
 		name: FilterName;
-		children?: FilterOperationByDataset<T>[];
+		children?: FilterOperationBySection[];
 		num?: number;
 		str?: string;
 		key?: InsightFacadeKey;
@@ -61,16 +61,16 @@ export class FilterOperationByDataset<T extends object> implements FilterOperati
 		this.key = params.key;
 	}
 
-	public apply(): T[] {
-		const selected: T[] = [];
-		for (const item of this.dataset.members) {
+	public apply(): Section[] {
+		const selected: Section[] = [];
+		for (const section of this.dataset.members) {
 			// Early abort if too many
-			// if (selected.length > maxResults) {
-			// 	throw new ResultTooLargeError();
-			// }
-			// Check item valid under filter
-			if (FilterOperationByDataset.test(this, item)) {
-				selected.push(item);
+			if (selected.length > maxResults) {
+				throw new ResultTooLargeError();
+			}
+			// Check section valid under filter
+			if (FilterOperationBySection.test(this, section)) {
+				selected.push(section);
 			}
 		}
 		return selected;
@@ -79,28 +79,37 @@ export class FilterOperationByDataset<T extends object> implements FilterOperati
 	/**
 	 *
 	 * @param operation the root filter operation to process
-	 * @param item the item to validate
-	 * @returns whether the given item is valid under the given filter operation
+	 * @param section the section to validate
+	 * @returns whether the given section is valid under the given filter operation
 	 */
-	private static test<T extends object>(operation: FilterOperationByDataset<T>, item: T): boolean {
+	private static test(operation: FilterOperationBySection, section: Section): boolean {
 		switch (operation.name) {
 			case FilterName.All:
 				return true;
 			case FilterName.Equals:
-				// Type assertion to Record<string, any> to inform TypeScript about dynamic keys
-				return (item as Record<string, any>)[operation.key!.field] === operation.num!;
+				return section[operation.key!!.field] === operation.num!!;
 			case FilterName.Is:
-				return this.validateFilterString(operation.str!, (item as Record<string, any>)[operation.key!.field]);
+				return this.validateFilterString(operation.str!!, section[operation.key!!.field] as string);
 			case FilterName.GreaterThan:
-				return (item as Record<string, any>)[operation.key!.field] > operation.num!;
+				return (section[operation.key!!.field] as number) > operation.num!!;
 			case FilterName.LessThan:
-				return (item as Record<string, any>)[operation.key!.field] < operation.num!;
+				return (section[operation.key!!.field] as number) < operation.num!!;
 			case FilterName.Not:
-				return !this.test(operation.children![0], item);
+				return !this.test(operation.children!![0], section);
 			case FilterName.And:
-				return operation.children!.every((child) => this.test(child, item));
+				for (const child of operation.children!!) {
+					if (!this.test(child, section)) {
+						return false;
+					}
+				}
+				return true;
 			case FilterName.Or:
-				return operation.children!.some((child) => this.test(child, item));
+				for (const child of operation.children!!) {
+					if (this.test(child, section)) {
+						return true;
+					}
+				}
+				return false;
 			default:
 				throw new InsightError("Unexpected filter name: " + operation.name);
 		}
@@ -110,11 +119,11 @@ export class FilterOperationByDataset<T extends object> implements FilterOperati
 	 * Takes care of asterisks in string to filter
 	 *
 	 * @param filterStr the string provided in the filter
-	 * @param itemStr the item string to test against
+	 * @param sectionStr the section string to test against
 	 */
-	private static validateFilterString(filterStr: string, itemStr: string): boolean {
+	private static validateFilterString(filterStr: string, sectionStr: string): boolean {
 		if (filterStr === "") {
-			return "" === itemStr;
+			return "" === sectionStr;
 		}
 
 		const aStart = filterStr.startsWith("*");
@@ -128,57 +137,56 @@ export class FilterOperationByDataset<T extends object> implements FilterOperati
 		}
 
 		if (aStart && aEnd) {
-			return itemStr.includes(startAndEndCharsRemoved);
+			return sectionStr.includes(startAndEndCharsRemoved);
 		} else if (aStart) {
-			return itemStr.endsWith(startCharRemoved);
+			return sectionStr.endsWith(startCharRemoved);
 		} else if (aEnd) {
-			return itemStr.startsWith(endCharRemoved);
+			return sectionStr.startsWith(endCharRemoved);
 		} else if (filterStr.includes("*")) {
 			throw new InsightError("Asterisk must occur at start or end of string");
 		} else {
-			return filterStr === itemStr;
+			return filterStr === sectionStr;
 		}
 	}
 }
 
-export class FilterByDataset<T extends object> implements FilterStrategy<T, FilterOperationByDataset<T>> {
-	private dataset: Dataset<T>;
+export class FilterBySection implements FilterStrategy<FilterOperationBySection> {
+	private dataset: SectionsDataset;
 
 	/**
 	 *
-	 * @param dataset the dataset to use for filtering
+	 * @param dp the datasets provider
+	 * @param options the options for the given query
 	 */
-	constructor(dataset: Dataset<T>) {
+	constructor(dataset: SectionsDataset) {
 		this.dataset = dataset;
 	}
 
-	public or(children: FilterOperationByDataset<T>[]): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public or(children: FilterOperationBySection[]): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.Or,
 			children: children,
 		});
 	}
 
-	public and(children: FilterOperationByDataset<T>[]): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public and(children: FilterOperationBySection[]): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.And,
 			children: children,
 		});
 	}
-
-	public lessThan(limit: number, mkey: InsightFacadeKey): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public lessThan(limit: number, mkey: InsightFacadeKey): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.LessThan,
 			key: mkey,
 			num: limit,
 		});
 	}
-
-	public greaterThan(limit: number, mkey: InsightFacadeKey): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public greaterThan(limit: number, mkey: InsightFacadeKey): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.GreaterThan,
 			key: mkey,
@@ -186,8 +194,8 @@ export class FilterByDataset<T extends object> implements FilterStrategy<T, Filt
 		});
 	}
 
-	public equals(limit: number, mkey: InsightFacadeKey): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public equals(limit: number, mkey: InsightFacadeKey): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.Equals,
 			key: mkey,
@@ -195,8 +203,8 @@ export class FilterByDataset<T extends object> implements FilterStrategy<T, Filt
 		});
 	}
 
-	public is(compare: string, skey: InsightFacadeKey): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public is(compare: string, skey: InsightFacadeKey): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.Is,
 			key: skey,
@@ -204,16 +212,16 @@ export class FilterByDataset<T extends object> implements FilterStrategy<T, Filt
 		});
 	}
 
-	public not(child: FilterOperationByDataset<T>): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public not(child: FilterOperationBySection): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.Not,
 			children: [child],
 		});
 	}
 
-	public all(): FilterOperationByDataset<T> {
-		return new FilterOperationByDataset<T>({
+	public all(): FilterOperationBySection {
+		return new FilterOperationBySection({
 			dataset: this.dataset,
 			name: FilterName.All,
 		});
