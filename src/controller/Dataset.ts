@@ -14,17 +14,6 @@ export enum DatasetId {
 	Pass = "pass",
 	Fail = "fail",
 	Audit = "audit",
-	Lat = "lat",
-	Lon = "lon",
-	Seats = "seats",
-	Fullname = "fullname",
-	Shortname = "shortname",
-	Number = "number",
-	Name = "name",
-	Address = "address",
-	Type = "type",
-	Furniture = "furniture",
-	Href = "href",
 }
 
 export interface Section {
@@ -39,7 +28,6 @@ export interface Section {
 	fail: number;
 	audit: number;
 }
-export type SectionWithDynamicKeys = Section & Record<string, any>;
 
 export interface Room {
 	fullname: string;
@@ -71,40 +59,17 @@ export interface DatasetList {
 
 export type DatasetsProvider = () => DatasetList;
 
-export const MFields = [
-	DatasetId.Avg,
-	DatasetId.Pass,
-	DatasetId.Fail,
-	DatasetId.Audit,
-	DatasetId.Year,
-	DatasetId.Lat,
-	DatasetId.Lon,
-	DatasetId.Seats,
-];
-export const SFields = [
-	DatasetId.Dept,
-	DatasetId.Id,
-	DatasetId.Instructor,
-	DatasetId.Title,
-	DatasetId.Uuid,
-	DatasetId.Fullname,
-	DatasetId.Shortname,
-	DatasetId.Number,
-	DatasetId.Name,
-	DatasetId.Address,
-	DatasetId.Type,
-	DatasetId.Furniture,
-];
+export const MFields = [DatasetId.Avg, DatasetId.Pass, DatasetId.Fail, DatasetId.Audit, DatasetId.Year];
+export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, DatasetId.Title, DatasetId.Uuid];
 
 export interface InsightFacadeKey {
-	kind: string;
+	idstring: string;
 	field: DatasetId;
 }
 
 export const Keywords = {
 	Body: "WHERE",
 	Options: "OPTIONS",
-	Transformations: "TRANSFORMATIONS",
 	Filter: {
 		Logic: {
 			And: "AND",
@@ -122,37 +87,14 @@ export const Keywords = {
 			Not: "NOT",
 		},
 	},
-	Direction: {
-		Up: "UP",
-		Down: "DOWN",
-	},
-	ApplyToken: {
-		Max: "MAX",
-		Min: "MIN",
-		Avg: "AVG",
-		Count: "COUNT",
-		Sum: "SUM",
-	},
 	Columns: "COLUMNS",
 	Order: "ORDER",
-	Group: "GROUP",
-	Apply: "APPLY",
 };
 
-export type ApplyRule = Record<string, Record<string, string>>;
-
-export interface Transformations {
-	GROUP: string[];
-	APPLY: ApplyRule[];
-}
-
 export interface OptionsState {
-	order?: {
-		dir: "UP" | "DOWN";
-		keys: string[];
-	};
+	order: InsightFacadeKey | undefined;
 	columns: InsightFacadeKey[];
-	datasetKind: string;
+	datasetId: string;
 }
 
 export class DatasetUtils {
@@ -174,19 +116,9 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDatasetByKind(
-		provider: DatasetsProvider,
-		kind: string
-	): SectionsDataset | RoomsDataset | undefined {
+	public static findDataset(provider: DatasetsProvider, id: string): SectionsDataset | undefined {
 		const datasets = provider();
-		if (kind === InsightDatasetKind.Sections) {
-			// Assuming only one Sections dataset exists
-			return datasets.sections[0];
-		} else if (kind === InsightDatasetKind.Rooms) {
-			// Assuming only one Rooms dataset exists
-			return datasets.rooms[0];
-		}
-		return undefined;
+		return datasets.sections.find((dataset) => dataset.id === id);
 	}
 
 	/**
@@ -196,7 +128,10 @@ export class DatasetUtils {
 	 * @returns false if string is improperly formatted (only whitespace or contains underscoare), true otherwise
 	 */
 	public static isValidIdString(idstring: string): boolean {
-		return idstring.trim() !== "" && !idstring.includes("_");
+		if (idstring.trim() === "" || idstring.includes("_")) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -206,17 +141,17 @@ export class DatasetUtils {
 	 */
 	public static parseMKey(key: string): InsightFacadeKey | undefined {
 		const splitUnderscore = key.split("_");
-		const expectedParts = 2;
-		if (splitUnderscore.length !== expectedParts) {
+		const beforeAndAfterUnderscoreLength = 2;
+		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
-		const mfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !MFields.includes(mfield as DatasetId)) {
+		const idstring = splitUnderscore[0],
+			mfield = splitUnderscore[1];
+		if (!this.isValidIdString(idstring) || !MFields.find((x) => x === mfield)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: idstring,
 			field: mfield as DatasetId,
 		};
 	}
@@ -228,24 +163,19 @@ export class DatasetUtils {
 	 */
 	public static parseSKey(key: string): InsightFacadeKey | undefined {
 		const splitUnderscore = key.split("_");
-		const expectedParts = 2;
-		if (splitUnderscore.length !== expectedParts) {
+		const beforeAndAfterUnderscoreLength = 2;
+		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
-		const sfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !SFields.includes(sfield as DatasetId)) {
+		const idstring = splitUnderscore[0],
+			sfield = splitUnderscore[1];
+		if (!this.isValidIdString(idstring) || !SFields.find((x) => x === sfield)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: idstring,
 			field: sfield as DatasetId,
 		};
-	}
-
-	// New helper function to validate kind
-	public static isValidKind(kind: string): boolean {
-		return kind === InsightDatasetKind.Sections || kind === InsightDatasetKind.Rooms;
 	}
 
 	/**

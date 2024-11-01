@@ -72,6 +72,8 @@ export class RoomsDatasetProcessor {
 		// Parse room files deeper in zip
 		const allRooms = await this.parseRoomsFiles(unzipped, buildingInfoMap);
 
+		// console.log(allRooms[10]);
+
 		return allRooms;
 	}
 
@@ -161,6 +163,7 @@ export class RoomsDatasetProcessor {
 				}
 			} catch (_e) {
 				// Moving on ...
+				// console.log(_e);
 			}
 		});
 		return rooms;
@@ -209,6 +212,7 @@ export class RoomsDatasetProcessor {
 			name: buildingInfo.code + "_" + roomNumber?.trim()!!,
 		};
 	}
+
 	/**
 	 *
 	 * @param parent parent node to search
