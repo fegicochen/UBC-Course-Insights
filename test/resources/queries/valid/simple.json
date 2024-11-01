@@ -1,5 +1,5 @@
 {
-	"title": "simple",
+	"title": "SELECT dept, avg WHERE avg > 97",
 	"input": {
 		"WHERE": {
 			"GT": {
@@ -17,19 +17,19 @@
 	"errorExpected": false,
 	"expected": [
 		{
-			"sections_dept": "epse",
-			"sections_avg": 97.09
-		},
-		{
-			"sections_dept": "epse",
-			"sections_avg": 97.09
-		},
-		{
 			"sections_dept": "math",
 			"sections_avg": 97.09
 		},
 		{
 			"sections_dept": "math",
+			"sections_avg": 97.09
+		},
+		{
+			"sections_dept": "epse",
+			"sections_avg": 97.09
+		},
+		{
+			"sections_dept": "epse",
 			"sections_avg": 97.09
 		},
 		{
@@ -145,19 +145,19 @@
 			"sections_avg": 98.5
 		},
 		{
-			"sections_dept": "epse",
-			"sections_avg": 98.58
-		},
-		{
-			"sections_dept": "epse",
-			"sections_avg": 98.58
-		},
-		{
 			"sections_dept": "nurs",
 			"sections_avg": 98.58
 		},
 		{
 			"sections_dept": "nurs",
+			"sections_avg": 98.58
+		},
+		{
+			"sections_dept": "epse",
+			"sections_avg": 98.58
+		},
+		{
+			"sections_dept": "epse",
 			"sections_avg": 98.58
 		},
 		{
