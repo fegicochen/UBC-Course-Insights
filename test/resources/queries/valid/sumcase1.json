@@ -1,0 +1,81 @@
+{
+	"title": "Sum of Failures per Year",
+	"input": {
+		"WHERE": {
+			"GT": {
+				"sections_fail": 0
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_year",
+				"totalFails"
+			],
+			"ORDER": {
+				"dir": "DOWN",
+				"keys": [
+					"totalFails"
+				]
+			}
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_year"
+			],
+			"APPLY": [
+				{
+					"totalFails": {
+						"SUM": "sections_fail"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_year": 1900,
+			"totalFails": 81223
+		},
+		{
+			"sections_year": 2014,
+			"totalFails": 10073
+		},
+		{
+			"sections_year": 2015,
+			"totalFails": 10073
+		},
+		{
+			"sections_year": 2013,
+			"totalFails": 9940
+		},
+		{
+			"sections_year": 2012,
+			"totalFails": 9723
+		},
+		{
+			"sections_year": 2009,
+			"totalFails": 9135
+		},
+		{
+			"sections_year": 2010,
+			"totalFails": 9044
+		},
+		{
+			"sections_year": 2011,
+			"totalFails": 8716
+		},
+		{
+			"sections_year": 2007,
+			"totalFails": 6268
+		},
+		{
+			"sections_year": 2008,
+			"totalFails": 6225
+		},
+		{
+			"sections_year": 2016,
+			"totalFails": 1944
+		}
+	]
+}

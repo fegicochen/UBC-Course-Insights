@@ -1,0 +1,1374 @@
+{
+	"title": "Combination Query with Multiple APPLY Rules",
+	"input": {
+		"WHERE": {},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"maxPasses",
+				"minPasses",
+				"avgPasses",
+				"uniqueSections"
+			],
+			"ORDER": {
+				"dir": "DOWN",
+				"keys": [
+					"avgPasses"
+				]
+			}
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"maxPasses": {
+						"MAX": "sections_pass"
+					}
+				},
+				{
+					"minPasses": {
+						"MIN": "sections_pass"
+					}
+				},
+				{
+					"avgPasses": {
+						"AVG": "sections_pass"
+					}
+				},
+				{
+					"uniqueSections": {
+						"COUNT": "sections_id"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "phrm",
+			"maxPasses": 218,
+			"minPasses": 17,
+			"avgPasses": 196.18,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "caps",
+			"maxPasses": 583,
+			"minPasses": 7,
+			"avgPasses": 135.49,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "psyc",
+			"maxPasses": 2289,
+			"minPasses": 1,
+			"avgPasses": 134.72,
+			"uniqueSections": 52
+		},
+		{
+			"sections_dept": "biol",
+			"maxPasses": 1817,
+			"minPasses": 4,
+			"avgPasses": 123.11,
+			"uniqueSections": 91
+		},
+		{
+			"sections_dept": "chem",
+			"maxPasses": 1762,
+			"minPasses": 1,
+			"avgPasses": 122.27,
+			"uniqueSections": 63
+		},
+		{
+			"sections_dept": "crwr",
+			"maxPasses": 1111,
+			"minPasses": 1,
+			"avgPasses": 120.1,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "poli",
+			"maxPasses": 917,
+			"minPasses": 7,
+			"avgPasses": 118.07,
+			"uniqueSections": 22
+		},
+		{
+			"sections_dept": "lfs",
+			"maxPasses": 360,
+			"minPasses": 0,
+			"avgPasses": 110.92,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "phar",
+			"maxPasses": 234,
+			"minPasses": 1,
+			"avgPasses": 108.57,
+			"uniqueSections": 51
+		},
+		{
+			"sections_dept": "econ",
+			"maxPasses": 2438,
+			"minPasses": 2,
+			"avgPasses": 97.9,
+			"uniqueSections": 93
+		},
+		{
+			"sections_dept": "phil",
+			"maxPasses": 1245,
+			"minPasses": 1,
+			"avgPasses": 94.94,
+			"uniqueSections": 17
+		},
+		{
+			"sections_dept": "fmst",
+			"maxPasses": 566,
+			"minPasses": 7,
+			"avgPasses": 93.95,
+			"uniqueSections": 7
+		},
+		{
+			"sections_dept": "stat",
+			"maxPasses": 827,
+			"minPasses": 1,
+			"avgPasses": 92.65,
+			"uniqueSections": 21
+		},
+		{
+			"sections_dept": "phys",
+			"maxPasses": 1558,
+			"minPasses": 3,
+			"avgPasses": 90.11,
+			"uniqueSections": 68
+		},
+		{
+			"sections_dept": "math",
+			"maxPasses": 1390,
+			"minPasses": 1,
+			"avgPasses": 89.78,
+			"uniqueSections": 94
+		},
+		{
+			"sections_dept": "micb",
+			"maxPasses": 740,
+			"minPasses": 4,
+			"avgPasses": 88.07,
+			"uniqueSections": 27
+		},
+		{
+			"sections_dept": "apsc",
+			"maxPasses": 810,
+			"minPasses": 5,
+			"avgPasses": 87.18,
+			"uniqueSections": 18
+		},
+		{
+			"sections_dept": "bioc",
+			"maxPasses": 542,
+			"minPasses": 1,
+			"avgPasses": 86.96,
+			"uniqueSections": 19
+		},
+		{
+			"sections_dept": "cpen",
+			"maxPasses": 256,
+			"minPasses": 9,
+			"avgPasses": 84.05,
+			"uniqueSections": 18
+		},
+		{
+			"sections_dept": "fnh",
+			"maxPasses": 518,
+			"minPasses": 3,
+			"avgPasses": 82.64,
+			"uniqueSections": 38
+		},
+		{
+			"sections_dept": "eosc",
+			"maxPasses": 2016,
+			"minPasses": 1,
+			"avgPasses": 80.94,
+			"uniqueSections": 89
+		},
+		{
+			"sections_dept": "geob",
+			"maxPasses": 565,
+			"minPasses": 4,
+			"avgPasses": 80.15,
+			"uniqueSections": 23
+		},
+		{
+			"sections_dept": "comm",
+			"maxPasses": 1367,
+			"minPasses": 3,
+			"avgPasses": 79.29,
+			"uniqueSections": 99
+		},
+		{
+			"sections_dept": "cpsc",
+			"maxPasses": 966,
+			"minPasses": 1,
+			"avgPasses": 78.09,
+			"uniqueSections": 53
+		},
+		{
+			"sections_dept": "phth",
+			"maxPasses": 83,
+			"minPasses": 1,
+			"avgPasses": 78.08,
+			"uniqueSections": 16
+		},
+		{
+			"sections_dept": "astr",
+			"maxPasses": 462,
+			"minPasses": 3,
+			"avgPasses": 76.22,
+			"uniqueSections": 16
+		},
+		{
+			"sections_dept": "clst",
+			"maxPasses": 730,
+			"minPasses": 5,
+			"avgPasses": 74.95,
+			"uniqueSections": 25
+		},
+		{
+			"sections_dept": "laso",
+			"maxPasses": 89,
+			"minPasses": 65,
+			"avgPasses": 73.71,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "cons",
+			"maxPasses": 284,
+			"minPasses": 4,
+			"avgPasses": 69.06,
+			"uniqueSections": 15
+		},
+		{
+			"sections_dept": "civl",
+			"maxPasses": 285,
+			"minPasses": 1,
+			"avgPasses": 68.61,
+			"uniqueSections": 84
+		},
+		{
+			"sections_dept": "asic",
+			"maxPasses": 86,
+			"minPasses": 5,
+			"avgPasses": 67.18,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "busi",
+			"maxPasses": 321,
+			"minPasses": 0,
+			"avgPasses": 65.08,
+			"uniqueSections": 40
+		},
+		{
+			"sections_dept": "ling",
+			"maxPasses": 641,
+			"minPasses": 4,
+			"avgPasses": 63.77,
+			"uniqueSections": 30
+		},
+		{
+			"sections_dept": "kin",
+			"maxPasses": 258,
+			"minPasses": 4,
+			"avgPasses": 63.56,
+			"uniqueSections": 53
+		},
+		{
+			"sections_dept": "engl",
+			"maxPasses": 2994,
+			"minPasses": 1,
+			"avgPasses": 63.28,
+			"uniqueSections": 32
+		},
+		{
+			"sections_dept": "elec",
+			"maxPasses": 307,
+			"minPasses": 4,
+			"avgPasses": 62.11,
+			"uniqueSections": 54
+		},
+		{
+			"sections_dept": "appp",
+			"maxPasses": 70,
+			"minPasses": 42,
+			"avgPasses": 61.5,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "soci",
+			"maxPasses": 450,
+			"minPasses": 4,
+			"avgPasses": 61.5,
+			"uniqueSections": 19
+		},
+		{
+			"sections_dept": "ba",
+			"maxPasses": 209,
+			"minPasses": 12,
+			"avgPasses": 61.19,
+			"uniqueSections": 10
+		},
+		{
+			"sections_dept": "astu",
+			"maxPasses": 121,
+			"minPasses": 6,
+			"avgPasses": 59.46,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "asia",
+			"maxPasses": 409,
+			"minPasses": 6,
+			"avgPasses": 58.71,
+			"uniqueSections": 57
+		},
+		{
+			"sections_dept": "bapa",
+			"maxPasses": 205,
+			"minPasses": 12,
+			"avgPasses": 58,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "geog",
+			"maxPasses": 472,
+			"minPasses": 1,
+			"avgPasses": 57.77,
+			"uniqueSections": 47
+		},
+		{
+			"sections_dept": "coec",
+			"maxPasses": 156,
+			"minPasses": 20,
+			"avgPasses": 57.41,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "cens",
+			"maxPasses": 279,
+			"minPasses": 4,
+			"avgPasses": 56.25,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "chbe",
+			"maxPasses": 208,
+			"minPasses": 1,
+			"avgPasses": 52.82,
+			"uniqueSections": 55
+		},
+		{
+			"sections_dept": "fist",
+			"maxPasses": 270,
+			"minPasses": 7,
+			"avgPasses": 50.83,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "wrds",
+			"maxPasses": 1856,
+			"minPasses": 12,
+			"avgPasses": 50.74,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "anat",
+			"maxPasses": 83,
+			"minPasses": 4,
+			"avgPasses": 49.27,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "cogs",
+			"maxPasses": 262,
+			"minPasses": 6,
+			"avgPasses": 49.05,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "hist",
+			"maxPasses": 353,
+			"minPasses": 1,
+			"avgPasses": 48.65,
+			"uniqueSections": 69
+		},
+		{
+			"sections_dept": "mech",
+			"maxPasses": 240,
+			"minPasses": 1,
+			"avgPasses": 48.55,
+			"uniqueSections": 85
+		},
+		{
+			"sections_dept": "basc",
+			"maxPasses": 153,
+			"minPasses": 10,
+			"avgPasses": 48.43,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "bahr",
+			"maxPasses": 222,
+			"minPasses": 9,
+			"avgPasses": 48.03,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "rsot",
+			"maxPasses": 54,
+			"minPasses": 1,
+			"avgPasses": 46.85,
+			"uniqueSections": 11
+		},
+		{
+			"sections_dept": "bama",
+			"maxPasses": 203,
+			"minPasses": 5,
+			"avgPasses": 46.16,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "bala",
+			"maxPasses": 57,
+			"minPasses": 9,
+			"avgPasses": 45.18,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "baac",
+			"maxPasses": 201,
+			"minPasses": 7,
+			"avgPasses": 45,
+			"uniqueSections": 6
+		},
+		{
+			"sections_dept": "arth",
+			"maxPasses": 131,
+			"minPasses": 1,
+			"avgPasses": 44.91,
+			"uniqueSections": 32
+		},
+		{
+			"sections_dept": "basm",
+			"maxPasses": 188,
+			"minPasses": 6,
+			"avgPasses": 44.13,
+			"uniqueSections": 6
+		},
+		{
+			"sections_dept": "grsj",
+			"maxPasses": 238,
+			"minPasses": 1,
+			"avgPasses": 43.03,
+			"uniqueSections": 23
+		},
+		{
+			"sections_dept": "scan",
+			"maxPasses": 78,
+			"minPasses": 7,
+			"avgPasses": 42.58,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "anth",
+			"maxPasses": 212,
+			"minPasses": 3,
+			"avgPasses": 42.39,
+			"uniqueSections": 26
+		},
+		{
+			"sections_dept": "frst",
+			"maxPasses": 245,
+			"minPasses": 0,
+			"avgPasses": 41.87,
+			"uniqueSections": 72
+		},
+		{
+			"sections_dept": "babs",
+			"maxPasses": 140,
+			"minPasses": 7,
+			"avgPasses": 41.73,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "span",
+			"maxPasses": 534,
+			"minPasses": 2,
+			"avgPasses": 41.29,
+			"uniqueSections": 21
+		},
+		{
+			"sections_dept": "scie",
+			"maxPasses": 472,
+			"minPasses": 9,
+			"avgPasses": 40.7,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "urst",
+			"maxPasses": 75,
+			"minPasses": 19,
+			"avgPasses": 40.5,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "info",
+			"maxPasses": 40,
+			"minPasses": 40,
+			"avgPasses": 40,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "bafi",
+			"maxPasses": 233,
+			"minPasses": 4,
+			"avgPasses": 39.84,
+			"uniqueSections": 11
+		},
+		{
+			"sections_dept": "igen",
+			"maxPasses": 59,
+			"minPasses": 10,
+			"avgPasses": 39.82,
+			"uniqueSections": 8
+		},
+		{
+			"sections_dept": "visa",
+			"maxPasses": 442,
+			"minPasses": 5,
+			"avgPasses": 39.8,
+			"uniqueSections": 28
+		},
+		{
+			"sections_dept": "ufor",
+			"maxPasses": 54,
+			"minPasses": 13,
+			"avgPasses": 39.67,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "fren",
+			"maxPasses": 435,
+			"minPasses": 4,
+			"avgPasses": 39.45,
+			"uniqueSections": 28
+		},
+		{
+			"sections_dept": "germ",
+			"maxPasses": 597,
+			"minPasses": 2,
+			"avgPasses": 39.43,
+			"uniqueSections": 23
+		},
+		{
+			"sections_dept": "vant",
+			"maxPasses": 203,
+			"minPasses": 13,
+			"avgPasses": 39.2,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "arcl",
+			"maxPasses": 184,
+			"minPasses": 7,
+			"avgPasses": 38.81,
+			"uniqueSections": 13
+		},
+		{
+			"sections_dept": "bait",
+			"maxPasses": 94,
+			"minPasses": 8,
+			"avgPasses": 38.8,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "mdvl",
+			"maxPasses": 51,
+			"minPasses": 28,
+			"avgPasses": 38.3,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "nest",
+			"maxPasses": 111,
+			"minPasses": 4,
+			"avgPasses": 38,
+			"uniqueSections": 7
+		},
+		{
+			"sections_dept": "enph",
+			"maxPasses": 64,
+			"minPasses": 4,
+			"avgPasses": 37.93,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "envr",
+			"maxPasses": 92,
+			"minPasses": 4,
+			"avgPasses": 37.9,
+			"uniqueSections": 7
+		},
+		{
+			"sections_dept": "mine",
+			"maxPasses": 109,
+			"minPasses": 1,
+			"avgPasses": 36.8,
+			"uniqueSections": 41
+		},
+		{
+			"sections_dept": "adhe",
+			"maxPasses": 193,
+			"minPasses": 7,
+			"avgPasses": 35.53,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "chin",
+			"maxPasses": 436,
+			"minPasses": 4,
+			"avgPasses": 35.49,
+			"uniqueSections": 43
+		},
+		{
+			"sections_dept": "ends",
+			"maxPasses": 160,
+			"minPasses": 9,
+			"avgPasses": 34.79,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "baen",
+			"maxPasses": 69,
+			"minPasses": 13,
+			"avgPasses": 34.02,
+			"uniqueSections": 6
+		},
+		{
+			"sections_dept": "fre",
+			"maxPasses": 121,
+			"minPasses": 4,
+			"avgPasses": 33.79,
+			"uniqueSections": 18
+		},
+		{
+			"sections_dept": "relg",
+			"maxPasses": 104,
+			"minPasses": 5,
+			"avgPasses": 33.06,
+			"uniqueSections": 15
+		},
+		{
+			"sections_dept": "cohr",
+			"maxPasses": 47,
+			"minPasses": 11,
+			"avgPasses": 32.81,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "nurs",
+			"maxPasses": 120,
+			"minPasses": 1,
+			"avgPasses": 32.51,
+			"uniqueSections": 46
+		},
+		{
+			"sections_dept": "cnps",
+			"maxPasses": 214,
+			"minPasses": 4,
+			"avgPasses": 32.02,
+			"uniqueSections": 19
+		},
+		{
+			"sections_dept": "baul",
+			"maxPasses": 46,
+			"minPasses": 20,
+			"avgPasses": 31.89,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "jrnl",
+			"maxPasses": 56,
+			"minPasses": 11,
+			"avgPasses": 30.91,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "mtrl",
+			"maxPasses": 95,
+			"minPasses": 1,
+			"avgPasses": 30.71,
+			"uniqueSections": 48
+		},
+		{
+			"sections_dept": "spha",
+			"maxPasses": 44,
+			"minPasses": 23,
+			"avgPasses": 30.64,
+			"uniqueSections": 20
+		},
+		{
+			"sections_dept": "law",
+			"maxPasses": 190,
+			"minPasses": 2,
+			"avgPasses": 30.48,
+			"uniqueSections": 83
+		},
+		{
+			"sections_dept": "wood",
+			"maxPasses": 91,
+			"minPasses": 0,
+			"avgPasses": 28.81,
+			"uniqueSections": 30
+		},
+		{
+			"sections_dept": "cnrs",
+			"maxPasses": 60,
+			"minPasses": 1,
+			"avgPasses": 28.48,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "libe",
+			"maxPasses": 71,
+			"minPasses": 12,
+			"avgPasses": 28.48,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "musc",
+			"maxPasses": 148,
+			"minPasses": 1,
+			"avgPasses": 28.28,
+			"uniqueSections": 52
+		},
+		{
+			"sections_dept": "isci",
+			"maxPasses": 54,
+			"minPasses": 13,
+			"avgPasses": 28.23,
+			"uniqueSections": 6
+		},
+		{
+			"sections_dept": "fnis",
+			"maxPasses": 92,
+			"minPasses": 9,
+			"avgPasses": 28.11,
+			"uniqueSections": 8
+		},
+		{
+			"sections_dept": "cics",
+			"maxPasses": 35,
+			"minPasses": 19,
+			"avgPasses": 27.86,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "ital",
+			"maxPasses": 272,
+			"minPasses": 3,
+			"avgPasses": 27.53,
+			"uniqueSections": 15
+		},
+		{
+			"sections_dept": "etec",
+			"maxPasses": 107,
+			"minPasses": 5,
+			"avgPasses": 26.9,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "russ",
+			"maxPasses": 105,
+			"minPasses": 4,
+			"avgPasses": 26.89,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "last",
+			"maxPasses": 47,
+			"minPasses": 8,
+			"avgPasses": 26.81,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "fipr",
+			"maxPasses": 94,
+			"minPasses": 8,
+			"avgPasses": 26.59,
+			"uniqueSections": 14
+		},
+		{
+			"sections_dept": "atsc",
+			"maxPasses": 101,
+			"minPasses": 4,
+			"avgPasses": 26.08,
+			"uniqueSections": 8
+		},
+		{
+			"sections_dept": "pcth",
+			"maxPasses": 208,
+			"minPasses": 1,
+			"avgPasses": 25.5,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "latn",
+			"maxPasses": 135,
+			"minPasses": 6,
+			"avgPasses": 25.36,
+			"uniqueSections": 6
+		},
+		{
+			"sections_dept": "educ",
+			"maxPasses": 202,
+			"minPasses": 3,
+			"avgPasses": 25.27,
+			"uniqueSections": 11
+		},
+		{
+			"sections_dept": "japn",
+			"maxPasses": 500,
+			"minPasses": 5,
+			"avgPasses": 25.26,
+			"uniqueSections": 24
+		},
+		{
+			"sections_dept": "apbi",
+			"maxPasses": 233,
+			"minPasses": 2,
+			"avgPasses": 25.15,
+			"uniqueSections": 40
+		},
+		{
+			"sections_dept": "swed",
+			"maxPasses": 57,
+			"minPasses": 12,
+			"avgPasses": 24.96,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "sowk",
+			"maxPasses": 116,
+			"minPasses": 3,
+			"avgPasses": 23.94,
+			"uniqueSections": 33
+		},
+		{
+			"sections_dept": "arch",
+			"maxPasses": 62,
+			"minPasses": 1,
+			"avgPasses": 23.91,
+			"uniqueSections": 29
+		},
+		{
+			"sections_dept": "lled",
+			"maxPasses": 304,
+			"minPasses": 3,
+			"avgPasses": 23.5,
+			"uniqueSections": 27
+		},
+		{
+			"sections_dept": "eced",
+			"maxPasses": 72,
+			"minPasses": 9,
+			"avgPasses": 23.46,
+			"uniqueSections": 10
+		},
+		{
+			"sections_dept": "korn",
+			"maxPasses": 67,
+			"minPasses": 3,
+			"avgPasses": 23.1,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "iwme",
+			"maxPasses": 23,
+			"minPasses": 23,
+			"avgPasses": 23,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "epse",
+			"maxPasses": 185,
+			"minPasses": 4,
+			"avgPasses": 22.64,
+			"uniqueSections": 58
+		},
+		{
+			"sections_dept": "arbc",
+			"maxPasses": 40,
+			"minPasses": 8,
+			"avgPasses": 21.88,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "libr",
+			"maxPasses": 75,
+			"minPasses": 1,
+			"avgPasses": 21.59,
+			"uniqueSections": 34
+		},
+		{
+			"sections_dept": "punj",
+			"maxPasses": 51,
+			"minPasses": 5,
+			"avgPasses": 21.24,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "dhyg",
+			"maxPasses": 75,
+			"minPasses": 3,
+			"avgPasses": 21.22,
+			"uniqueSections": 18
+		},
+		{
+			"sections_dept": "spph",
+			"maxPasses": 113,
+			"minPasses": 3,
+			"avgPasses": 20.73,
+			"uniqueSections": 51
+		},
+		{
+			"sections_dept": "pols",
+			"maxPasses": 36,
+			"minPasses": 5,
+			"avgPasses": 20,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "audi",
+			"maxPasses": 87,
+			"minPasses": 8,
+			"avgPasses": 19.81,
+			"uniqueSections": 34
+		},
+		{
+			"sections_dept": "thtr",
+			"maxPasses": 191,
+			"minPasses": 2,
+			"avgPasses": 19.39,
+			"uniqueSections": 43
+		},
+		{
+			"sections_dept": "ceen",
+			"maxPasses": 30,
+			"minPasses": 3,
+			"avgPasses": 19.37,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "edcp",
+			"maxPasses": 102,
+			"minPasses": 5,
+			"avgPasses": 19.37,
+			"uniqueSections": 26
+		},
+		{
+			"sections_dept": "path",
+			"maxPasses": 148,
+			"minPasses": 1,
+			"avgPasses": 19.36,
+			"uniqueSections": 27
+		},
+		{
+			"sections_dept": "hgse",
+			"maxPasses": 21,
+			"minPasses": 14,
+			"avgPasses": 19.11,
+			"uniqueSections": 10
+		},
+		{
+			"sections_dept": "hinu",
+			"maxPasses": 25,
+			"minPasses": 6,
+			"avgPasses": 18.38,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "rhsc",
+			"maxPasses": 81,
+			"minPasses": 1,
+			"avgPasses": 18.08,
+			"uniqueSections": 10
+		},
+		{
+			"sections_dept": "arst",
+			"maxPasses": 35,
+			"minPasses": 4,
+			"avgPasses": 18.02,
+			"uniqueSections": 19
+		},
+		{
+			"sections_dept": "plan",
+			"maxPasses": 65,
+			"minPasses": 4,
+			"avgPasses": 18.02,
+			"uniqueSections": 16
+		},
+		{
+			"sections_dept": "bams",
+			"maxPasses": 69,
+			"minPasses": 7,
+			"avgPasses": 17.48,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "bmeg",
+			"maxPasses": 44,
+			"minPasses": 1,
+			"avgPasses": 17.29,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "larc",
+			"maxPasses": 36,
+			"minPasses": 4,
+			"avgPasses": 17.21,
+			"uniqueSections": 19
+		},
+		{
+			"sections_dept": "itst",
+			"maxPasses": 36,
+			"minPasses": 4,
+			"avgPasses": 17.14,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "gpp",
+			"maxPasses": 28,
+			"minPasses": 5,
+			"avgPasses": 16.92,
+			"uniqueSections": 10
+		},
+		{
+			"sections_dept": "fopr",
+			"maxPasses": 58,
+			"minPasses": 0,
+			"avgPasses": 16.1,
+			"uniqueSections": 7
+		},
+		{
+			"sections_dept": "onco",
+			"maxPasses": 23,
+			"minPasses": 9,
+			"avgPasses": 16,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "food",
+			"maxPasses": 31,
+			"minPasses": 5,
+			"avgPasses": 15.99,
+			"uniqueSections": 11
+		},
+		{
+			"sections_dept": "edst",
+			"maxPasses": 64,
+			"minPasses": 2,
+			"avgPasses": 15.62,
+			"uniqueSections": 25
+		},
+		{
+			"sections_dept": "rmst",
+			"maxPasses": 38,
+			"minPasses": 4,
+			"avgPasses": 15.6,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "port",
+			"maxPasses": 36,
+			"minPasses": 4,
+			"avgPasses": 15.2,
+			"uniqueSections": 8
+		},
+		{
+			"sections_dept": "dent",
+			"maxPasses": 59,
+			"minPasses": 1,
+			"avgPasses": 15.04,
+			"uniqueSections": 46
+		},
+		{
+			"sections_dept": "midw",
+			"maxPasses": 21,
+			"minPasses": 6,
+			"avgPasses": 14.8,
+			"uniqueSections": 14
+		},
+		{
+			"sections_dept": "udes",
+			"maxPasses": 16,
+			"minPasses": 13,
+			"avgPasses": 14.75,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "fnel",
+			"maxPasses": 38,
+			"minPasses": 5,
+			"avgPasses": 14.4,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "nrsc",
+			"maxPasses": 36,
+			"minPasses": 1,
+			"avgPasses": 14.39,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "medg",
+			"maxPasses": 37,
+			"minPasses": 2,
+			"avgPasses": 14.06,
+			"uniqueSections": 13
+		},
+		{
+			"sections_dept": "medi",
+			"maxPasses": 49,
+			"minPasses": 1,
+			"avgPasses": 13.63,
+			"uniqueSections": 8
+		},
+		{
+			"sections_dept": "name",
+			"maxPasses": 16,
+			"minPasses": 11,
+			"avgPasses": 13.48,
+			"uniqueSections": 7
+		},
+		{
+			"sections_dept": "cnto",
+			"maxPasses": 20,
+			"minPasses": 3,
+			"avgPasses": 13,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "bota",
+			"maxPasses": 23,
+			"minPasses": 3,
+			"avgPasses": 12.53,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "rgla",
+			"maxPasses": 25,
+			"minPasses": 5,
+			"avgPasses": 12.38,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "dani",
+			"maxPasses": 22,
+			"minPasses": 3,
+			"avgPasses": 12.31,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "fhis",
+			"maxPasses": 15,
+			"minPasses": 9,
+			"avgPasses": 12,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "gsat",
+			"maxPasses": 18,
+			"minPasses": 7,
+			"avgPasses": 11.86,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "rmes",
+			"maxPasses": 24,
+			"minPasses": 1,
+			"avgPasses": 11.66,
+			"uniqueSections": 13
+		},
+		{
+			"sections_dept": "eece",
+			"maxPasses": 55,
+			"minPasses": 1,
+			"avgPasses": 11.35,
+			"uniqueSections": 35
+		},
+		{
+			"sections_dept": "clch",
+			"maxPasses": 16,
+			"minPasses": 6,
+			"avgPasses": 11.29,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "hebr",
+			"maxPasses": 24,
+			"minPasses": 5,
+			"avgPasses": 11.11,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "ursy",
+			"maxPasses": 12,
+			"minPasses": 9,
+			"avgPasses": 10.5,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "grek",
+			"maxPasses": 27,
+			"minPasses": 4,
+			"avgPasses": 10.43,
+			"uniqueSections": 6
+		},
+		{
+			"sections_dept": "biof",
+			"maxPasses": 16,
+			"minPasses": 3,
+			"avgPasses": 9.52,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "pers",
+			"maxPasses": 24,
+			"minPasses": 3,
+			"avgPasses": 9.29,
+			"uniqueSections": 6
+		},
+		{
+			"sections_dept": "cell",
+			"maxPasses": 19,
+			"minPasses": 4,
+			"avgPasses": 8.74,
+			"uniqueSections": 12
+		},
+		{
+			"sections_dept": "surg",
+			"maxPasses": 28,
+			"minPasses": 3,
+			"avgPasses": 8.47,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "sans",
+			"maxPasses": 11,
+			"minPasses": 4,
+			"avgPasses": 8.2,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "aanb",
+			"maxPasses": 9,
+			"minPasses": 6,
+			"avgPasses": 7.5,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "soil",
+			"maxPasses": 16,
+			"minPasses": 3,
+			"avgPasses": 7.44,
+			"uniqueSections": 9
+		},
+		{
+			"sections_dept": "ccst",
+			"maxPasses": 13,
+			"minPasses": 1,
+			"avgPasses": 6.9,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "zool",
+			"maxPasses": 13,
+			"minPasses": 1,
+			"avgPasses": 6.64,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "gbpr",
+			"maxPasses": 8,
+			"minPasses": 5,
+			"avgPasses": 6.5,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "lais",
+			"maxPasses": 7,
+			"minPasses": 6,
+			"avgPasses": 6.5,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "fish",
+			"maxPasses": 10,
+			"minPasses": 2,
+			"avgPasses": 6.36,
+			"uniqueSections": 5
+		},
+		{
+			"sections_dept": "hunu",
+			"maxPasses": 11,
+			"minPasses": 3,
+			"avgPasses": 6.23,
+			"uniqueSections": 2
+		},
+		{
+			"sections_dept": "obst",
+			"maxPasses": 12,
+			"minPasses": 1,
+			"avgPasses": 6.13,
+			"uniqueSections": 7
+		},
+		{
+			"sections_dept": "sts",
+			"maxPasses": 8,
+			"minPasses": 5,
+			"avgPasses": 6,
+			"uniqueSections": 3
+		},
+		{
+			"sections_dept": "mrne",
+			"maxPasses": 7,
+			"minPasses": 4,
+			"avgPasses": 5.45,
+			"uniqueSections": 4
+		},
+		{
+			"sections_dept": "test",
+			"maxPasses": 3,
+			"minPasses": 3,
+			"avgPasses": 3,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "iar",
+			"maxPasses": 5,
+			"minPasses": 1,
+			"avgPasses": 2.8,
+			"uniqueSections": 1
+		},
+		{
+			"sections_dept": "chil",
+			"maxPasses": 8,
+			"minPasses": 1,
+			"avgPasses": 2.67,
+			"uniqueSections": 1
+		}
+	]
+}

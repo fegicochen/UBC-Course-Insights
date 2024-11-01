@@ -1,5 +1,5 @@
 import { Keywords, InsightFacadeKey, OptionsState } from "./Dataset";
-import { DatasetUtils } from "./Dataset";
+import { DatasetUtils, Transformations } from "./Dataset";
 import { InsightError } from "./IInsightFacade";
 
 export class OptionsProcessor {
@@ -11,7 +11,7 @@ export class OptionsProcessor {
 	 * Processes the raw options object and returns the structured OptionsState.
 	 * @throws InsightError if options are malformed.
 	 */
-	public processOptions(): OptionsState {
+	public processOptions(transformations?: Transformations): OptionsState {
 		const options = DatasetUtils.checkIsObject(Keywords.Options, this.optionsRaw);
 		const optionsStructure = DatasetUtils.requireExactKeys(options, [
 			[Keywords.Columns, true],
@@ -25,6 +25,26 @@ export class OptionsProcessor {
 		const columnsSet = new Set(columnsForState.map((col) => (col.kind ? `${col.kind}_${col.field}` : col.field)));
 
 		const orderForState = this.processOrder(optionsStructure, datasetIdForState, columnsSet);
+
+		// If transformations are present, validate that all columns are in GROUP or APPLY
+		if (transformations) {
+			const groupKeys = new Set(transformations.GROUP);
+			const applyKeysSet = new Set(this.applyKeys);
+
+			columnsForState.forEach((column) => {
+				if (column.kind === "") {
+					// APPLY keys
+					if (!applyKeysSet.has(column.field)) {
+						throw new InsightError(`APPLY key ${column.field} not found.`);
+					}
+				} else {
+					// GROUP keys
+					if (!groupKeys.has(`${column.kind}_${column.field}`)) {
+						throw new InsightError(`GROUP key ${column.kind}_${column.field} not found.`);
+					}
+				}
+			});
+		}
 
 		return {
 			columns: columnsForState,

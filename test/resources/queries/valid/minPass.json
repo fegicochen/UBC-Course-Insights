@@ -1,0 +1,594 @@
+{
+	"title": "minPass",
+	"input": {
+		"WHERE": {},
+		"OPTIONS": {
+			"COLUMNS": [
+				"minPass"
+			],
+			"ORDER": "minPass"
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"minPass": {
+						"MIN": "sections_pass"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"minPass": 0
+		},
+		{
+			"minPass": 0
+		},
+		{
+			"minPass": 0
+		},
+		{
+			"minPass": 0
+		},
+		{
+			"minPass": 0
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 1
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 2
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 3
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 4
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 5
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 6
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 7
+		},
+		{
+			"minPass": 8
+		},
+		{
+			"minPass": 8
+		},
+		{
+			"minPass": 8
+		},
+		{
+			"minPass": 8
+		},
+		{
+			"minPass": 8
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 9
+		},
+		{
+			"minPass": 10
+		},
+		{
+			"minPass": 10
+		},
+		{
+			"minPass": 11
+		},
+		{
+			"minPass": 11
+		},
+		{
+			"minPass": 11
+		},
+		{
+			"minPass": 12
+		},
+		{
+			"minPass": 12
+		},
+		{
+			"minPass": 12
+		},
+		{
+			"minPass": 12
+		},
+		{
+			"minPass": 12
+		},
+		{
+			"minPass": 13
+		},
+		{
+			"minPass": 13
+		},
+		{
+			"minPass": 13
+		},
+		{
+			"minPass": 13
+		},
+		{
+			"minPass": 13
+		},
+		{
+			"minPass": 14
+		},
+		{
+			"minPass": 17
+		},
+		{
+			"minPass": 19
+		},
+		{
+			"minPass": 19
+		},
+		{
+			"minPass": 20
+		},
+		{
+			"minPass": 20
+		},
+		{
+			"minPass": 23
+		},
+		{
+			"minPass": 23
+		},
+		{
+			"minPass": 28
+		},
+		{
+			"minPass": 40
+		},
+		{
+			"minPass": 42
+		},
+		{
+			"minPass": 65
+		}
+	]
+}

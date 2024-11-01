@@ -336,8 +336,15 @@ export class QueryEngine {
 	}
 
 	private applyTransformations(data: any[], transformations: Transformations): any[] {
-		// 'any' because it can be Section or Room
 		const { GROUP, APPLY } = transformations;
+
+		// Check for duplicate APPLY keys
+		const applyKeys = APPLY.map((applyRule) => Object.keys(applyRule)[0]);
+		const uniqueApplyKeys = new Set(applyKeys);
+		if (applyKeys.length !== uniqueApplyKeys.size) {
+			throw new InsightError("Duplicate APPLY keys found.");
+		}
+
 		const groupedData = this.groupData(data, GROUP);
 
 		const results: any[] = [];

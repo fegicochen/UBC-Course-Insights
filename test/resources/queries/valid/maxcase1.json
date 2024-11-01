@@ -1,0 +1,793 @@
+{
+	"title": "Find Maximum Passes in Each Department",
+	"input": {
+		"WHERE": {
+			"GT": {
+				"sections_pass": 0
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"maxPasses"
+			],
+			"ORDER": {
+				"dir": "DOWN",
+				"keys": [
+					"maxPasses"
+				]
+			}
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"maxPasses": {
+						"MAX": "sections_pass"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "engl",
+			"maxPasses": 2994
+		},
+		{
+			"sections_dept": "econ",
+			"maxPasses": 2438
+		},
+		{
+			"sections_dept": "psyc",
+			"maxPasses": 2289
+		},
+		{
+			"sections_dept": "eosc",
+			"maxPasses": 2016
+		},
+		{
+			"sections_dept": "wrds",
+			"maxPasses": 1856
+		},
+		{
+			"sections_dept": "biol",
+			"maxPasses": 1817
+		},
+		{
+			"sections_dept": "chem",
+			"maxPasses": 1762
+		},
+		{
+			"sections_dept": "phys",
+			"maxPasses": 1558
+		},
+		{
+			"sections_dept": "math",
+			"maxPasses": 1390
+		},
+		{
+			"sections_dept": "comm",
+			"maxPasses": 1367
+		},
+		{
+			"sections_dept": "phil",
+			"maxPasses": 1245
+		},
+		{
+			"sections_dept": "crwr",
+			"maxPasses": 1111
+		},
+		{
+			"sections_dept": "cpsc",
+			"maxPasses": 966
+		},
+		{
+			"sections_dept": "poli",
+			"maxPasses": 917
+		},
+		{
+			"sections_dept": "stat",
+			"maxPasses": 827
+		},
+		{
+			"sections_dept": "apsc",
+			"maxPasses": 810
+		},
+		{
+			"sections_dept": "micb",
+			"maxPasses": 740
+		},
+		{
+			"sections_dept": "clst",
+			"maxPasses": 730
+		},
+		{
+			"sections_dept": "ling",
+			"maxPasses": 641
+		},
+		{
+			"sections_dept": "germ",
+			"maxPasses": 597
+		},
+		{
+			"sections_dept": "caps",
+			"maxPasses": 583
+		},
+		{
+			"sections_dept": "fmst",
+			"maxPasses": 566
+		},
+		{
+			"sections_dept": "geob",
+			"maxPasses": 565
+		},
+		{
+			"sections_dept": "bioc",
+			"maxPasses": 542
+		},
+		{
+			"sections_dept": "span",
+			"maxPasses": 534
+		},
+		{
+			"sections_dept": "fnh",
+			"maxPasses": 518
+		},
+		{
+			"sections_dept": "japn",
+			"maxPasses": 500
+		},
+		{
+			"sections_dept": "geog",
+			"maxPasses": 472
+		},
+		{
+			"sections_dept": "scie",
+			"maxPasses": 472
+		},
+		{
+			"sections_dept": "astr",
+			"maxPasses": 462
+		},
+		{
+			"sections_dept": "soci",
+			"maxPasses": 450
+		},
+		{
+			"sections_dept": "visa",
+			"maxPasses": 442
+		},
+		{
+			"sections_dept": "chin",
+			"maxPasses": 436
+		},
+		{
+			"sections_dept": "fren",
+			"maxPasses": 435
+		},
+		{
+			"sections_dept": "asia",
+			"maxPasses": 409
+		},
+		{
+			"sections_dept": "lfs",
+			"maxPasses": 360
+		},
+		{
+			"sections_dept": "hist",
+			"maxPasses": 353
+		},
+		{
+			"sections_dept": "busi",
+			"maxPasses": 321
+		},
+		{
+			"sections_dept": "elec",
+			"maxPasses": 307
+		},
+		{
+			"sections_dept": "lled",
+			"maxPasses": 304
+		},
+		{
+			"sections_dept": "civl",
+			"maxPasses": 285
+		},
+		{
+			"sections_dept": "cons",
+			"maxPasses": 284
+		},
+		{
+			"sections_dept": "cens",
+			"maxPasses": 279
+		},
+		{
+			"sections_dept": "ital",
+			"maxPasses": 272
+		},
+		{
+			"sections_dept": "fist",
+			"maxPasses": 270
+		},
+		{
+			"sections_dept": "cogs",
+			"maxPasses": 262
+		},
+		{
+			"sections_dept": "kin",
+			"maxPasses": 258
+		},
+		{
+			"sections_dept": "cpen",
+			"maxPasses": 256
+		},
+		{
+			"sections_dept": "frst",
+			"maxPasses": 245
+		},
+		{
+			"sections_dept": "mech",
+			"maxPasses": 240
+		},
+		{
+			"sections_dept": "grsj",
+			"maxPasses": 238
+		},
+		{
+			"sections_dept": "phar",
+			"maxPasses": 234
+		},
+		{
+			"sections_dept": "apbi",
+			"maxPasses": 233
+		},
+		{
+			"sections_dept": "bafi",
+			"maxPasses": 233
+		},
+		{
+			"sections_dept": "bahr",
+			"maxPasses": 222
+		},
+		{
+			"sections_dept": "phrm",
+			"maxPasses": 218
+		},
+		{
+			"sections_dept": "cnps",
+			"maxPasses": 214
+		},
+		{
+			"sections_dept": "anth",
+			"maxPasses": 212
+		},
+		{
+			"sections_dept": "ba",
+			"maxPasses": 209
+		},
+		{
+			"sections_dept": "chbe",
+			"maxPasses": 208
+		},
+		{
+			"sections_dept": "pcth",
+			"maxPasses": 208
+		},
+		{
+			"sections_dept": "bapa",
+			"maxPasses": 205
+		},
+		{
+			"sections_dept": "bama",
+			"maxPasses": 203
+		},
+		{
+			"sections_dept": "vant",
+			"maxPasses": 203
+		},
+		{
+			"sections_dept": "educ",
+			"maxPasses": 202
+		},
+		{
+			"sections_dept": "baac",
+			"maxPasses": 201
+		},
+		{
+			"sections_dept": "adhe",
+			"maxPasses": 193
+		},
+		{
+			"sections_dept": "thtr",
+			"maxPasses": 191
+		},
+		{
+			"sections_dept": "law",
+			"maxPasses": 190
+		},
+		{
+			"sections_dept": "basm",
+			"maxPasses": 188
+		},
+		{
+			"sections_dept": "epse",
+			"maxPasses": 185
+		},
+		{
+			"sections_dept": "arcl",
+			"maxPasses": 184
+		},
+		{
+			"sections_dept": "ends",
+			"maxPasses": 160
+		},
+		{
+			"sections_dept": "coec",
+			"maxPasses": 156
+		},
+		{
+			"sections_dept": "basc",
+			"maxPasses": 153
+		},
+		{
+			"sections_dept": "musc",
+			"maxPasses": 148
+		},
+		{
+			"sections_dept": "path",
+			"maxPasses": 148
+		},
+		{
+			"sections_dept": "babs",
+			"maxPasses": 140
+		},
+		{
+			"sections_dept": "latn",
+			"maxPasses": 135
+		},
+		{
+			"sections_dept": "arth",
+			"maxPasses": 131
+		},
+		{
+			"sections_dept": "astu",
+			"maxPasses": 121
+		},
+		{
+			"sections_dept": "fre",
+			"maxPasses": 121
+		},
+		{
+			"sections_dept": "nurs",
+			"maxPasses": 120
+		},
+		{
+			"sections_dept": "sowk",
+			"maxPasses": 116
+		},
+		{
+			"sections_dept": "spph",
+			"maxPasses": 113
+		},
+		{
+			"sections_dept": "nest",
+			"maxPasses": 111
+		},
+		{
+			"sections_dept": "mine",
+			"maxPasses": 109
+		},
+		{
+			"sections_dept": "etec",
+			"maxPasses": 107
+		},
+		{
+			"sections_dept": "russ",
+			"maxPasses": 105
+		},
+		{
+			"sections_dept": "relg",
+			"maxPasses": 104
+		},
+		{
+			"sections_dept": "edcp",
+			"maxPasses": 102
+		},
+		{
+			"sections_dept": "atsc",
+			"maxPasses": 101
+		},
+		{
+			"sections_dept": "mtrl",
+			"maxPasses": 95
+		},
+		{
+			"sections_dept": "bait",
+			"maxPasses": 94
+		},
+		{
+			"sections_dept": "fipr",
+			"maxPasses": 94
+		},
+		{
+			"sections_dept": "envr",
+			"maxPasses": 92
+		},
+		{
+			"sections_dept": "fnis",
+			"maxPasses": 92
+		},
+		{
+			"sections_dept": "wood",
+			"maxPasses": 91
+		},
+		{
+			"sections_dept": "laso",
+			"maxPasses": 89
+		},
+		{
+			"sections_dept": "audi",
+			"maxPasses": 87
+		},
+		{
+			"sections_dept": "asic",
+			"maxPasses": 86
+		},
+		{
+			"sections_dept": "anat",
+			"maxPasses": 83
+		},
+		{
+			"sections_dept": "phth",
+			"maxPasses": 83
+		},
+		{
+			"sections_dept": "rhsc",
+			"maxPasses": 81
+		},
+		{
+			"sections_dept": "scan",
+			"maxPasses": 78
+		},
+		{
+			"sections_dept": "dhyg",
+			"maxPasses": 75
+		},
+		{
+			"sections_dept": "libr",
+			"maxPasses": 75
+		},
+		{
+			"sections_dept": "urst",
+			"maxPasses": 75
+		},
+		{
+			"sections_dept": "eced",
+			"maxPasses": 72
+		},
+		{
+			"sections_dept": "libe",
+			"maxPasses": 71
+		},
+		{
+			"sections_dept": "appp",
+			"maxPasses": 70
+		},
+		{
+			"sections_dept": "baen",
+			"maxPasses": 69
+		},
+		{
+			"sections_dept": "bams",
+			"maxPasses": 69
+		},
+		{
+			"sections_dept": "korn",
+			"maxPasses": 67
+		},
+		{
+			"sections_dept": "plan",
+			"maxPasses": 65
+		},
+		{
+			"sections_dept": "edst",
+			"maxPasses": 64
+		},
+		{
+			"sections_dept": "enph",
+			"maxPasses": 64
+		},
+		{
+			"sections_dept": "arch",
+			"maxPasses": 62
+		},
+		{
+			"sections_dept": "cnrs",
+			"maxPasses": 60
+		},
+		{
+			"sections_dept": "dent",
+			"maxPasses": 59
+		},
+		{
+			"sections_dept": "igen",
+			"maxPasses": 59
+		},
+		{
+			"sections_dept": "fopr",
+			"maxPasses": 58
+		},
+		{
+			"sections_dept": "bala",
+			"maxPasses": 57
+		},
+		{
+			"sections_dept": "swed",
+			"maxPasses": 57
+		},
+		{
+			"sections_dept": "jrnl",
+			"maxPasses": 56
+		},
+		{
+			"sections_dept": "eece",
+			"maxPasses": 55
+		},
+		{
+			"sections_dept": "isci",
+			"maxPasses": 54
+		},
+		{
+			"sections_dept": "rsot",
+			"maxPasses": 54
+		},
+		{
+			"sections_dept": "ufor",
+			"maxPasses": 54
+		},
+		{
+			"sections_dept": "mdvl",
+			"maxPasses": 51
+		},
+		{
+			"sections_dept": "punj",
+			"maxPasses": 51
+		},
+		{
+			"sections_dept": "medi",
+			"maxPasses": 49
+		},
+		{
+			"sections_dept": "cohr",
+			"maxPasses": 47
+		},
+		{
+			"sections_dept": "last",
+			"maxPasses": 47
+		},
+		{
+			"sections_dept": "baul",
+			"maxPasses": 46
+		},
+		{
+			"sections_dept": "bmeg",
+			"maxPasses": 44
+		},
+		{
+			"sections_dept": "spha",
+			"maxPasses": 44
+		},
+		{
+			"sections_dept": "arbc",
+			"maxPasses": 40
+		},
+		{
+			"sections_dept": "info",
+			"maxPasses": 40
+		},
+		{
+			"sections_dept": "fnel",
+			"maxPasses": 38
+		},
+		{
+			"sections_dept": "rmst",
+			"maxPasses": 38
+		},
+		{
+			"sections_dept": "medg",
+			"maxPasses": 37
+		},
+		{
+			"sections_dept": "itst",
+			"maxPasses": 36
+		},
+		{
+			"sections_dept": "larc",
+			"maxPasses": 36
+		},
+		{
+			"sections_dept": "nrsc",
+			"maxPasses": 36
+		},
+		{
+			"sections_dept": "pols",
+			"maxPasses": 36
+		},
+		{
+			"sections_dept": "port",
+			"maxPasses": 36
+		},
+		{
+			"sections_dept": "arst",
+			"maxPasses": 35
+		},
+		{
+			"sections_dept": "cics",
+			"maxPasses": 35
+		},
+		{
+			"sections_dept": "food",
+			"maxPasses": 31
+		},
+		{
+			"sections_dept": "ceen",
+			"maxPasses": 30
+		},
+		{
+			"sections_dept": "gpp",
+			"maxPasses": 28
+		},
+		{
+			"sections_dept": "surg",
+			"maxPasses": 28
+		},
+		{
+			"sections_dept": "grek",
+			"maxPasses": 27
+		},
+		{
+			"sections_dept": "hinu",
+			"maxPasses": 25
+		},
+		{
+			"sections_dept": "rgla",
+			"maxPasses": 25
+		},
+		{
+			"sections_dept": "hebr",
+			"maxPasses": 24
+		},
+		{
+			"sections_dept": "pers",
+			"maxPasses": 24
+		},
+		{
+			"sections_dept": "rmes",
+			"maxPasses": 24
+		},
+		{
+			"sections_dept": "bota",
+			"maxPasses": 23
+		},
+		{
+			"sections_dept": "iwme",
+			"maxPasses": 23
+		},
+		{
+			"sections_dept": "onco",
+			"maxPasses": 23
+		},
+		{
+			"sections_dept": "dani",
+			"maxPasses": 22
+		},
+		{
+			"sections_dept": "hgse",
+			"maxPasses": 21
+		},
+		{
+			"sections_dept": "midw",
+			"maxPasses": 21
+		},
+		{
+			"sections_dept": "cnto",
+			"maxPasses": 20
+		},
+		{
+			"sections_dept": "cell",
+			"maxPasses": 19
+		},
+		{
+			"sections_dept": "gsat",
+			"maxPasses": 18
+		},
+		{
+			"sections_dept": "biof",
+			"maxPasses": 16
+		},
+		{
+			"sections_dept": "clch",
+			"maxPasses": 16
+		},
+		{
+			"sections_dept": "name",
+			"maxPasses": 16
+		},
+		{
+			"sections_dept": "soil",
+			"maxPasses": 16
+		},
+		{
+			"sections_dept": "udes",
+			"maxPasses": 16
+		},
+		{
+			"sections_dept": "fhis",
+			"maxPasses": 15
+		},
+		{
+			"sections_dept": "ccst",
+			"maxPasses": 13
+		},
+		{
+			"sections_dept": "zool",
+			"maxPasses": 13
+		},
+		{
+			"sections_dept": "obst",
+			"maxPasses": 12
+		},
+		{
+			"sections_dept": "ursy",
+			"maxPasses": 12
+		},
+		{
+			"sections_dept": "hunu",
+			"maxPasses": 11
+		},
+		{
+			"sections_dept": "sans",
+			"maxPasses": 11
+		},
+		{
+			"sections_dept": "fish",
+			"maxPasses": 10
+		},
+		{
+			"sections_dept": "aanb",
+			"maxPasses": 9
+		},
+		{
+			"sections_dept": "chil",
+			"maxPasses": 8
+		},
+		{
+			"sections_dept": "gbpr",
+			"maxPasses": 8
+		},
+		{
+			"sections_dept": "sts",
+			"maxPasses": 8
+		},
+		{
+			"sections_dept": "lais",
+			"maxPasses": 7
+		},
+		{
+			"sections_dept": "mrne",
+			"maxPasses": 7
+		},
+		{
+			"sections_dept": "iar",
+			"maxPasses": 5
+		},
+		{
+			"sections_dept": "test",
+			"maxPasses": 3
+		}
+	]
+}

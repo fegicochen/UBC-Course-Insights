@@ -1,0 +1,2045 @@
+{
+	"title": "Find Minimum Average Grades per Instructor with C",
+	"input": {
+		"WHERE": {
+			"IS": {
+				"sections_instructor": "c*"
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_instructor",
+				"minAvgGrade"
+			],
+			"ORDER": {
+				"dir": "UP",
+				"keys": [
+					"minAvgGrade"
+				]
+			}
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_instructor"
+			],
+			"APPLY": [
+				{
+					"minAvgGrade": {
+						"MIN": "sections_avg"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_instructor": "cretu, edmond",
+			"minAvgGrade": 52.67
+		},
+		{
+			"sections_instructor": "chhita, sunil",
+			"minAvgGrade": 55.24
+		},
+		{
+			"sections_instructor": "cheek, caleb",
+			"minAvgGrade": 55.74
+		},
+		{
+			"sections_instructor": "cheviakov, alexei",
+			"minAvgGrade": 58.13
+		},
+		{
+			"sections_instructor": "crane, angela;wang, yan",
+			"minAvgGrade": 58.16
+		},
+		{
+			"sections_instructor": "cai, shuang",
+			"minAvgGrade": 58.27
+		},
+		{
+			"sections_instructor": "chen chai, susan m.c.",
+			"minAvgGrade": 58.33
+		},
+		{
+			"sections_instructor": "ciufolini, marco",
+			"minAvgGrade": 58.75
+		},
+		{
+			"sections_instructor": "cernele, shane",
+			"minAvgGrade": 58.9
+		},
+		{
+			"sections_instructor": "cook, brian",
+			"minAvgGrade": 58.97
+		},
+		{
+			"sections_instructor": "couch, brett",
+			"minAvgGrade": 59.45
+		},
+		{
+			"sections_instructor": "cockcroft, steven",
+			"minAvgGrade": 59.64
+		},
+		{
+			"sections_instructor": "culibrk, ana",
+			"minAvgGrade": 60.53
+		},
+		{
+			"sections_instructor": "combariza, german",
+			"minAvgGrade": 61.28
+		},
+		{
+			"sections_instructor": "cadman, charles",
+			"minAvgGrade": 61.4
+		},
+		{
+			"sections_instructor": "chiao, mu",
+			"minAvgGrade": 61.44
+		},
+		{
+			"sections_instructor": "crane, angela",
+			"minAvgGrade": 61.48
+		},
+		{
+			"sections_instructor": "chen, jingyi",
+			"minAvgGrade": 61.63
+		},
+		{
+			"sections_instructor": "chau, albert",
+			"minAvgGrade": 61.65
+		},
+		{
+			"sections_instructor": "campbell, chuck",
+			"minAvgGrade": 61.96
+		},
+		{
+			"sections_instructor": "cheng, man chuen",
+			"minAvgGrade": 62.17
+		},
+		{
+			"sections_instructor": "clarkson, james",
+			"minAvgGrade": 62.3
+		},
+		{
+			"sections_instructor": "clarke, roger;margolis, eric;viera, gerardo alberto",
+			"minAvgGrade": 62.66
+		},
+		{
+			"sections_instructor": "couch, brett;kalas, pamela",
+			"minAvgGrade": 63.13
+		},
+		{
+			"sections_instructor": "christie, brian;gorzalka, boris",
+			"minAvgGrade": 63.31
+		},
+		{
+			"sections_instructor": "craigie, allan",
+			"minAvgGrade": 63.39
+		},
+		{
+			"sections_instructor": "chen chai, susan m.c.;enns, alice",
+			"minAvgGrade": 63.75
+		},
+		{
+			"sections_instructor": "chung, tran khue",
+			"minAvgGrade": 63.92
+		},
+		{
+			"sections_instructor": "chen, frances",
+			"minAvgGrade": 63.93
+		},
+		{
+			"sections_instructor": "code, warren",
+			"minAvgGrade": 63.96
+		},
+		{
+			"sections_instructor": "chan, david",
+			"minAvgGrade": 64.13
+		},
+		{
+			"sections_instructor": "christou, cameron",
+			"minAvgGrade": 64.14
+		},
+		{
+			"sections_instructor": "cytrynbaum, eric",
+			"minAvgGrade": 64.35
+		},
+		{
+			"sections_instructor": "chapple, clive",
+			"minAvgGrade": 64.53
+		},
+		{
+			"sections_instructor": "creese, david",
+			"minAvgGrade": 65
+		},
+		{
+			"sections_instructor": "crane, angela;herring, f geoffrey",
+			"minAvgGrade": 65.12
+		},
+		{
+			"sections_instructor": "campbell, christopher",
+			"minAvgGrade": 65.33
+		},
+		{
+			"sections_instructor": "christie, brian",
+			"minAvgGrade": 65.5
+		},
+		{
+			"sections_instructor": "castonguay-belanger, joel",
+			"minAvgGrade": 65.55
+		},
+		{
+			"sections_instructor": "coombs, daniel",
+			"minAvgGrade": 65.6
+		},
+		{
+			"sections_instructor": "christie, stella",
+			"minAvgGrade": 65.66
+		},
+		{
+			"sections_instructor": "currie, brenda",
+			"minAvgGrade": 65.67
+		},
+		{
+			"sections_instructor": "cooper, elisabeth",
+			"minAvgGrade": 65.67
+		},
+		{
+			"sections_instructor": "costantino, manuela",
+			"minAvgGrade": 65.71
+		},
+		{
+			"sections_instructor": "chipeniuk, karsten",
+			"minAvgGrade": 65.71
+		},
+		{
+			"sections_instructor": "cladek, laura",
+			"minAvgGrade": 65.9
+		},
+		{
+			"sections_instructor": "carr, geoffrey",
+			"minAvgGrade": 66.38
+		},
+		{
+			"sections_instructor": "clark, luke",
+			"minAvgGrade": 66.53
+		},
+		{
+			"sections_instructor": "cohen, david;ellis, simon",
+			"minAvgGrade": 66.54
+		},
+		{
+			"sections_instructor": "cheng, man chuen;wetton, brian thomas",
+			"minAvgGrade": 66.55
+		},
+		{
+			"sections_instructor": "crawford, david robert",
+			"minAvgGrade": 66.69
+		},
+		{
+			"sections_instructor": "coury, ariane",
+			"minAvgGrade": 66.69
+		},
+		{
+			"sections_instructor": "chan, vincent",
+			"minAvgGrade": 66.73
+		},
+		{
+			"sections_instructor": "chen, david",
+			"minAvgGrade": 66.94
+		},
+		{
+			"sections_instructor": "comeau, wendy",
+			"minAvgGrade": 67.05
+		},
+		{
+			"sections_instructor": "crofton, fiona",
+			"minAvgGrade": 67.1
+		},
+		{
+			"sections_instructor": "cringan, john",
+			"minAvgGrade": 67.1
+		},
+		{
+			"sections_instructor": "crane, angela;wolf, michael",
+			"minAvgGrade": 67.16
+		},
+		{
+			"sections_instructor": "cuttler, carrie",
+			"minAvgGrade": 67.23
+		},
+		{
+			"sections_instructor": "carrasco-teja, mariana",
+			"minAvgGrade": 67.24
+		},
+		{
+			"sections_instructor": "currie, dawn heather",
+			"minAvgGrade": 67.28
+		},
+		{
+			"sections_instructor": "cowan, craig",
+			"minAvgGrade": 67.32
+		},
+		{
+			"sections_instructor": "cox, barbara",
+			"minAvgGrade": 67.36
+		},
+		{
+			"sections_instructor": "catron, mandy",
+			"minAvgGrade": 67.4
+		},
+		{
+			"sections_instructor": "cheung, benjamin",
+			"minAvgGrade": 67.44
+		},
+		{
+			"sections_instructor": "conati, cristina",
+			"minAvgGrade": 67.48
+		},
+		{
+			"sections_instructor": "crane, angela;monga, vishakha",
+			"minAvgGrade": 67.5
+		},
+		{
+			"sections_instructor": "chan, ian",
+			"minAvgGrade": 67.51
+		},
+		{
+			"sections_instructor": "cabezas villalobos, oscar arie",
+			"minAvgGrade": 67.52
+		},
+		{
+			"sections_instructor": "cempirek, jan;turner, david",
+			"minAvgGrade": 67.53
+		},
+		{
+			"sections_instructor": "coulthard, lisa;evans, christine",
+			"minAvgGrade": 67.55
+		},
+		{
+			"sections_instructor": "canuto, luisa",
+			"minAvgGrade": 67.55
+		},
+		{
+			"sections_instructor": "chen, jiahua",
+			"minAvgGrade": 67.55
+		},
+		{
+			"sections_instructor": "cervantes larios, alejandro",
+			"minAvgGrade": 67.58
+		},
+		{
+			"sections_instructor": "cytrynbaum, eric;maclean, mark thomson;tba",
+			"minAvgGrade": 67.61
+		},
+		{
+			"sections_instructor": "chong, mary",
+			"minAvgGrade": 67.69
+		},
+		{
+			"sections_instructor": "carnovale, marc",
+			"minAvgGrade": 67.71
+		},
+		{
+			"sections_instructor": "cooke, james",
+			"minAvgGrade": 67.74
+		},
+		{
+			"sections_instructor": "calvino-fraga, jesus",
+			"minAvgGrade": 67.89
+		},
+		{
+			"sections_instructor": "carchedi, david",
+			"minAvgGrade": 67.93
+		},
+		{
+			"sections_instructor": "culbert, john",
+			"minAvgGrade": 67.95
+		},
+		{
+			"sections_instructor": "christoff, kalina",
+			"minAvgGrade": 68.11
+		},
+		{
+			"sections_instructor": "connelly, sean",
+			"minAvgGrade": 68.27
+		},
+		{
+			"sections_instructor": "chappells, heather;donner, simon",
+			"minAvgGrade": 68.31
+		},
+		{
+			"sections_instructor": "cook, scott",
+			"minAvgGrade": 68.34
+		},
+		{
+			"sections_instructor": "carter, paul martin",
+			"minAvgGrade": 68.57
+		},
+		{
+			"sections_instructor": "chou, keng chang;hein, jason",
+			"minAvgGrade": 68.59
+		},
+		{
+			"sections_instructor": "carr, roxane;lalji, fawziah",
+			"minAvgGrade": 68.67
+		},
+		{
+			"sections_instructor": "cramond, pat",
+			"minAvgGrade": 68.88
+		},
+		{
+			"sections_instructor": "cohodas, marvin",
+			"minAvgGrade": 68.91
+		},
+		{
+			"sections_instructor": "cavell, richard anthony",
+			"minAvgGrade": 68.97
+		},
+		{
+			"sections_instructor": "crane, angela;mehrkhodavandi, parisa",
+			"minAvgGrade": 69
+		},
+		{
+			"sections_instructor": "crowley, rory",
+			"minAvgGrade": 69.06
+		},
+		{
+			"sections_instructor": "chen, liane",
+			"minAvgGrade": 69.09
+		},
+		{
+			"sections_instructor": "clark, randal j",
+			"minAvgGrade": 69.09
+		},
+		{
+			"sections_instructor": "conway, jessica",
+			"minAvgGrade": 69.13
+		},
+		{
+			"sections_instructor": "choi, rebecca fuk hing chau",
+			"minAvgGrade": 69.18
+		},
+		{
+			"sections_instructor": "chapman, mary megan",
+			"minAvgGrade": 69.23
+		},
+		{
+			"sections_instructor": "curat, herve;duggan, maryse;rouget, christine;scott, anne",
+			"minAvgGrade": 69.36
+		},
+		{
+			"sections_instructor": "curat, herve;o'hagan, michael;scott, anne",
+			"minAvgGrade": 69.43
+		},
+		{
+			"sections_instructor": "chanway, christopher",
+			"minAvgGrade": 69.44
+		},
+		{
+			"sections_instructor": "chou, keng chang;gates, derek;krems, roman;lekhi, priya",
+			"minAvgGrade": 69.51
+		},
+		{
+			"sections_instructor": "chou, keng chang",
+			"minAvgGrade": 69.64
+		},
+		{
+			"sections_instructor": "crutsinger, gregory;goodey, wayne;jankowski, jill",
+			"minAvgGrade": 69.65
+		},
+		{
+			"sections_instructor": "cowan, shannon",
+			"minAvgGrade": 69.82
+		},
+		{
+			"sections_instructor": "christen, andreas",
+			"minAvgGrade": 69.84
+		},
+		{
+			"sections_instructor": "cautis, sabin",
+			"minAvgGrade": 69.89
+		},
+		{
+			"sections_instructor": "carenini, giuseppe",
+			"minAvgGrade": 69.91
+		},
+		{
+			"sections_instructor": "cawley, susan;ducharme, michel",
+			"minAvgGrade": 69.92
+		},
+		{
+			"sections_instructor": "chen, jinhua",
+			"minAvgGrade": 69.93
+		},
+		{
+			"sections_instructor": "cubbon, paul;kroeker, jeff",
+			"minAvgGrade": 69.93
+		},
+		{
+			"sections_instructor": "combet, vianney",
+			"minAvgGrade": 70
+		},
+		{
+			"sections_instructor": "chowdhury, arjun",
+			"minAvgGrade": 70.02
+		},
+		{
+			"sections_instructor": "chen, yu ting",
+			"minAvgGrade": 70.16
+		},
+		{
+			"sections_instructor": "charlie, clinton",
+			"minAvgGrade": 70.22
+		},
+		{
+			"sections_instructor": "cairns, brian;verma, arun",
+			"minAvgGrade": 70.24
+		},
+		{
+			"sections_instructor": "carolan, james;steyn, douw gerbrand",
+			"minAvgGrade": 70.31
+		},
+		{
+			"sections_instructor": "curat, herve",
+			"minAvgGrade": 70.37
+		},
+		{
+			"sections_instructor": "chiu-duke, josephine",
+			"minAvgGrade": 70.41
+		},
+		{
+			"sections_instructor": "crane, angela;li, hongbin",
+			"minAvgGrade": 70.43
+		},
+		{
+			"sections_instructor": "couch, brett;ellis, shona margaret;hawkes, michael",
+			"minAvgGrade": 70.46
+		},
+		{
+			"sections_instructor": "citizen, robyn",
+			"minAvgGrade": 70.48
+		},
+		{
+			"sections_instructor": "charbonneau, arthur",
+			"minAvgGrade": 70.5
+		},
+		{
+			"sections_instructor": "carroll, allan;hamelin, richard",
+			"minAvgGrade": 70.52
+		},
+		{
+			"sections_instructor": "chen, edith",
+			"minAvgGrade": 70.53
+		},
+		{
+			"sections_instructor": "carazzo, guillaume",
+			"minAvgGrade": 70.55
+		},
+		{
+			"sections_instructor": "carter, paul martin;karim, faizal;knorr, edwin max",
+			"minAvgGrade": 70.56
+		},
+		{
+			"sections_instructor": "creese, gillian",
+			"minAvgGrade": 70.61
+		},
+		{
+			"sections_instructor": "cortes, guido",
+			"minAvgGrade": 70.64
+		},
+		{
+			"sections_instructor": "coulthard, lisa",
+			"minAvgGrade": 70.77
+		},
+		{
+			"sections_instructor": "copeland, brian",
+			"minAvgGrade": 70.89
+		},
+		{
+			"sections_instructor": "creighton, millie",
+			"minAvgGrade": 70.96
+		},
+		{
+			"sections_instructor": "cawthray, jacquie;monga, vishakha",
+			"minAvgGrade": 70.98
+		},
+		{
+			"sections_instructor": "cooper, elisabeth;hikade, thomas",
+			"minAvgGrade": 71.02
+		},
+		{
+			"sections_instructor": "claxton, dana",
+			"minAvgGrade": 71.11
+		},
+		{
+			"sections_instructor": "croft, alyssa",
+			"minAvgGrade": 71.12
+		},
+		{
+			"sections_instructor": "carrier-moisan, marie-eve",
+			"minAvgGrade": 71.16
+		},
+		{
+			"sections_instructor": "cubbon, paul",
+			"minAvgGrade": 71.25
+		},
+		{
+			"sections_instructor": "clausen, bruce",
+			"minAvgGrade": 71.26
+		},
+		{
+			"sections_instructor": "cienciala, piotr;tba",
+			"minAvgGrade": 71.46
+		},
+		{
+			"sections_instructor": "christoff, kalina;gorzalka, boris",
+			"minAvgGrade": 71.5
+		},
+		{
+			"sections_instructor": "cubbon, paul;jackes, robert;williamson, elaine",
+			"minAvgGrade": 71.56
+		},
+		{
+			"sections_instructor": "chowrira, gangamma",
+			"minAvgGrade": 71.61
+		},
+		{
+			"sections_instructor": "cohen, michael david",
+			"minAvgGrade": 71.66
+		},
+		{
+			"sections_instructor": "campbell, christopher david",
+			"minAvgGrade": 71.69
+		},
+		{
+			"sections_instructor": "carazzo, guillaume;eberhardt, erik;monteux, julien;stull, roland;sutherland, stuart",
+			"minAvgGrade": 71.86
+		},
+		{
+			"sections_instructor": "crane, angela;lekhi, priya;ryan, katherine;straus, suzana",
+			"minAvgGrade": 71.9
+		},
+		{
+			"sections_instructor": "clark, randal j;ribarits, stephen",
+			"minAvgGrade": 71.9
+		},
+		{
+			"sections_instructor": "chan, fong;chauvin, vaughn;kanji, tamiz jamal;seto, katherine",
+			"minAvgGrade": 72.05
+		},
+		{
+			"sections_instructor": "courtiel, julien",
+			"minAvgGrade": 72.06
+		},
+		{
+			"sections_instructor": "calloway, katherine",
+			"minAvgGrade": 72.07
+		},
+		{
+			"sections_instructor": "coops, nicholas charles",
+			"minAvgGrade": 72.11
+		},
+		{
+			"sections_instructor": "crane, angela;lekhi, priya;schafer, laurel",
+			"minAvgGrade": 72.15
+		},
+		{
+			"sections_instructor": "caute, adeline",
+			"minAvgGrade": 72.15
+		},
+		{
+			"sections_instructor": "carbonetti, maria",
+			"minAvgGrade": 72.15
+		},
+		{
+			"sections_instructor": "cooper, john",
+			"minAvgGrade": 72.24
+		},
+		{
+			"sections_instructor": "coulthard, glen",
+			"minAvgGrade": 72.25
+		},
+		{
+			"sections_instructor": "casey, anna",
+			"minAvgGrade": 72.26
+		},
+		{
+			"sections_instructor": "cousland, robert",
+			"minAvgGrade": 72.27
+		},
+		{
+			"sections_instructor": "cool, julie",
+			"minAvgGrade": 72.28
+		},
+		{
+			"sections_instructor": "chong, kevin kim wang",
+			"minAvgGrade": 72.31
+		},
+		{
+			"sections_instructor": "cripton, peter;ollivier-gooch, carl;schajer, gary;tba",
+			"minAvgGrade": 72.32
+		},
+		{
+			"sections_instructor": "chen, jin-gui;singh, santokh;wasteneys, geoff",
+			"minAvgGrade": 72.37
+		},
+		{
+			"sections_instructor": "cottle, paul",
+			"minAvgGrade": 72.38
+		},
+		{
+			"sections_instructor": "cienciala, piotr",
+			"minAvgGrade": 72.39
+		},
+		{
+			"sections_instructor": "carolan, james;oberg, gunilla",
+			"minAvgGrade": 72.43
+		},
+		{
+			"sections_instructor": "chen, jason",
+			"minAvgGrade": 72.5
+		},
+		{
+			"sections_instructor": "casquilho resende, camila",
+			"minAvgGrade": 72.5
+		},
+		{
+			"sections_instructor": "creagh, aimee louise;kannangara, dhaneshwarie",
+			"minAvgGrade": 72.55
+		},
+		{
+			"sections_instructor": "cutler, frederick",
+			"minAvgGrade": 72.69
+		},
+		{
+			"sections_instructor": "cronk, quentin charles",
+			"minAvgGrade": 72.78
+		},
+		{
+			"sections_instructor": "chatman, stephen",
+			"minAvgGrade": 72.79
+		},
+		{
+			"sections_instructor": "collard, rosemary-claire;dempsey, jessica",
+			"minAvgGrade": 72.86
+		},
+		{
+			"sections_instructor": "cohodas, marvin;french, william earl",
+			"minAvgGrade": 72.89
+		},
+		{
+			"sections_instructor": "christopoulos, john",
+			"minAvgGrade": 72.95
+		},
+		{
+			"sections_instructor": "chow, garland",
+			"minAvgGrade": 72.97
+		},
+		{
+			"sections_instructor": "campbell, jill",
+			"minAvgGrade": 73
+		},
+		{
+			"sections_instructor": "cripton, peter;ollivier-gooch, carl;schajer, gary",
+			"minAvgGrade": 73.02
+		},
+		{
+			"sections_instructor": "croft, elizabeth;ostafichuk, peter;schajer, gary;wells, mary a.;yan, joseph",
+			"minAvgGrade": 73.04
+		},
+		{
+			"sections_instructor": "cheung, karen",
+			"minAvgGrade": 73.11
+		},
+		{
+			"sections_instructor": "christen, andreas;hermansen, sally",
+			"minAvgGrade": 73.11
+		},
+		{
+			"sections_instructor": "cassidy, alison elizabeth",
+			"minAvgGrade": 73.22
+		},
+		{
+			"sections_instructor": "cramer, carl",
+			"minAvgGrade": 73.27
+		},
+		{
+			"sections_instructor": "chehab, krystel",
+			"minAvgGrade": 73.33
+		},
+		{
+			"sections_instructor": "chrostowski, lukas",
+			"minAvgGrade": 73.38
+		},
+		{
+			"sections_instructor": "chessor, edward stanley",
+			"minAvgGrade": 73.38
+		},
+		{
+			"sections_instructor": "chen, robert s",
+			"minAvgGrade": 73.39
+		},
+		{
+			"sections_instructor": "calder, ryan",
+			"minAvgGrade": 73.42
+		},
+		{
+			"sections_instructor": "croft, elizabeth",
+			"minAvgGrade": 73.42
+		},
+		{
+			"sections_instructor": "cooper, kendra;miller, gregor",
+			"minAvgGrade": 73.5
+		},
+		{
+			"sections_instructor": "chen, jin-gui;wasteneys, geoff",
+			"minAvgGrade": 73.51
+		},
+		{
+			"sections_instructor": "crane, angela;rodriguez nunez, jose",
+			"minAvgGrade": 73.52
+		},
+		{
+			"sections_instructor": "chowrira, gangamma;jolliffe, peter a;mansfield, shawn;singh, santokh",
+			"minAvgGrade": 73.54
+		},
+		{
+			"sections_instructor": "culham, thomas",
+			"minAvgGrade": 73.6
+		},
+		{
+			"sections_instructor": "corbett, kenneth",
+			"minAvgGrade": 73.6
+		},
+		{
+			"sections_instructor": "cohodas, marvin;sundberg, juanita",
+			"minAvgGrade": 73.63
+		},
+		{
+			"sections_instructor": "cohen freue, gabriela",
+			"minAvgGrade": 73.68
+		},
+		{
+			"sections_instructor": "christen, andreas;eaton, brett;henry, gregory h;koppes, michele",
+			"minAvgGrade": 73.68
+		},
+		{
+			"sections_instructor": "chen, xia",
+			"minAvgGrade": 73.7
+		},
+		{
+			"sections_instructor": "conibear, elizabeth;numata, masayuki;strynadka, natalie;van petegem, filip",
+			"minAvgGrade": 73.74
+		},
+		{
+			"sections_instructor": "cripton, peter",
+			"minAvgGrade": 73.79
+		},
+		{
+			"sections_instructor": "chan, elic",
+			"minAvgGrade": 73.84
+		},
+		{
+			"sections_instructor": "chen, shaojun jenny;graham, brian",
+			"minAvgGrade": 73.87
+		},
+		{
+			"sections_instructor": "crane, angela;sammis, glenn",
+			"minAvgGrade": 73.88
+		},
+		{
+			"sections_instructor": "caldecott, marion",
+			"minAvgGrade": 73.91
+		},
+		{
+			"sections_instructor": "colley, leo",
+			"minAvgGrade": 73.92
+		},
+		{
+			"sections_instructor": "cairns, kelly lynn",
+			"minAvgGrade": 74
+		},
+		{
+			"sections_instructor": "chamberlain, sandra",
+			"minAvgGrade": 74.05
+		},
+		{
+			"sections_instructor": "cronkite, susan-marie",
+			"minAvgGrade": 74.07
+		},
+		{
+			"sections_instructor": "chang bortolussi, dorothy",
+			"minAvgGrade": 74.09
+		},
+		{
+			"sections_instructor": "charbonneau, arthur;mattison, thomas",
+			"minAvgGrade": 74.11
+		},
+		{
+			"sections_instructor": "cripton, peter;jones, claire;newell, robyn",
+			"minAvgGrade": 74.13
+		},
+		{
+			"sections_instructor": "cooper, kendra",
+			"minAvgGrade": 74.15
+		},
+		{
+			"sections_instructor": "charbonneau, arthur;koster, evert",
+			"minAvgGrade": 74.15
+		},
+		{
+			"sections_instructor": "carbonetti, maria;rubio, pablo",
+			"minAvgGrade": 74.33
+		},
+		{
+			"sections_instructor": "couture, selena",
+			"minAvgGrade": 74.33
+		},
+		{
+			"sections_instructor": "condin, christopher",
+			"minAvgGrade": 74.4
+		},
+		{
+			"sections_instructor": "cameron, maxwell",
+			"minAvgGrade": 74.45
+		},
+		{
+			"sections_instructor": "cornil, yann",
+			"minAvgGrade": 74.46
+		},
+		{
+			"sections_instructor": "cesar marin, nelly",
+			"minAvgGrade": 74.5
+		},
+		{
+			"sections_instructor": "clark, leah",
+			"minAvgGrade": 74.56
+		},
+		{
+			"sections_instructor": "crane, angela;maclachlan, mark",
+			"minAvgGrade": 74.56
+		},
+		{
+			"sections_instructor": "christen, andreas;quastel, noah",
+			"minAvgGrade": 74.59
+		},
+		{
+			"sections_instructor": "cohen, david",
+			"minAvgGrade": 74.63
+		},
+		{
+			"sections_instructor": "chen, jack",
+			"minAvgGrade": 74.64
+		},
+		{
+			"sections_instructor": "campbell, alice",
+			"minAvgGrade": 74.74
+		},
+		{
+			"sections_instructor": "coordinator;grunburg, michael ;struch, gela",
+			"minAvgGrade": 74.74
+		},
+		{
+			"sections_instructor": "crane, angela;grant, edward;lekhi, priya;sammis, glenn",
+			"minAvgGrade": 74.79
+		},
+		{
+			"sections_instructor": "creagh, aimee louise",
+			"minAvgGrade": 74.91
+		},
+		{
+			"sections_instructor": "cooper, kendra;davies, paul;khosravi, hassan",
+			"minAvgGrade": 74.96
+		},
+		{
+			"sections_instructor": "cooke, james;lacombe, agnes",
+			"minAvgGrade": 74.98
+		},
+		{
+			"sections_instructor": "corhay, alexandre",
+			"minAvgGrade": 75
+		},
+		{
+			"sections_instructor": "carden, guy",
+			"minAvgGrade": 75
+		},
+		{
+			"sections_instructor": "chaudhry, ayesha",
+			"minAvgGrade": 75.01
+		},
+		{
+			"sections_instructor": "cassidy, alison",
+			"minAvgGrade": 75.04
+		},
+		{
+			"sections_instructor": "cheinman, ksenia;scott, anne",
+			"minAvgGrade": 75.05
+		},
+		{
+			"sections_instructor": "carolan, james;rieger, georg;tchvialeva, lioudmila",
+			"minAvgGrade": 75.07
+		},
+		{
+			"sections_instructor": "chang, kuo-mei",
+			"minAvgGrade": 75.15
+		},
+		{
+			"sections_instructor": "cheung, wai lung;steyn, douw gerbrand",
+			"minAvgGrade": 75.15
+		},
+		{
+			"sections_instructor": "chan, kai;harris, sara",
+			"minAvgGrade": 75.23
+		},
+		{
+			"sections_instructor": "chanway, christopher;simard, suzanne",
+			"minAvgGrade": 75.24
+		},
+		{
+			"sections_instructor": "cheng, maorong",
+			"minAvgGrade": 75.27
+		},
+		{
+			"sections_instructor": "conte, gina",
+			"minAvgGrade": 75.34
+		},
+		{
+			"sections_instructor": "cheung, wai lung;fox, joanne alison;han, andrea",
+			"minAvgGrade": 75.44
+		},
+		{
+			"sections_instructor": "chowrira, gangamma;taylor, jared",
+			"minAvgGrade": 75.45
+		},
+		{
+			"sections_instructor": "caute, adeline;miller, robert;scott, anne",
+			"minAvgGrade": 75.48
+		},
+		{
+			"sections_instructor": "chiu, sidney",
+			"minAvgGrade": 75.75
+		},
+		{
+			"sections_instructor": "cavusoglu, hasan",
+			"minAvgGrade": 75.76
+		},
+		{
+			"sections_instructor": "carolan, james;rieger, georg",
+			"minAvgGrade": 75.85
+		},
+		{
+			"sections_instructor": "cairns, brian;levine, marc;soja, peter;verma, arun;zed, peter",
+			"minAvgGrade": 75.94
+		},
+		{
+			"sections_instructor": "cronk, quentin charles;ellis, shona margaret",
+			"minAvgGrade": 75.95
+		},
+		{
+			"sections_instructor": "chan, fong;frankel, adam;lalji, fawziah;massaro, davide;miller, penelope;moshenko, janice lynn;park, charles;seet, tony;watson, hilary;zed, peter",
+			"minAvgGrade": 75.97
+		},
+		{
+			"sections_instructor": "cox, elizabeth",
+			"minAvgGrade": 76.05
+		},
+		{
+			"sections_instructor": "cheung, yau man;saunders, adam",
+			"minAvgGrade": 76.06
+		},
+		{
+			"sections_instructor": "cochard, renee",
+			"minAvgGrade": 76.1
+		},
+		{
+			"sections_instructor": "coordinator;revell, stephanie;struch, gela",
+			"minAvgGrade": 76.11
+		},
+		{
+			"sections_instructor": "cairns, brian",
+			"minAvgGrade": 76.11
+		},
+		{
+			"sections_instructor": "chen, shaojun jenny",
+			"minAvgGrade": 76.14
+		},
+		{
+			"sections_instructor": "carbonetti, maria;grillo arbulu, maria teresa",
+			"minAvgGrade": 76.14
+		},
+		{
+			"sections_instructor": "condon, darryl",
+			"minAvgGrade": 76.2
+		},
+		{
+			"sections_instructor": "campbell, fiona;grant, larry",
+			"minAvgGrade": 76.21
+		},
+		{
+			"sections_instructor": "cheng, qiang",
+			"minAvgGrade": 76.25
+		},
+		{
+			"sections_instructor": "clain, heloise",
+			"minAvgGrade": 76.3
+		},
+		{
+			"sections_instructor": "close, david",
+			"minAvgGrade": 76.33
+		},
+		{
+			"sections_instructor": "chantler, janet k",
+			"minAvgGrade": 76.33
+		},
+		{
+			"sections_instructor": "crisfield, erin",
+			"minAvgGrade": 76.54
+		},
+		{
+			"sections_instructor": "clerici, nathen",
+			"minAvgGrade": 76.56
+		},
+		{
+			"sections_instructor": "covey, scott",
+			"minAvgGrade": 76.57
+		},
+		{
+			"sections_instructor": "chen, david;wang, yan",
+			"minAvgGrade": 76.6
+		},
+		{
+			"sections_instructor": "crane, angela;grant, edward;lekhi, priya;ryan, katherine",
+			"minAvgGrade": 76.63
+		},
+		{
+			"sections_instructor": "chandra, ambarish",
+			"minAvgGrade": 76.68
+		},
+		{
+			"sections_instructor": "craig, bonnie jean;imai, pauline",
+			"minAvgGrade": 76.75
+		},
+		{
+			"sections_instructor": "cho, youngmi",
+			"minAvgGrade": 76.8
+		},
+		{
+			"sections_instructor": "crane, angela;lekhi, priya;sammis, glenn;straus, suzana",
+			"minAvgGrade": 76.98
+		},
+		{
+			"sections_instructor": "christensen, julia",
+			"minAvgGrade": 77
+		},
+		{
+			"sections_instructor": "carew, stephanie barrett",
+			"minAvgGrade": 77.1
+		},
+		{
+			"sections_instructor": "chowrira, gangamma;lund, steven",
+			"minAvgGrade": 77.2
+		},
+		{
+			"sections_instructor": "chan, anthony;jaggi, bruno;milner, ruth",
+			"minAvgGrade": 77.27
+		},
+		{
+			"sections_instructor": "casey, brett;dooley, kent;frohlich, jiri;halstead, anne catherine;hill, john stuart;holmes, daniel;keller, bernd;mattman, andre;nimmo, michael;pudek, morris;schreiber, william;tomalty, cheryl;urquhart, nadine;vallance, hilary",
+			"minAvgGrade": 77.3
+		},
+		{
+			"sections_instructor": "colliander, james",
+			"minAvgGrade": 77.33
+		},
+		{
+			"sections_instructor": "cole, raymond john",
+			"minAvgGrade": 77.45
+		},
+		{
+			"sections_instructor": "carr, roxane;gerber, patricia",
+			"minAvgGrade": 77.51
+		},
+		{
+			"sections_instructor": "cohodas, marvin;mandujano lopez, ruth",
+			"minAvgGrade": 77.52
+		},
+		{
+			"sections_instructor": "chitnev, veta",
+			"minAvgGrade": 77.69
+		},
+		{
+			"sections_instructor": "chen, hsueh ni",
+			"minAvgGrade": 77.77
+		},
+		{
+			"sections_instructor": "carolan, james;rieger, georg;zhou, fei",
+			"minAvgGrade": 77.78
+		},
+		{
+			"sections_instructor": "carr, geoffrey;windsor-liscombe, rhodri",
+			"minAvgGrade": 77.8
+		},
+		{
+			"sections_instructor": "curzon, francis l",
+			"minAvgGrade": 77.88
+		},
+		{
+			"sections_instructor": "craib, kevin j",
+			"minAvgGrade": 77.89
+		},
+		{
+			"sections_instructor": "catungal, john paul",
+			"minAvgGrade": 78.04
+		},
+		{
+			"sections_instructor": "cooke, james;singh, santokh",
+			"minAvgGrade": 78.05
+		},
+		{
+			"sections_instructor": "chan, jennifer",
+			"minAvgGrade": 78.09
+		},
+		{
+			"sections_instructor": "carlson, murray;yuill, garry",
+			"minAvgGrade": 78.16
+		},
+		{
+			"sections_instructor": "cerri, ronaldo",
+			"minAvgGrade": 78.33
+		},
+		{
+			"sections_instructor": "cubbon, paul;hellmann, thomas",
+			"minAvgGrade": 78.33
+		},
+		{
+			"sections_instructor": "coordinator;jones, lydia;struch, gela",
+			"minAvgGrade": 78.37
+		},
+		{
+			"sections_instructor": "coulter-mackie, marion;keller, bernd;kizhakkedathu, jayachandran;seow, chun yong;young, sean",
+			"minAvgGrade": 78.42
+		},
+		{
+			"sections_instructor": "celik, gorkem",
+			"minAvgGrade": 78.45
+		},
+		{
+			"sections_instructor": "carr, roxane;gerber, patricia;miller, penelope",
+			"minAvgGrade": 78.53
+		},
+		{
+			"sections_instructor": "chatzivasileiou, evangelia",
+			"minAvgGrade": 78.55
+		},
+		{
+			"sections_instructor": "chen, yu christine",
+			"minAvgGrade": 78.68
+		},
+		{
+			"sections_instructor": "cheung, yau man",
+			"minAvgGrade": 78.72
+		},
+		{
+			"sections_instructor": "chamberlain, sandra;lo, kin",
+			"minAvgGrade": 78.75
+		},
+		{
+			"sections_instructor": "carroll, allan;marshall, peter",
+			"minAvgGrade": 78.75
+		},
+		{
+			"sections_instructor": "cantin, teri",
+			"minAvgGrade": 78.8
+		},
+		{
+			"sections_instructor": "coughtrie, michael;nislow, corey",
+			"minAvgGrade": 78.84
+		},
+		{
+			"sections_instructor": "conibear, elizabeth;kay, robert;simpson, elizabeth;vilarino-guell, carles",
+			"minAvgGrade": 78.88
+		},
+		{
+			"sections_instructor": "caruthers, andrew;friedlander, elizabeth;tba",
+			"minAvgGrade": 78.91
+		},
+		{
+			"sections_instructor": "cafferty, patrick;padash-barmchi, mojgan",
+			"minAvgGrade": 78.95
+		},
+		{
+			"sections_instructor": "crowe, sean",
+			"minAvgGrade": 79.16
+		},
+		{
+			"sections_instructor": "cramer, carl;shariati, batoul",
+			"minAvgGrade": 79.19
+		},
+		{
+			"sections_instructor": "campbell, kim;tba",
+			"minAvgGrade": 79.22
+		},
+		{
+			"sections_instructor": "campbell, karen;harrison, rosamund louise;kennedy, david;mathu-muju, kavita;richman, joy marion",
+			"minAvgGrade": 79.25
+		},
+		{
+			"sections_instructor": "chae, bo youn",
+			"minAvgGrade": 79.28
+		},
+		{
+			"sections_instructor": "chen, liane;hinze, ehleen",
+			"minAvgGrade": 79.5
+		},
+		{
+			"sections_instructor": "cafferty, patrick;westendorf, kathryn ann",
+			"minAvgGrade": 79.54
+		},
+		{
+			"sections_instructor": "chan, kai;ivanochko, tara",
+			"minAvgGrade": 79.63
+		},
+		{
+			"sections_instructor": "chavez-peon, mario ernesto",
+			"minAvgGrade": 79.67
+		},
+		{
+			"sections_instructor": "chang, thomas",
+			"minAvgGrade": 79.67
+		},
+		{
+			"sections_instructor": "croft, elizabeth;lu, xiaodong",
+			"minAvgGrade": 79.75
+		},
+		{
+			"sections_instructor": "carlson, murray;fisher, adlai",
+			"minAvgGrade": 79.76
+		},
+		{
+			"sections_instructor": "cyr, david",
+			"minAvgGrade": 79.76
+		},
+		{
+			"sections_instructor": "cunningham, margaret mui yeah;foster, paula;jackson, cathryn;simpson, margaret;taverner, tarnia",
+			"minAvgGrade": 79.81
+		},
+		{
+			"sections_instructor": "coordinator;sanders, travis;struch, gela",
+			"minAvgGrade": 79.82
+		},
+		{
+			"sections_instructor": "celler, anna",
+			"minAvgGrade": 79.86
+		},
+		{
+			"sections_instructor": "chieng, sie-tan",
+			"minAvgGrade": 79.87
+		},
+		{
+			"sections_instructor": "carroll, allan",
+			"minAvgGrade": 79.87
+		},
+		{
+			"sections_instructor": "caruthers, andrew;sutherland, stuart",
+			"minAvgGrade": 80.13
+		},
+		{
+			"sections_instructor": "carr, roxane",
+			"minAvgGrade": 80.13
+		},
+		{
+			"sections_instructor": "cenfetelli, ronald timothy;cruickshank, ian",
+			"minAvgGrade": 80.23
+		},
+		{
+			"sections_instructor": "cho, allan",
+			"minAvgGrade": 80.27
+		},
+		{
+			"sections_instructor": "cubbon, paul;hodgson, antony;kruchten, philippe;simonite, james",
+			"minAvgGrade": 80.29
+		},
+		{
+			"sections_instructor": "carlson, murray",
+			"minAvgGrade": 80.53
+		},
+		{
+			"sections_instructor": "cubbon, paul;viskovich, julio",
+			"minAvgGrade": 80.53
+		},
+		{
+			"sections_instructor": "cubbon, paul;dahl, darren",
+			"minAvgGrade": 80.53
+		},
+		{
+			"sections_instructor": "coordinator;klibadze, dali;struch, gela",
+			"minAvgGrade": 80.55
+		},
+		{
+			"sections_instructor": "condon, patrick michael",
+			"minAvgGrade": 80.57
+		},
+		{
+			"sections_instructor": "coulter-mackie, marion;keller, bernd;kizhakkedathu, jayachandran;seow, chun yong",
+			"minAvgGrade": 80.58
+		},
+		{
+			"sections_instructor": "conibear, elizabeth;simpson, elizabeth;vilarino-guell, carles",
+			"minAvgGrade": 80.61
+		},
+		{
+			"sections_instructor": "castellarin, simone",
+			"minAvgGrade": 80.63
+		},
+		{
+			"sections_instructor": "crawford, david robert;fielding, david",
+			"minAvgGrade": 80.67
+		},
+		{
+			"sections_instructor": "coops, nicholas charles;lemay, valerie;meitner, michael",
+			"minAvgGrade": 80.71
+		},
+		{
+			"sections_instructor": "cavens, duncan",
+			"minAvgGrade": 80.71
+		},
+		{
+			"sections_instructor": "chan, may;kempthorne, maryann",
+			"minAvgGrade": 80.75
+		},
+		{
+			"sections_instructor": "collins, daniel",
+			"minAvgGrade": 80.8
+		},
+		{
+			"sections_instructor": "cockcroft, steven;fernlund, goran;maijer, daan;wang, rizhi;wassink, berend",
+			"minAvgGrade": 80.87
+		},
+		{
+			"sections_instructor": "choptuik, matthew",
+			"minAvgGrade": 80.94
+		},
+		{
+			"sections_instructor": "campbell, kim",
+			"minAvgGrade": 81
+		},
+		{
+			"sections_instructor": "chemin, matthieu",
+			"minAvgGrade": 81.03
+		},
+		{
+			"sections_instructor": "cubbon, paul;kruchten, philippe;miller, david",
+			"minAvgGrade": 81.08
+		},
+		{
+			"sections_instructor": "creagh, aimee louise;gyenge, elod lajos;kannangara, dhaneshwarie",
+			"minAvgGrade": 81.15
+		},
+		{
+			"sections_instructor": "conibear, elizabeth;kay, robert;marra, marco",
+			"minAvgGrade": 81.18
+		},
+		{
+			"sections_instructor": "cockcroft, steven;wassink, berend",
+			"minAvgGrade": 81.25
+		},
+		{
+			"sections_instructor": "cubbon, paul;simonite, james",
+			"minAvgGrade": 81.33
+		},
+		{
+			"sections_instructor": "coordinator;struch, gela;svanidze, tamara",
+			"minAvgGrade": 81.33
+		},
+		{
+			"sections_instructor": "couch, brett;germano, bernardita;kalas, pamela;kopp, christopher;moussavi, maryam;nomme, kathy margaret;norman, lynn;sun, chin",
+			"minAvgGrade": 81.42
+		},
+		{
+			"sections_instructor": "clarke, steven",
+			"minAvgGrade": 81.43
+		},
+		{
+			"sections_instructor": "camacho, sarah;denison, jacqueline;dunat, tatijana;manio, trisha joyce;tan, elsie;valkenier, beverley",
+			"minAvgGrade": 81.47
+		},
+		{
+			"sections_instructor": "currie, leanne",
+			"minAvgGrade": 81.63
+		},
+		{
+			"sections_instructor": "canam, connie joan",
+			"minAvgGrade": 81.72
+		},
+		{
+			"sections_instructor": "chen, hong",
+			"minAvgGrade": 81.73
+		},
+		{
+			"sections_instructor": "clark, hazel;paul, karin",
+			"minAvgGrade": 81.79
+		},
+		{
+			"sections_instructor": "cox, geoffrey;lokman, kees",
+			"minAvgGrade": 81.86
+		},
+		{
+			"sections_instructor": "chappells, heather",
+			"minAvgGrade": 81.88
+		},
+		{
+			"sections_instructor": "cannon, joanna",
+			"minAvgGrade": 82
+		},
+		{
+			"sections_instructor": "chan, may",
+			"minAvgGrade": 82.12
+		},
+		{
+			"sections_instructor": "cleary, michelle",
+			"minAvgGrade": 82.13
+		},
+		{
+			"sections_instructor": "carlson, murray;giammarino, ronald;heinkel, robert lee",
+			"minAvgGrade": 82.15
+		},
+		{
+			"sections_instructor": "chen, liane;young, robin",
+			"minAvgGrade": 82.26
+		},
+		{
+			"sections_instructor": "cairns, brian;levine, marc;soja, peter;verma, arun",
+			"minAvgGrade": 82.32
+		},
+		{
+			"sections_instructor": "cadario, barbara",
+			"minAvgGrade": 82.53
+		},
+		{
+			"sections_instructor": "condon, patrick michael;van duzer, leslie",
+			"minAvgGrade": 82.6
+		},
+		{
+			"sections_instructor": "cubbon, paul;etmannski, tamara;miller, david",
+			"minAvgGrade": 82.63
+		},
+		{
+			"sections_instructor": "charles, grant",
+			"minAvgGrade": 82.67
+		},
+		{
+			"sections_instructor": "campbell, karen",
+			"minAvgGrade": 82.75
+		},
+		{
+			"sections_instructor": "cramond, pat;fengler, markus;mikkelsen, jon;winkelman, paul",
+			"minAvgGrade": 82.76
+		},
+		{
+			"sections_instructor": "campbell, kim;vedam, saraswathi",
+			"minAvgGrade": 82.9
+		},
+		{
+			"sections_instructor": "chou, fred",
+			"minAvgGrade": 82.92
+		},
+		{
+			"sections_instructor": "cyr, david;stiller, murray",
+			"minAvgGrade": 82.92
+		},
+		{
+			"sections_instructor": "camp, patricia",
+			"minAvgGrade": 82.93
+		},
+		{
+			"sections_instructor": "chan, anthony;jaggi, bruno",
+			"minAvgGrade": 83.1
+		},
+		{
+			"sections_instructor": "colozzo, paola",
+			"minAvgGrade": 83.13
+		},
+		{
+			"sections_instructor": "cenfetelli, ronald timothy",
+			"minAvgGrade": 83.13
+		},
+		{
+			"sections_instructor": "cyr, david;lewis, jennifer",
+			"minAvgGrade": 83.21
+		},
+		{
+			"sections_instructor": "cawthray, jacquie",
+			"minAvgGrade": 83.29
+		},
+		{
+			"sections_instructor": "charles, grant;jones, elizabeth;mcnicoll, paule",
+			"minAvgGrade": 83.3
+		},
+		{
+			"sections_instructor": "campbell, kim;krebs, claudia",
+			"minAvgGrade": 83.35
+		},
+		{
+			"sections_instructor": "charles, grant;jones, elizabeth;o'neill, brian;yan, miu chung",
+			"minAvgGrade": 83.48
+		},
+		{
+			"sections_instructor": "callison, candis;lapointe, kirk",
+			"minAvgGrade": 83.63
+		},
+		{
+			"sections_instructor": "coordinator;redlich, jeremy;struch, gela",
+			"minAvgGrade": 83.67
+		},
+		{
+			"sections_instructor": "cervatiuc, andreea",
+			"minAvgGrade": 83.68
+		},
+		{
+			"sections_instructor": "collier, abby;ensom, mary;wong, harvey",
+			"minAvgGrade": 83.68
+		},
+		{
+			"sections_instructor": "chapman, marilyn;stewart, mary",
+			"minAvgGrade": 83.77
+		},
+		{
+			"sections_instructor": "chauvin-payan, carole",
+			"minAvgGrade": 83.77
+		},
+		{
+			"sections_instructor": "cassidy, alice",
+			"minAvgGrade": 83.83
+		},
+		{
+			"sections_instructor": "creagh, aimee louise;muttray, annette f",
+			"minAvgGrade": 83.86
+		},
+		{
+			"sections_instructor": "chowrira, gangamma;nomme, kathy margaret;samuels, anne lacey",
+			"minAvgGrade": 83.89
+		},
+		{
+			"sections_instructor": "chapariha, mehrdad",
+			"minAvgGrade": 83.9
+		},
+		{
+			"sections_instructor": "christensen, villy;ivanochko, tara;radic, valentina",
+			"minAvgGrade": 83.93
+		},
+		{
+			"sections_instructor": "chrostowski, lukas;jaeger, nicolas a",
+			"minAvgGrade": 84
+		},
+		{
+			"sections_instructor": "cheung, karen;ma, hongshen;wilson, david",
+			"minAvgGrade": 84.1
+		},
+		{
+			"sections_instructor": "chandler, frances",
+			"minAvgGrade": 84.18
+		},
+		{
+			"sections_instructor": "camacho, sarah;dunat, tatijana;mcpherson, gladys;valkenier, beverley",
+			"minAvgGrade": 84.22
+		},
+		{
+			"sections_instructor": "clark, natalie",
+			"minAvgGrade": 84.23
+		},
+		{
+			"sections_instructor": "clee, susanne michelle",
+			"minAvgGrade": 84.29
+		},
+		{
+			"sections_instructor": "coupland, robert william",
+			"minAvgGrade": 84.33
+		},
+		{
+			"sections_instructor": "cheek, timothy",
+			"minAvgGrade": 84.4
+		},
+		{
+			"sections_instructor": "chan, kai",
+			"minAvgGrade": 84.44
+		},
+		{
+			"sections_instructor": "caldwell, john",
+			"minAvgGrade": 84.44
+		},
+		{
+			"sections_instructor": "crutsinger, gregory",
+			"minAvgGrade": 84.48
+		},
+		{
+			"sections_instructor": "cliff, margaret anne",
+			"minAvgGrade": 84.5
+		},
+		{
+			"sections_instructor": "cadario, barbara;eccott, lynda",
+			"minAvgGrade": 84.51
+		},
+		{
+			"sections_instructor": "carroll, allan;de long, deborah;hamelin, richard;larson, bruce;lyons, charles;mitchell, stephen jarvis",
+			"minAvgGrade": 84.53
+		},
+		{
+			"sections_instructor": "chan, kai;satterfield, theresa",
+			"minAvgGrade": 84.65
+		},
+		{
+			"sections_instructor": "craig, bonnie jean;hatzimanolakis, penny",
+			"minAvgGrade": 84.68
+		},
+		{
+			"sections_instructor": "camacho, sarah;dunat, tatijana;mcpherson, gladys",
+			"minAvgGrade": 84.74
+		},
+		{
+			"sections_instructor": "cortial, solenne;o'brien, juliet",
+			"minAvgGrade": 84.78
+		},
+		{
+			"sections_instructor": "cliff, margaret anne;madadi noei, azita",
+			"minAvgGrade": 84.86
+		},
+		{
+			"sections_instructor": "clark, natalie;o'connor, deborah;o'neill, brian;stainton, timothy;tester, frank",
+			"minAvgGrade": 84.87
+		},
+		{
+			"sections_instructor": "clee, susanne michelle;kieffer, tim;kwok, yin nam kenny;lynn, francis",
+			"minAvgGrade": 84.91
+		},
+		{
+			"sections_instructor": "campbell, allison;simmons, valerie",
+			"minAvgGrade": 84.92
+		},
+		{
+			"sections_instructor": "chapman, gwenneth",
+			"minAvgGrade": 85
+		},
+		{
+			"sections_instructor": "cohen, stewart",
+			"minAvgGrade": 85
+		},
+		{
+			"sections_instructor": "chieng, sie-tan;isaacson, michael d;lence, barbara jean;ventura, carlos estuardo",
+			"minAvgGrade": 85.03
+		},
+		{
+			"sections_instructor": "caldwell, john;lee, sandra marjorie",
+			"minAvgGrade": 85.04
+		},
+		{
+			"sections_instructor": "conn, stephanie",
+			"minAvgGrade": 85.08
+		},
+		{
+			"sections_instructor": "cheung, wai lung;christensen, villy;close, david;mcallister, murdoch;pauly, daniel;pitcher, tony;sumaila, ussif rashid;trites, andrew;vincent, amanda;walters, carl john",
+			"minAvgGrade": 85.17
+		},
+		{
+			"sections_instructor": "carey, stephen",
+			"minAvgGrade": 85.29
+		},
+		{
+			"sections_instructor": "charles, grant;clark, natalie;jones, elizabeth",
+			"minAvgGrade": 85.3
+		},
+		{
+			"sections_instructor": "chen, hui;yen, edwin h",
+			"minAvgGrade": 85.4
+		},
+		{
+			"sections_instructor": "campbell, kim;simmons, valerie",
+			"minAvgGrade": 85.5
+		},
+		{
+			"sections_instructor": "cooper, john;heatley, stephen;scholte, tom",
+			"minAvgGrade": 85.5
+		},
+		{
+			"sections_instructor": "cayley, mair",
+			"minAvgGrade": 85.53
+		},
+		{
+			"sections_instructor": "ciocca, valter",
+			"minAvgGrade": 85.6
+		},
+		{
+			"sections_instructor": "cheung, karen;hodgson, antony",
+			"minAvgGrade": 85.6
+		},
+		{
+			"sections_instructor": "covey, scott;van petegem, filip",
+			"minAvgGrade": 85.7
+		},
+		{
+			"sections_instructor": "chieng, sie-tan;stiemer, siegfried",
+			"minAvgGrade": 85.76
+		},
+		{
+			"sections_instructor": "clark, natalie;jamieson, ally;jones, elizabeth",
+			"minAvgGrade": 85.9
+		},
+		{
+			"sections_instructor": "copeland, lynn;garnett, joyce",
+			"minAvgGrade": 86.14
+		},
+		{
+			"sections_instructor": "campbell, suzanne",
+			"minAvgGrade": 86.17
+		},
+		{
+			"sections_instructor": "chan, anthony",
+			"minAvgGrade": 86.2
+		},
+		{
+			"sections_instructor": "cote, helene",
+			"minAvgGrade": 86.25
+		},
+		{
+			"sections_instructor": "callison, candis",
+			"minAvgGrade": 86.27
+		},
+		{
+			"sections_instructor": "chang, stephanie",
+			"minAvgGrade": 86.37
+		},
+		{
+			"sections_instructor": "copeland, lynn",
+			"minAvgGrade": 86.42
+		},
+		{
+			"sections_instructor": "casson, barbara",
+			"minAvgGrade": 86.44
+		},
+		{
+			"sections_instructor": "chase, kate",
+			"minAvgGrade": 86.75
+		},
+		{
+			"sections_instructor": "chiniforoosh, sina",
+			"minAvgGrade": 86.83
+		},
+		{
+			"sections_instructor": "courneya, carol-ann;kehl, steven;moore, edwin d;osborne, salma",
+			"minAvgGrade": 86.84
+		},
+		{
+			"sections_instructor": "cheung, wai lung;christensen, villy;close, david;mcallister, murdoch;pauly, daniel;pitcher, tony;sumaila, ussif rashid;trites, andrew;vincent, amanda",
+			"minAvgGrade": 86.89
+		},
+		{
+			"sections_instructor": "cohodas, marvin;ryan, maureen",
+			"minAvgGrade": 87
+		},
+		{
+			"sections_instructor": "campbell, katie",
+			"minAvgGrade": 87.03
+		},
+		{
+			"sections_instructor": "casini, paola",
+			"minAvgGrade": 87.06
+		},
+		{
+			"sections_instructor": "coulter, david",
+			"minAvgGrade": 87.06
+		},
+		{
+			"sections_instructor": "coniglio, connie",
+			"minAvgGrade": 87.07
+		},
+		{
+			"sections_instructor": "cairns, brian;levine, marc;soja, peter",
+			"minAvgGrade": 87.18
+		},
+		{
+			"sections_instructor": "cox, daniel",
+			"minAvgGrade": 87.22
+		},
+		{
+			"sections_instructor": "campbell, kristin;eng, janice;hunt, michael anthony;scott, alexander;virji-babul, naznin",
+			"minAvgGrade": 87.37
+		},
+		{
+			"sections_instructor": "coulter, david;rubenson, kjell len",
+			"minAvgGrade": 87.4
+		},
+		{
+			"sections_instructor": "chieng, sie-tan;nesbit, susan;stiemer, siegfried",
+			"minAvgGrade": 87.41
+		},
+		{
+			"sections_instructor": "cole, peter",
+			"minAvgGrade": 87.47
+		},
+		{
+			"sections_instructor": "cheung, karen;ma, hongshen;wang, rizhi",
+			"minAvgGrade": 87.57
+		},
+		{
+			"sections_instructor": "cho, sunah",
+			"minAvgGrade": 87.59
+		},
+		{
+			"sections_instructor": "chan, eric",
+			"minAvgGrade": 87.67
+		},
+		{
+			"sections_instructor": "carter, john",
+			"minAvgGrade": 87.86
+		},
+		{
+			"sections_instructor": "campbell, kristin;eng, janice;scott, alexander;virji-babul, naznin",
+			"minAvgGrade": 87.91
+		},
+		{
+			"sections_instructor": "chartres, lynn",
+			"minAvgGrade": 87.94
+		},
+		{
+			"sections_instructor": "cox, michael",
+			"minAvgGrade": 88
+		},
+		{
+			"sections_instructor": "cook, karen",
+			"minAvgGrade": 88
+		},
+		{
+			"sections_instructor": "cullis, pieter;finlay, b brett",
+			"minAvgGrade": 88.08
+		},
+		{
+			"sections_instructor": "cole, peter;o'riley, patricia",
+			"minAvgGrade": 88.12
+		},
+		{
+			"sections_instructor": "cote, helene;kalloger, steve ernest;wellington, cheryl lea",
+			"minAvgGrade": 88.13
+		},
+		{
+			"sections_instructor": "cullis, pieter;molday, robert",
+			"minAvgGrade": 88.17
+		},
+		{
+			"sections_instructor": "cullis, pieter;foster, leonard;roberge, michel",
+			"minAvgGrade": 88.19
+		},
+		{
+			"sections_instructor": "cox, elizabeth;reiner, ann",
+			"minAvgGrade": 88.25
+		},
+		{
+			"sections_instructor": "crowe, sean;hallam, steven",
+			"minAvgGrade": 88.35
+		},
+		{
+			"sections_instructor": "cockcroft, steven;dreisinger, david",
+			"minAvgGrade": 88.42
+		},
+		{
+			"sections_instructor": "cheung, wai lung;christensen, villy;close, david;pauly, daniel;pitcher, tony;sumaila, ussif rashid;trites, andrew;vincent, amanda;walters, carl john",
+			"minAvgGrade": 88.5
+		},
+		{
+			"sections_instructor": "cortial, solenne",
+			"minAvgGrade": 88.5
+		},
+		{
+			"sections_instructor": "campbell, kristin;nimmon, laura",
+			"minAvgGrade": 88.5
+		},
+		{
+			"sections_instructor": "campbell, allison",
+			"minAvgGrade": 88.58
+		},
+		{
+			"sections_instructor": "coil, jeffrey martin;haapasalo, markus;shen, ya",
+			"minAvgGrade": 88.75
+		},
+		{
+			"sections_instructor": "carter, cedric john",
+			"minAvgGrade": 88.81
+		},
+		{
+			"sections_instructor": "chowrira, gangamma;samuels, anne lacey",
+			"minAvgGrade": 88.83
+		},
+		{
+			"sections_instructor": "cote, helene;kalloger, steve ernest;laule, cornelia;lockwood, william;wellington, cheryl lea",
+			"minAvgGrade": 89
+		},
+		{
+			"sections_instructor": "cambruzzi, john;coil, jeffrey martin;corber, ron;fraser, john gordon",
+			"minAvgGrade": 89.25
+		},
+		{
+			"sections_instructor": "cardwell, steve",
+			"minAvgGrade": 89.4
+		},
+		{
+			"sections_instructor": "cyr, david;tba",
+			"minAvgGrade": 89.52
+		},
+		{
+			"sections_instructor": "curle, deirdre;jamieson, janet ruth",
+			"minAvgGrade": 89.58
+		},
+		{
+			"sections_instructor": "campbell, deborah",
+			"minAvgGrade": 89.75
+		},
+		{
+			"sections_instructor": "champion, kathleen",
+			"minAvgGrade": 89.89
+		},
+		{
+			"sections_instructor": "chen, hui;pliska, benjamin;yen, edwin h",
+			"minAvgGrade": 90
+		},
+		{
+			"sections_instructor": "casson, barbara;choi, marcia",
+			"minAvgGrade": 90.09
+		},
+		{
+			"sections_instructor": "cullis, pieter",
+			"minAvgGrade": 90.1
+		},
+		{
+			"sections_instructor": "cullis, pieter;duong van hoa, franck;molday, robert",
+			"minAvgGrade": 90.33
+		},
+		{
+			"sections_instructor": "carlson, scott",
+			"minAvgGrade": 90.83
+		},
+		{
+			"sections_instructor": "carr, wendy;denizot, isabelle",
+			"minAvgGrade": 91.18
+		},
+		{
+			"sections_instructor": "curle, deirdre;jordan, elizabeth",
+			"minAvgGrade": 93
+		},
+		{
+			"sections_instructor": "curle, deirdre;jordan, elizabeth;norman, nancy",
+			"minAvgGrade": 93.83
+		},
+		{
+			"sections_instructor": "clarke, lorne",
+			"minAvgGrade": 94.7
+		},
+		{
+			"sections_instructor": "cole, kenneth",
+			"minAvgGrade": 96.21
+		},
+		{
+			"sections_instructor": "coria, lino",
+			"minAvgGrade": 98.75
+		}
+	]
+}
