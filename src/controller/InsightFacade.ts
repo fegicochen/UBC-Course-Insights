@@ -1,4 +1,4 @@
-import { Dataset, DatasetList, DatasetUtils } from "./Dataset";
+import { SectionsDataset, DatasetUtils, RoomsDataset } from "./Dataset";
 import {
 	IInsightFacade,
 	InsightDataset,
@@ -8,8 +8,9 @@ import {
 	NotFoundError,
 } from "./IInsightFacade";
 import { QueryEngine } from "./QueryEngine";
-import DatasetProcessor from "../../src/controller/DatasetProcessor";
-import { mkdir, pathExists, readJSON, writeJSON } from "fs-extra";
+import PersistantData from "./PersistantData";
+import SectionsDatasetProcessor from "./SectionsDatasetProcessor";
+import { RoomsDatasetProcessor } from "./RoomsDatasetProcessor";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -17,108 +18,80 @@ import { mkdir, pathExists, readJSON, writeJSON } from "fs-extra";
  *
  */
 export default class InsightFacade implements IInsightFacade {
-	private datasets: DatasetList;
-	private loadedData;
+	private data: PersistantData;
 
 	constructor() {
-		// TODO: Load datasets from dist
-		this.loadedData = false;
-		this.datasets = { datasets: [] };
-	}
-
-	private async loadDataIfRequired(): Promise<void> {
-		if (this.loadedData) {
-			return;
-		}
-		try {
-			if (await pathExists("data/datasets.json")) {
-				const pkgObj = await readJSON("data/datasets.json");
-				this.datasets = pkgObj as DatasetList;
-			}
-			this.loadedData = true;
-		} catch (e) {
-			throw new InsightError("Failed to read data from disc: " + JSON.stringify(e));
-		}
-	}
-
-	private async writeData(): Promise<void> {
-		try {
-			if (!(await pathExists("data"))) {
-				try {
-					await mkdir("data");
-				} catch (_e) {
-					// Its fine
-				}
-			}
-			await writeJSON("data/datasets.json", this.datasets);
-		} catch (e) {
-			throw new InsightError("Failed to write data to disc: " + JSON.stringify(e));
-		}
+		this.data = new PersistantData();
 	}
 
 	public async addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-		await this.loadDataIfRequired();
 		// Check id valid
 		if (!DatasetUtils.isValidIdString(id)) {
 			throw new InsightError("Invalid dataset ID: " + id + ".");
 		}
 
 		// Check for duplicate ID
-		if (this.datasets.datasets.find((dataset) => dataset.id === id)) {
+		if ((await this.data.getDatasets()).sections.find((dataset) => dataset.id === id)) {
 			throw new InsightError("Duplicate ID: " + id);
 		}
 
 		// Check kind
 		if (kind === InsightDatasetKind.Sections) {
-			const validSections = await DatasetProcessor.getValidSections(content);
-			const dataset: Dataset = { id: id, members: validSections };
-			this.datasets.datasets.push(dataset);
+			const validSections = await SectionsDatasetProcessor.getValidSections(content);
+			const dataset: SectionsDataset = { id: id, members: validSections, type: InsightDatasetKind.Sections };
+			await this.data.addSectionsDataset(dataset);
 		} else {
-			throw new InsightError("InsightDatasetKind.Rooms not supported yet.");
+			const validRooms = await RoomsDatasetProcessor.getValidRooms(content);
+			const dataset: RoomsDataset = { id: id, members: validRooms, type: InsightDatasetKind.Rooms };
+			await this.data.addRoomsDataset(dataset);
 		}
 
 		// Save to disc
-		await this.writeData();
+		await this.data.writeData();
 
 		// Return list of valid datasets
-		return this.datasets.datasets.map((dataset) => dataset.id);
+		return DatasetUtils.getAllIDs(await this.data.getDatasets());
 	}
 
 	public async removeDataset(id: string): Promise<string> {
-		await this.loadDataIfRequired();
-
 		if (!DatasetUtils.isValidIdString(id)) {
 			throw new InsightError("Invalid id: " + id);
 		}
-		const newDatasets: Dataset[] = [];
-		this.datasets.datasets.forEach((dataset) => {
+		const newSections: SectionsDataset[] = [];
+		const newRooms: RoomsDataset[] = [];
+		const datasets = await this.data.getDatasets();
+		datasets.sections.forEach((dataset) => {
 			if (dataset.id !== id) {
-				newDatasets.push(dataset);
+				newSections.push(dataset);
 			}
 		});
-		if (this.datasets.datasets.length === newDatasets.length) {
+		datasets.rooms.forEach((dataset) => {
+			if (dataset.id !== id) {
+				newRooms.push(dataset);
+			}
+		});
+		if ((await this.data.getDatasets()).sections.length === newSections.length) {
 			throw new NotFoundError("Dataset with id " + id + " not found.");
 		}
-		this.datasets.datasets = newDatasets;
+		await this.data.setDatasets({ sections: newSections, rooms: newRooms });
 
 		// Save to disc
-		await this.writeData();
+		await this.data.writeData();
 
 		return id;
 	}
 
 	public async performQuery(query: unknown): Promise<InsightResult[]> {
-		await this.loadDataIfRequired();
-		const qe = new QueryEngine(() => this.datasets);
+		const datasets = await this.data.getDatasets();
+		const qe = new QueryEngine(() => datasets);
 		const sections = await qe.processQuery(query);
 		return sections;
 	}
 
 	public async listDatasets(): Promise<InsightDataset[]> {
-		await this.loadDataIfRequired();
-		return this.datasets.datasets.map((dataset) => ({
+		return DatasetUtils.combineDatasets(await this.data.getDatasets()).map((dataset) => ({
 			id: dataset.id,
-			kind: InsightDatasetKind.Sections,
+			kind: dataset.type,
 			numRows: dataset.members.length,
 		}));
 	}

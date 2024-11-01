@@ -1,4 +1,5 @@
-import { InsightError } from "./IInsightFacade";
+import JSZip from "jszip";
+import { InsightDatasetKind, InsightError } from "./IInsightFacade";
 
 export const maxResults = 5000;
 
@@ -28,13 +29,32 @@ export interface Section {
 	audit: number;
 }
 
-export interface Dataset {
-	id: string;
-	members: Section[];
+export interface Room {
+	fullname: string;
+	shortname: string;
+	number: string;
+	name: string;
+	address: string;
+	lat: number;
+	lon: number;
+	seats: number;
+	type: string;
+	furniture: string;
+	href: string;
 }
 
+export interface Dataset<T> {
+	id: string;
+	members: T[];
+	type: InsightDatasetKind;
+}
+
+export type SectionsDataset = Dataset<Section>;
+export type RoomsDataset = Dataset<Room>;
+
 export interface DatasetList {
-	datasets: Dataset[];
+	sections: SectionsDataset[];
+	rooms: RoomsDataset[];
 }
 
 export type DatasetsProvider = () => DatasetList;
@@ -96,9 +116,9 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDataset(provider: DatasetsProvider, id: string): Dataset | undefined {
+	public static findDataset(provider: DatasetsProvider, id: string): SectionsDataset | undefined {
 		const datasets = provider();
-		return datasets.datasets.find((dataset) => dataset.id === id);
+		return datasets.sections.find((dataset) => dataset.id === id);
 	}
 
 	/**
@@ -327,5 +347,39 @@ export class DatasetUtils {
 			throw new InsightError("JSON format error: " + section + " must be an object, not: " + typeof obj + ", " + obj);
 		}
 		return obj as object;
+	}
+
+	/**
+	 *
+	 * @param content base64 content to unzip
+	 * @returns a JSZip of the content
+	 * @throws InsightError if the content cannot be properly parsed
+	 */
+	public static async unzipBase64Content(content: string): Promise<JSZip> {
+		let unzipped: JSZip;
+		try {
+			unzipped = await new JSZip().loadAsync(content, { base64: true });
+		} catch (e) {
+			throw new InsightError("Error parsing content " + e);
+		}
+		return unzipped;
+	}
+
+	/**
+	 *
+	 * @param datasets datasets to get ids from
+	 * @returns all ids in the given datasets
+	 */
+	public static getAllIDs(datasets: DatasetList): string[] {
+		return this.combineDatasets(datasets).map((x) => x.id);
+	}
+
+	/**
+	 *
+	 * @param datasets datasets to combine
+	 * @returns list of datasets combined
+	 */
+	public static combineDatasets(datasets: DatasetList): Dataset<Section | Room>[] {
+		return (datasets.rooms as Dataset<Section | Room>[]).concat(datasets.sections);
 	}
 }
