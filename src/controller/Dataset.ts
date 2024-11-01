@@ -14,6 +14,17 @@ export enum DatasetId {
 	Pass = "pass",
 	Fail = "fail",
 	Audit = "audit",
+	Lat = "lat",
+	Lon = "lon",
+	Seats = "seats",
+	Fullname = "fullname",
+	Shortname = "shortname",
+	Number = "number",
+	Name = "name",
+	Address = "address",
+	Type = "type",
+	Furniture = "furniture",
+	Href = "href",
 }
 
 export interface Section {
@@ -28,6 +39,7 @@ export interface Section {
 	fail: number;
 	audit: number;
 }
+export type SectionWithDynamicKeys = Section & Record<string, any>;
 
 export interface Room {
 	fullname: string;
@@ -59,11 +71,32 @@ export interface DatasetList {
 
 export type DatasetsProvider = () => DatasetList;
 
-export const MFields = [DatasetId.Avg, DatasetId.Pass, DatasetId.Fail, DatasetId.Audit, DatasetId.Year];
-export const SFields = [DatasetId.Dept, DatasetId.Id, DatasetId.Instructor, DatasetId.Title, DatasetId.Uuid];
+export const MFields = [
+	DatasetId.Avg,
+	DatasetId.Pass,
+	DatasetId.Fail,
+	DatasetId.Audit,
+	DatasetId.Year,
+	DatasetId.Lat,
+	DatasetId.Lon,
+	DatasetId.Seats,
+];
+export const SFields = [
+	DatasetId.Dept,
+	DatasetId.Id,
+	DatasetId.Instructor,
+	DatasetId.Title,
+	DatasetId.Uuid,
+	DatasetId.Fullname,
+	DatasetId.Shortname,
+	DatasetId.Number,
+	DatasetId.Name,
+	DatasetId.Address,
+	DatasetId.Type,
+	DatasetId.Furniture,
+];
 
 export interface InsightFacadeKey {
-	idstring: string;
 	idstring: string;
 	field: DatasetId;
 }
@@ -71,6 +104,7 @@ export interface InsightFacadeKey {
 export const Keywords = {
 	Body: "WHERE",
 	Options: "OPTIONS",
+	Transformations: "TRANSFORMATIONS",
 	Filter: {
 		Logic: {
 			And: "AND",
@@ -88,14 +122,37 @@ export const Keywords = {
 			Not: "NOT",
 		},
 	},
+	Direction: {
+		Up: "UP",
+		Down: "DOWN",
+	},
+	ApplyToken: {
+		Max: "MAX",
+		Min: "MIN",
+		Avg: "AVG",
+		Count: "COUNT",
+		Sum: "SUM",
+	},
 	Columns: "COLUMNS",
 	Order: "ORDER",
+	Group: "GROUP",
+	Apply: "APPLY",
 };
 
+export type ApplyRule = Record<string, Record<string, string>>;
+
+export interface Transformations {
+	GROUP: string[];
+	APPLY: ApplyRule[];
+}
+
 export interface OptionsState {
-	order: InsightFacadeKey | undefined;
+	order?: {
+		dir: "UP" | "DOWN";
+		keys: string[];
+	};
 	columns: InsightFacadeKey[];
-	datasetId: string;
+	datasetKind: string;
 }
 
 export class DatasetUtils {
@@ -137,10 +194,7 @@ export class DatasetUtils {
 	 * @returns false if string is improperly formatted (only whitespace or contains underscoare), true otherwise
 	 */
 	public static isValidIdString(idstring: string): boolean {
-		if (idstring.trim() === "" || idstring.includes("_")) {
-			return false;
-		}
-		return true;
+		return idstring.trim() !== "" && !idstring.includes("_");
 	}
 
 	/**
@@ -152,20 +206,14 @@ export class DatasetUtils {
 		const splitUnderscore = key.split("_");
 		const beforeAndAfterUnderscoreLength = 2;
 		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
-		const beforeAndAfterUnderscoreLength = 2;
-		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
 			return undefined;
 		}
-		const idstring = splitUnderscore[0],
-			mfield = splitUnderscore[1];
-		if (!this.isValidIdString(idstring) || !MFields.find((x) => x === mfield)) {
 		const idstring = splitUnderscore[0],
 			mfield = splitUnderscore[1];
 		if (!this.isValidIdString(idstring) || !MFields.find((x) => x === mfield)) {
 			return undefined;
 		}
 		return {
-			idstring: idstring,
 			idstring: idstring,
 			field: mfield as DatasetId,
 		};
@@ -180,20 +228,14 @@ export class DatasetUtils {
 		const splitUnderscore = key.split("_");
 		const beforeAndAfterUnderscoreLength = 2;
 		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
-		const beforeAndAfterUnderscoreLength = 2;
-		if (splitUnderscore.length !== beforeAndAfterUnderscoreLength) {
 			return undefined;
 		}
-		const idstring = splitUnderscore[0],
-			sfield = splitUnderscore[1];
-		if (!this.isValidIdString(idstring) || !SFields.find((x) => x === sfield)) {
 		const idstring = splitUnderscore[0],
 			sfield = splitUnderscore[1];
 		if (!this.isValidIdString(idstring) || !SFields.find((x) => x === sfield)) {
 			return undefined;
 		}
 		return {
-			idstring: idstring,
 			idstring: idstring,
 			field: sfield as DatasetId,
 		};
