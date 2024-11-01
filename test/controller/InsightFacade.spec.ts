@@ -1,4 +1,4 @@
-// import { DatasetId, DatasetUtils, Keywords } from "../../src/controller/Dataset";
+// import { DatasetUtils, Keywords } from "../../src/controller/Dataset";
 import {
 	IInsightFacade,
 	InsightDatasetKind,
@@ -496,6 +496,12 @@ describe("InsightFacade", function () {
 			let result: InsightResult[];
 			try {
 				result = await facade.performQuery(input);
+
+				// if (result.length !== expected.length) {
+				// 	console.log(`Expected length: ${expected.length}, Actual length: ${result.length}`);
+				// }
+				// Log expected and actual results
+
 				expect(result.length).to.equal(expected.length);
 				expect(result).deep.equals(expected);
 			} catch (err) {
@@ -525,9 +531,7 @@ describe("InsightFacade", function () {
 			// Will *fail* if there is a problem reading ANY dataset.
 			const loadDatasetPromises: Promise<string[]>[] = [
 				facade.addDataset("sections", sections, InsightDatasetKind.Sections),
-				facade.addDataset("one", oneCourse, InsightDatasetKind.Sections),
-				facade.addDataset("two", twoCourses, InsightDatasetKind.Sections),
-				facade.addDataset("four", fourCourses, InsightDatasetKind.Sections),
+				facade.addDataset("rooms", allRooms, InsightDatasetKind.Rooms),
 			];
 
 			try {
@@ -546,6 +550,7 @@ describe("InsightFacade", function () {
 		it("[valid/check_gt.json] SELECT dept, avg WHERE avg > 97", checkQuery);
 		it("[valid/no_results.json] No results", checkQuery);
 		it("[valid/check_eq.json] Check equal to (EQ)", checkQuery);
+		it("[valid/checkeq.json] Check equal to (EQ)", checkQuery);
 		it("[valid/check_lt.json] Check less than (LT)", checkQuery);
 		it("[valid/check_and.json] Check and (AND)", checkQuery);
 		it("[valid/check_is.json] Check is (IS)", checkQuery);
@@ -567,6 +572,18 @@ describe("InsightFacade", function () {
 		it("[valid/validResult.json] valid complicated results", checkQuery);
 		it("[valid/simple.json] SELECT dept, avg WHERE avg > 97", checkQuery);
 		it("[valid/validEverything.json] valid everything", checkQuery);
+		// Tests for apply and sort in C2
+		it("[valid/applyCase1.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applyCase2.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/applyCase3.json] calculate the average of sections avg grouped by dept", checkQuery);
+		it("[valid/sort_case.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase2.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase3.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase4.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase5.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase6.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase9.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
+		it("[valid/sortcase11.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 
 		it("[invalid/missing_where.json] Query missing WHERE", checkQuery);
 		it("[invalid/missing_options.json] Query missing OPTIONS", checkQuery);
@@ -651,16 +668,16 @@ describe("InsightFacade", function () {
 // 			expect(DatasetUtils.parseSKey("A__B_AD_DAS")).equals(undefined);
 // 		});
 
-// 		it("should accept skeys", () => {
-// 			expect(DatasetUtils.parseSKey("abc_dept")).to.deep.equal({
-// 				idstring: "abc",
-// 				field: DatasetId.Dept,
-// 			});
-// 			expect(DatasetUtils.parseSKey("123_instructor")).to.deep.equal({
-// 				idstring: "123",
-// 				field: DatasetId.Instructor,
-// 			});
-// 		});
+// 		// it("should accept skeys", () => {
+// 		// 	expect(DatasetUtils.parseSKey("abc_dept")).to.deep.equal({
+// 		// 		idstring: "abc",
+// 		// 		field: DatasetId.Dept,
+// 		// 	});
+// 		// 	expect(DatasetUtils.parseSKey("123_instructor")).to.deep.equal({
+// 		// 		idstring: "123",
+// 		// 		field: DatasetId.Instructor,
+// 		// 	});
+// 		// });
 
 // 		it("should reject mkeys", () => {
 // 			expect(DatasetUtils.parseSKey("abc_avg")).equals(undefined);
@@ -685,16 +702,16 @@ describe("InsightFacade", function () {
 // 			expect(DatasetUtils.parseMKey("123_instructor")).equals(undefined);
 // 		});
 
-// 		it("should accept proper mkeys", () => {
-// 			expect(DatasetUtils.parseMKey("abc_avg")).to.deep.equal({
-// 				idstring: "abc",
-// 				field: DatasetId.Avg,
-// 			});
-// 			expect(DatasetUtils.parseMKey("123_fail")).to.deep.equal({
-// 				idstring: "123",
-// 				field: DatasetId.Fail,
-// 			});
-// 		});
+// 		// it("should accept proper mkeys", () => {
+// 		// 	expect(DatasetUtils.parseMKey("abc_avg")).to.deep.equal({
+// 		// 		idstring: "abc",
+// 		// 		field: DatasetId.Avg,
+// 		// 	});
+// 		// 	expect(DatasetUtils.parseMKey("123_fail")).to.deep.equal({
+// 		// 		idstring: "123",
+// 		// 		field: DatasetId.Fail,
+// 		// 	});
+// 		// });
 
 // 		it("should reject nonsense", () => {
 // 			expect(DatasetUtils.parseMKey("DNSKLDNASNDi123j13081232903_ie-12i321non")).equals(undefined);
@@ -873,56 +890,56 @@ describe("InsightFacade", function () {
 // 		});
 // 	});
 
-// 	describe("processQuery", () => {
-// 		it("should reject non-json", async () => {
-// 			try {
-// 				await qe.processQuery("ABC");
-// 				expect.fail("Should have thrown.");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
-
-// 		it("should reject with invalid key", async () => {
-// 			try {
-// 				await qe.processQuery({ PLUS: "ABCD" });
-// 				expect.fail("Should have failed");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
-
-// 		it("should reject query without options or where", async () => {
-// 			try {
-// 				await qe.processQuery({});
-// 				expect.fail("Should have failed.");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
-
-// 		it("should reject empty options", async () => {
-// 			try {
-// 				await qe.processQuery({ OPTIONS: {} });
-// 				expect.fail("Should have failed");
-// 			} catch (e) {
-// 				expect(e).to.be.instanceOf(InsightError);
-// 			}
-// 		});
+// describe("processQuery", () => {
+// 	it("should reject non-json", async () => {
+// 		try {
+// 			await qe.processQuery("ABC");
+// 			expect.fail("Should have thrown.");
+// 		} catch (e) {
+// 			expect(e).to.be.instanceOf(InsightError);
+// 		}
 // 	});
 
-// 	describe("getGeoLocation", () => {
-// 		afterEach(async function () {
-// 			await clearDisk();
-// 		});
-
-// 		it("check valid GeoLocation", async () => {
-// 			try {
-// 				const response = await RoomsDatasetProcessor.getGeoLocation("6245 Agronomy Road V6T 1Z4");
-// 				expect(response).to.deep.equal({ lat: 49.26125, lon: -123.24807 });
-// 			} catch (_e) {
-// 				expect.fail("Should not throw error.");
-// 			}
-// 		});
+// 	it("should reject with invalid key", async () => {
+// 		try {
+// 			await qe.processQuery({ PLUS: "ABCD" });
+// 			expect.fail("Should have failed");
+// 		} catch (e) {
+// 			expect(e).to.be.instanceOf(InsightError);
+// 		}
 // 	});
+
+// 	it("should reject query without options or where", async () => {
+// 		try {
+// 			await qe.processQuery({});
+// 			expect.fail("Should have failed.");
+// 		} catch (e) {
+// 			expect(e).to.be.instanceOf(InsightError);
+// 		}
+// 	});
+
+// 	it("should reject empty options", async () => {
+// 		try {
+// 			await qe.processQuery({ OPTIONS: {} });
+// 			expect.fail("Should have failed");
+// 		} catch (e) {
+// 			expect(e).to.be.instanceOf(InsightError);
+// 		}
+// 	});
+// });
+
+// describe("getGeoLocation", () => {
+// 	afterEach(async function () {
+// 		await clearDisk();
+// 	});
+
+// 	it("check valid GeoLocation", async () => {
+// 		try {
+// 			const response = await RoomsDatasetProcessor.getGeoLocation("6245 Agronomy Road V6T 1Z4");
+// 			expect(response).to.deep.equal({ lat: 49.26125, lon: -123.24807 });
+// 		} catch (_e) {
+// 			expect.fail("Should not throw error.");
+// 		}
+// 	});
+// });
 // });

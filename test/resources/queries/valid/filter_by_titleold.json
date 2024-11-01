@@ -1,5 +1,5 @@
 {
-	"title": "filter_by_title",
+	"title": "Filter by title",
 	"input": {
 		"WHERE": {
 			"AND": [
@@ -16,7 +16,12 @@
 			]
 		},
 		"OPTIONS": {
-			"COLUMNS": ["sections_dept", "sections_instructor", "sections_title", "sections_avg"],
+			"COLUMNS": [
+				"sections_dept",
+				"sections_instructor",
+				"sections_title",
+				"sections_avg"
+			],
 			"ORDER": "sections_avg"
 		}
 	},
@@ -42,13 +47,13 @@
 		},
 		{
 			"sections_dept": "ceen",
-			"sections_instructor": "mazzi, eric",
+			"sections_instructor": "",
 			"sections_title": "project & report",
 			"sections_avg": 92.33
 		},
 		{
 			"sections_dept": "ceen",
-			"sections_instructor": "",
+			"sections_instructor": "mazzi, eric",
 			"sections_title": "project & report",
 			"sections_avg": 92.33
 		},
