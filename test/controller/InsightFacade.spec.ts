@@ -497,10 +497,9 @@ describe("InsightFacade", function () {
 			try {
 				result = await facade.performQuery(input);
 
-				// if (result.length !== expected.length) {
-				// 	console.log(`Expected length: ${expected.length}, Actual length: ${result.length}`);
+				// if (result !== expected) {
+				// 	console.log(`Expected : ${expected}, Actual : ${result}`);
 				// }
-				// Log expected and actual results
 
 				expect(result.length).to.equal(expected.length);
 				expect(result).deep.equals(expected);
@@ -572,18 +571,6 @@ describe("InsightFacade", function () {
 		it("[valid/validResult.json] valid complicated results", checkQuery);
 		it("[valid/simple.json] SELECT dept, avg WHERE avg > 97", checkQuery);
 		it("[valid/validEverything.json] valid everything", checkQuery);
-		// Tests for apply and sort in C2
-		it("[valid/applyCase1.json] calculate the average of sections avg grouped by dept", checkQuery);
-		it("[valid/applyCase2.json] calculate the average of sections avg grouped by dept", checkQuery);
-		it("[valid/applyCase3.json] calculate the average of sections avg grouped by dept", checkQuery);
-		it("[valid/sort_case.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase2.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase3.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase4.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase5.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase6.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase9.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
-		it("[valid/sortcase11.json] Retrieve High-Average Courses with Department and Course Number", checkQuery);
 
 		it("[invalid/missing_where.json] Query missing WHERE", checkQuery);
 		it("[invalid/missing_options.json] Query missing OPTIONS", checkQuery);
@@ -637,6 +624,46 @@ describe("InsightFacade", function () {
 		it("[invalid/numberEQ.json] Invalid value type in EQ, should be number", checkQuery);
 		it("[invalid/numberGT.json] Invalid key sectiear in GT", checkQuery);
 		it("[invalid/numberLT.json] Invalid key sectiear in LT", checkQuery);
+
+		// Tests for apply and sort in C2
+		it("[valid/applyCase1.json] apply1", checkQuery);
+		it("[valid/applyCase2.json] apply2", checkQuery);
+		it("[valid/applyCase3.json] apply3", checkQuery);
+		it("[valid/applymax.json] applymax", checkQuery);
+		it("[valid/applymin.json] applymin", checkQuery);
+		it("[valid/applysum.json] applysum", checkQuery);
+		it("[valid/applycount.json] applycount", checkQuery);
+		it("[valid/sort_case.json] sort_case", checkQuery);
+		it("[valid/sortcase2.json] sort_case2", checkQuery);
+		it("[valid/sortcase3.json] sort_case3", checkQuery);
+		it("[valid/sortcase4.json] sort_case4", checkQuery);
+		it("[valid/sortcase5.json] sort_case5", checkQuery);
+		it("[valid/sortcase6.json] sort_case6", checkQuery);
+		it("[valid/sortcase9.json] sort_case9", checkQuery);
+		it("[valid/sortcase11.json] sort_case11", checkQuery);
+
+		it("[valid/maxcase1.json] Find Maximum Passes in Each Department", checkQuery);
+		it("[valid/mincase1.json] Find Minimum Average Grades per Instructor with C", checkQuery);
+		it("[valid/avgcase1.json] Average Pass Count by Section Title", checkQuery);
+		it("[valid/countcase1.json] Count Unique Sections per Department", checkQuery);
+		it("[valid/countcase2.json] Count Unique Sections per Department", checkQuery);
+		it("[valid/sumcase1.json] Sum of Failures per Year", checkQuery);
+		it("[valid/multiplecase1.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/minPass.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/countandgroup.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/useavgnonum.json] Combination Query with Multiple APPLY Rules", checkQuery);
+
+		it("[invalid/invalidmax.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidapply.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidorder.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidorder2.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidkeys.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidminkey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidgroup.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidsumkey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidavgkey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/dupeapplykey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidcolumn.json] Invalid key sectiear in LT", checkQuery);
 	});
 });
 

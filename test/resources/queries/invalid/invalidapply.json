@@ -1,0 +1,36 @@
+{
+	"title": "Duplicate APPLY key averageScore",
+	"input": {
+		"WHERE": {
+			"GT": {
+				"sections_avg": 50
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"averageScore"
+			],
+			"ORDER": "averageScore"
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"averageScore": {
+						"AVG": "sections_avg"
+					}
+				},
+				{
+					"averageScore": {
+						"MAX": "sections_avg"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

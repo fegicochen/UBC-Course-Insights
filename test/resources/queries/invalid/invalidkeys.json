@@ -1,0 +1,28 @@
+{
+	"title": "Keys in COLUMNS must be in GROUP or APPLY when TRANSFORMATIONS is present",
+	"input": {
+		"WHERE": {},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"averageFail",
+				"sections_avg"
+			],
+			"ORDER": "averageFail"
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"averageFail": {
+						"AVG": "sections_fail"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

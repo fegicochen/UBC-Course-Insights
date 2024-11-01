@@ -1,0 +1,29 @@
+{
+	"title": "All ORDER keys must be in COLUMNS",
+	"input": {
+		"WHERE": {
+			"LT": {
+				"sections_pass": 200
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept"
+			],
+			"ORDER": {
+				"dir": "DOWN",
+				"keys": [
+					"sections_pass"
+				]
+			}
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": []
+		}
+	},
+	"errorExpected": true,
+	"expected": "InsightError"
+}

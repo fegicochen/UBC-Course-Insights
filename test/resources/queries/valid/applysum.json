@@ -1,0 +1,127 @@
+{
+	"title": "applysum",
+	"input": {
+		"WHERE": {
+			"IS": {
+				"sections_dept": "c*"
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"totalMark"
+			]
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"totalMark": {
+						"SUM": "sections_avg"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "caps",
+			"totalMark": 6979.4
+		},
+		{
+			"sections_dept": "ccst",
+			"totalMark": 4202.48
+		},
+		{
+			"sections_dept": "ceen",
+			"totalMark": 4549.59
+		},
+		{
+			"sections_dept": "cell",
+			"totalMark": 12836.6
+		},
+		{
+			"sections_dept": "cens",
+			"totalMark": 6915.32
+		},
+		{
+			"sections_dept": "chbe",
+			"totalMark": 63319.16
+		},
+		{
+			"sections_dept": "chem",
+			"totalMark": 93157.07
+		},
+		{
+			"sections_dept": "chil",
+			"totalMark": 2400.88
+		},
+		{
+			"sections_dept": "chin",
+			"totalMark": 74466.93
+		},
+		{
+			"sections_dept": "cics",
+			"totalMark": 2311.68
+		},
+		{
+			"sections_dept": "civl",
+			"totalMark": 99142.75
+		},
+		{
+			"sections_dept": "clch",
+			"totalMark": 1061.76
+		},
+		{
+			"sections_dept": "clst",
+			"totalMark": 25488.97
+		},
+		{
+			"sections_dept": "cnps",
+			"totalMark": 62666.26
+		},
+		{
+			"sections_dept": "cnrs",
+			"totalMark": 2439.18
+		},
+		{
+			"sections_dept": "cnto",
+			"totalMark": 432.66
+		},
+		{
+			"sections_dept": "coec",
+			"totalMark": 1318.13
+		},
+		{
+			"sections_dept": "cogs",
+			"totalMark": 10557.71
+		},
+		{
+			"sections_dept": "cohr",
+			"totalMark": 13916.62
+		},
+		{
+			"sections_dept": "comm",
+			"totalMark": 272595.35
+		},
+		{
+			"sections_dept": "cons",
+			"totalMark": 16921.35
+		},
+		{
+			"sections_dept": "cpen",
+			"totalMark": 3429.4
+		},
+		{
+			"sections_dept": "cpsc",
+			"totalMark": 86189.91
+		},
+		{
+			"sections_dept": "crwr",
+			"totalMark": 17282.78
+		}
+	]
+}
