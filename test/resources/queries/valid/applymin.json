@@ -1,0 +1,127 @@
+{
+	"title": "applymin",
+	"input": {
+		"WHERE": {
+			"IS": {
+				"sections_dept": "c*"
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"minMark"
+			]
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"minMark": {
+						"MIN": "sections_avg"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "caps",
+			"minMark": 65.5
+		},
+		{
+			"sections_dept": "ccst",
+			"minMark": 77.5
+		},
+		{
+			"sections_dept": "ceen",
+			"minMark": 74.96
+		},
+		{
+			"sections_dept": "cell",
+			"minMark": 84.29
+		},
+		{
+			"sections_dept": "cens",
+			"minMark": 68.23
+		},
+		{
+			"sections_dept": "chbe",
+			"minMark": 42
+		},
+		{
+			"sections_dept": "chem",
+			"minMark": 42.5
+		},
+		{
+			"sections_dept": "chil",
+			"minMark": 83
+		},
+		{
+			"sections_dept": "chin",
+			"minMark": 65
+		},
+		{
+			"sections_dept": "cics",
+			"minMark": 76.39
+		},
+		{
+			"sections_dept": "civl",
+			"minMark": 33
+		},
+		{
+			"sections_dept": "clch",
+			"minMark": 69.76
+		},
+		{
+			"sections_dept": "clst",
+			"minMark": 62.74
+		},
+		{
+			"sections_dept": "cnps",
+			"minMark": 70.66
+		},
+		{
+			"sections_dept": "cnrs",
+			"minMark": 71.3
+		},
+		{
+			"sections_dept": "cnto",
+			"minMark": 84.59
+		},
+		{
+			"sections_dept": "coec",
+			"minMark": 73.34
+		},
+		{
+			"sections_dept": "cogs",
+			"minMark": 66.37
+		},
+		{
+			"sections_dept": "cohr",
+			"minMark": 72.14
+		},
+		{
+			"sections_dept": "comm",
+			"minMark": 46.71
+		},
+		{
+			"sections_dept": "cons",
+			"minMark": 67.64
+		},
+		{
+			"sections_dept": "cpen",
+			"minMark": 69.41
+		},
+		{
+			"sections_dept": "cpsc",
+			"minMark": 64
+		},
+		{
+			"sections_dept": "crwr",
+			"minMark": 72.31
+		}
+	]
+}

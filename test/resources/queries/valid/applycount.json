@@ -1,0 +1,127 @@
+{
+	"title": "applycount",
+	"input": {
+		"WHERE": {
+			"IS": {
+				"sections_dept": "c*"
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sectionCount"
+			]
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"sectionCount": {
+						"COUNT": "sections_uuid"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "caps",
+			"sectionCount": 86
+		},
+		{
+			"sections_dept": "ccst",
+			"sectionCount": 49
+		},
+		{
+			"sections_dept": "ceen",
+			"sectionCount": 54
+		},
+		{
+			"sections_dept": "cell",
+			"sectionCount": 144
+		},
+		{
+			"sections_dept": "cens",
+			"sectionCount": 87
+		},
+		{
+			"sections_dept": "chbe",
+			"sectionCount": 801
+		},
+		{
+			"sections_dept": "chem",
+			"sectionCount": 1254
+		},
+		{
+			"sections_dept": "chil",
+			"sectionCount": 27
+		},
+		{
+			"sections_dept": "chin",
+			"sectionCount": 974
+		},
+		{
+			"sections_dept": "cics",
+			"sectionCount": 28
+		},
+		{
+			"sections_dept": "civl",
+			"sectionCount": 1240
+		},
+		{
+			"sections_dept": "clch",
+			"sectionCount": 14
+		},
+		{
+			"sections_dept": "clst",
+			"sectionCount": 343
+		},
+		{
+			"sections_dept": "cnps",
+			"sectionCount": 720
+		},
+		{
+			"sections_dept": "cnrs",
+			"sectionCount": 31
+		},
+		{
+			"sections_dept": "cnto",
+			"sectionCount": 5
+		},
+		{
+			"sections_dept": "coec",
+			"sectionCount": 17
+		},
+		{
+			"sections_dept": "cogs",
+			"sectionCount": 137
+		},
+		{
+			"sections_dept": "cohr",
+			"sectionCount": 176
+		},
+		{
+			"sections_dept": "comm",
+			"sectionCount": 3570
+		},
+		{
+			"sections_dept": "cons",
+			"sectionCount": 217
+		},
+		{
+			"sections_dept": "cpen",
+			"sectionCount": 44
+		},
+		{
+			"sections_dept": "cpsc",
+			"sectionCount": 1111
+		},
+		{
+			"sections_dept": "crwr",
+			"sectionCount": 208
+		}
+	]
+}
