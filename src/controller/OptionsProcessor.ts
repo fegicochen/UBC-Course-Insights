@@ -11,29 +11,108 @@ export class OptionsProcessor {
 	 * Processes the raw options object and returns the structured OptionsState.
 	 * @throws InsightError if options are malformed.
 	 */
+	/**
+	 * Processes the raw options object and returns the structured OptionsState.
+	 * @param transformations Optional Transformations object from the query.
+	 * @returns The structured OptionsState.
+	 * @throws InsightError if options are malformed or validation fails.
+	 */
 	public processOptions(transformations?: Transformations): OptionsState {
+		// Ensure the optionsRaw is an object
 		const options = DatasetUtils.checkIsObject(Keywords.Options, this.optionsRaw);
+
+		// Ensure the options have exactly the required keys
 		const optionsStructure = DatasetUtils.requireExactKeys(options, [
 			[Keywords.Columns, true],
 			[Keywords.Order, false],
 		]);
 
+		// Parse the columns and extract the dataset ID if present
 		const [columnsForState, datasetIdForState] = this.parseColumns(optionsStructure);
-		this.datasetId = datasetIdForState;
 
-		// If transformations are present, validate that all columns are in GROUP or APPLY
+		// Assign the datasetId if it was identified from the columns
+		if (datasetIdForState !== undefined) {
+			this.datasetId = datasetIdForState;
+		}
+
+		// Infer and validate the dataset kind based on transformations and group keys
+		this.inferAndValidateDatasetKind(transformations);
+
+		// Validate that all columns are present in GROUP or APPLY
+		this.validateColumnsInGroupOrApply(columnsForState, transformations);
+
+		// Create a set of column keys for validation in ORDER
+		const columnsSet = new Set(columnsForState.map((col) => (col.kind ? `${col.kind}_${col.field}` : col.field)));
+
+		// Ensure that at least one column is present
+		if (columnsForState.length === 0) {
+			throw new InsightError("Query must select at least one valid column.");
+		}
+
+		// Process the ORDER specification
+		const orderForState = this.processOrder(optionsStructure, this.datasetId, columnsSet);
+
+		return {
+			columns: columnsForState,
+			order: orderForState,
+			datasetKind: this.datasetId,
+		};
+	}
+
+	/**
+	 * Infers the datasetKind from TRANSFORMATIONS.GROUP if not already set and validates GROUP keys.
+	 * @param transformations Optional Transformations object from the query.
+	 * @throws InsightError if datasetKind cannot be inferred or GROUP keys are invalid.
+	 */
+	private inferAndValidateDatasetKind(transformations?: Transformations): void {
+		// If datasetId is not set and transformations are provided, infer from GROUP keys
+		if (!this.datasetId && transformations) {
+			if (transformations.GROUP.length === 0) {
+				throw new InsightError("TRANSFORMATIONS.GROUP must have at least one key.");
+			}
+
+			const firstGroupKey = transformations.GROUP[0];
+			const groupKeyParsed = DatasetUtils.parseMOrSKey(firstGroupKey);
+			if (!groupKeyParsed) {
+				throw new InsightError(`Invalid GROUP key format: "${firstGroupKey}".`);
+			}
+
+			this.datasetId = groupKeyParsed.kind;
+
+			// Ensure all GROUP keys belong to the same dataset kind
+			transformations.GROUP.forEach((groupKey) => {
+				const parsedKey = DatasetUtils.parseMOrSKey(groupKey);
+				if (!parsedKey || parsedKey.kind !== this.datasetId) {
+					throw new InsightError(`GROUP key "${groupKey}" does not match dataset kind "${this.datasetId}".`);
+				}
+			});
+		}
+
+		// If datasetId is still undefined after attempting to infer, throw an error
+		if (!this.datasetId) {
+			throw new InsightError("Query must select at least one valid column.");
+		}
+	}
+
+	/**
+	 * Validates that all columns are present in either GROUP or APPLY when transformations are used.
+	 * @param columnsFState The parsed columns from COLUMNS.
+	 * @param transformations Optional Transformations object from the query.
+	 * @throws InsightError if any column is not present in GROUP or APPLY.
+	 */
+	private validateColumnsInGroupOrApply(columnsFState: InsightFacadeKey[], transformations?: Transformations): void {
 		if (transformations) {
 			const groupKeys = new Set(transformations.GROUP);
 			const applyKeysSet = new Set(this.applyKeys);
 
-			columnsForState.forEach((column) => {
+			columnsFState.forEach((column) => {
 				if (column.kind === "") {
-					// APPLY keys
+					// APPLY keys should already be validated to exist in APPLY
 					if (!applyKeysSet.has(column.field)) {
 						throw new InsightError(`APPLY key "${column.field}" not found.`);
 					}
 				} else {
-					// GROUP keys
+					// GROUP keys must be present in GROUP or as an APPLY key
 					const groupKey = `${column.kind}_${column.field}`;
 					if (!groupKeys.has(groupKey) && !applyKeysSet.has(column.field)) {
 						throw new InsightError(`Key "${groupKey}" must be present in GROUP or as an APPLY key.`);
@@ -41,17 +120,6 @@ export class OptionsProcessor {
 				}
 			});
 		}
-
-		// Create a set of column keys for validation in ORDER
-		const columnsSet = new Set(columnsForState.map((col) => (col.kind ? `${col.kind}_${col.field}` : col.field)));
-
-		const orderForState = this.processOrder(optionsStructure, datasetIdForState, columnsSet);
-
-		return {
-			columns: columnsForState,
-			order: orderForState,
-			datasetKind: datasetIdForState,
-		};
 	}
 
 	/**
@@ -60,7 +128,7 @@ export class OptionsProcessor {
 	 * @returns A tuple containing the columns and dataset ID
 	 * @throws InsightError if columns are malformed
 	 */
-	private parseColumns(optionsStructure: Map<string, unknown>): [InsightFacadeKey[], string] {
+	private parseColumns(optionsStructure: Map<string, unknown>): [InsightFacadeKey[], string | undefined] {
 		const columnsForState: InsightFacadeKey[] = [];
 		let datasetKindForState: string | undefined;
 
@@ -85,10 +153,6 @@ export class OptionsProcessor {
 			}
 		});
 
-		if (columnsForState.length === 0 || datasetKindForState === undefined) {
-			throw new InsightError("Query must select at least one valid column.");
-		}
-
 		return [columnsForState, datasetKindForState];
 	}
 
@@ -96,6 +160,7 @@ export class OptionsProcessor {
 	 * Processes the order from the options structure.
 	 * @param optionsStructure The structured options map.
 	 * @param datasetIdForState The dataset ID extracted from columns.
+	 * @param columnsSet The set of column keys.
 	 * @returns The order key if present, otherwise undefined.
 	 * @throws InsightError if order is malformed.
 	 */
@@ -116,7 +181,12 @@ export class OptionsProcessor {
 				const dir = orderObj.dir;
 				const keys = orderObj.keys;
 
-				if ((dir === "UP" || dir === "DOWN") && Array.isArray(keys) && keys.length > 0) {
+				if (
+					(dir === "UP" || dir === "DOWN") &&
+					Array.isArray(keys) &&
+					keys.length > 0 &&
+					keys.every((key: any) => typeof key === "string")
+				) {
 					// Validate that all keys are in columns
 					keys.forEach((key: string) => {
 						this.parseOrderKey(key, datasetIdForState, columnsSet);
@@ -143,7 +213,7 @@ export class OptionsProcessor {
 		const orderKey = DatasetUtils.parseMOrSKey(key);
 		if (orderKey !== undefined) {
 			if (orderKey.kind !== datasetIdForState) {
-				throw new InsightError("Multiple datasets used in query. Only one allowed.");
+				throw new InsightError("Sort key belongs to a different dataset kind.");
 			}
 			return key;
 		} else {

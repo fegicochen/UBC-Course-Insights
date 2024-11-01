@@ -498,7 +498,7 @@ describe("InsightFacade", function () {
 				result = await facade.performQuery(input);
 
 				// if (result !== expected) {
-				// 	console.log(`Expected : ${expected}, Actual ${result}`);
+				// 	console.log(`Expected : ${expected}, Actual : ${result}`);
 				// }
 
 				expect(result.length).to.equal(expected.length);
@@ -650,12 +650,20 @@ describe("InsightFacade", function () {
 		it("[valid/sumcase1.json] Sum of Failures per Year", checkQuery);
 		it("[valid/multiplecase1.json] Combination Query with Multiple APPLY Rules", checkQuery);
 		it("[valid/minPass.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/countandgroup.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/useavgnonum.json] Combination Query with Multiple APPLY Rules", checkQuery);
 
 		it("[invalid/invalidmax.json] Invalid key sectiear in LT", checkQuery);
 		it("[invalid/invalidapply.json] Invalid key sectiear in LT", checkQuery);
 		it("[invalid/invalidorder.json] Invalid key sectiear in LT", checkQuery);
 		it("[invalid/invalidorder2.json] Invalid key sectiear in LT", checkQuery);
 		it("[invalid/invalidkeys.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidminkey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidgroup.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidsumkey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidavgkey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/dupeapplykey.json] Invalid key sectiear in LT", checkQuery);
+		it("[invalid/invalidcolumn.json] Invalid key sectiear in LT", checkQuery);
 	});
 });
 

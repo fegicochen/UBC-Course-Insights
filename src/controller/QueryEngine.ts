@@ -42,14 +42,15 @@ export class QueryEngine {
 		]);
 
 		let applyKeys: string[] = [];
+		let transformations: Transformations | undefined = undefined;
 
 		if (rootStructure.has(Keywords.Transformations)) {
-			const transformations = rootStructure.get(Keywords.Transformations) as Transformations;
+			transformations = rootStructure.get(Keywords.Transformations) as Transformations;
 			applyKeys = this.extractApplyKeys(transformations.APPLY);
 		}
 
 		const optionsProcessor = new OptionsProcessor(rootStructure.get(Keywords.Options), applyKeys);
-		this.options = optionsProcessor.processOptions();
+		this.options = optionsProcessor.processOptions(transformations);
 
 		// Initialize ApplyProcessor if APPLY rules exist
 		if (applyKeys.length > 0) {
@@ -60,8 +61,7 @@ export class QueryEngine {
 
 		let transformedData = data;
 
-		if (rootStructure.has(Keywords.Transformations)) {
-			const transformations = rootStructure.get(Keywords.Transformations) as Transformations;
+		if (transformations) {
 			transformedData = this.applyTransformations(data, transformations);
 		}
 
@@ -155,15 +155,8 @@ export class QueryEngine {
 	private processBody(bodyRaw: unknown): any[] {
 		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
-		// Determine the dataset based on the fields used in the query
-		const columns = this.options!.columns;
-		if (columns.length === 0) {
-			throw new InsightError("No columns specified in the query.");
-		}
-
-		// Extract dataset kind from the first column
-		const firstColumn = columns[0];
-		const datasetKind = firstColumn.kind;
+		// Determine the dataset based on the datasetKind from options
+		const datasetKind = this.options!.datasetKind;
 		const dataset = DatasetUtils.findDatasetByKind(this.datasets, datasetKind);
 
 		if (dataset === undefined) {
