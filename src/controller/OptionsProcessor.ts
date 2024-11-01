@@ -22,9 +22,7 @@ export class OptionsProcessor {
 		this.datasetId = datasetIdForState;
 
 		// Create a set of column keys for validation
-		const columnsSet = new Set(
-			columnsForState.map((col) => (col.idstring ? `${col.idstring}_${col.field}` : col.field))
-		);
+		const columnsSet = new Set(columnsForState.map((col) => (col.kind ? `${col.kind}_${col.field}` : col.field)));
 
 		const orderForState = this.processOrder(optionsStructure, datasetIdForState, columnsSet);
 
@@ -43,25 +41,21 @@ export class OptionsProcessor {
 	 */
 	private parseColumns(optionsStructure: Map<string, unknown>): [InsightFacadeKey[], string] {
 		const columnsForState: InsightFacadeKey[] = [];
-		let datasetIdForState: string | undefined;
+		let datasetKindForState: string | undefined;
 
-		// Process the columns in the options
 		const columns = DatasetUtils.checkIsArray(Keywords.Columns, optionsStructure.get(Keywords.Columns));
 		columns.forEach((columnRaw) => {
 			const column = DatasetUtils.checkIsString(Keywords.Columns, columnRaw);
 
-			// Check if column is an apply key
 			if (this.applyKeys.includes(column)) {
-				columnsForState.push({ idstring: "", field: column as any });
+				columnsForState.push({ kind: "", field: column as any });
 			} else {
-				// Try parsing as a dataset key (mkey or skey)
 				const columnKey = DatasetUtils.parseMOrSKey(column);
 				if (columnKey !== undefined) {
-					// Ensure all dataset keys use the same dataset
-					if (datasetIdForState !== undefined && datasetIdForState !== columnKey.idstring) {
-						throw new InsightError("Multiple datasets used in query. Only one allowed.");
+					if (datasetKindForState !== undefined && datasetKindForState !== columnKey.kind) {
+						throw new InsightError("Multiple datasets used in query. Only one kind allowed.");
 					} else {
-						datasetIdForState = columnKey.idstring;
+						datasetKindForState = columnKey.kind;
 					}
 					columnsForState.push(columnKey);
 				} else {
@@ -70,12 +64,11 @@ export class OptionsProcessor {
 			}
 		});
 
-		// Ensure at least one valid dataset key is selected
-		if (columnsForState.length === 0 || datasetIdForState === undefined) {
+		if (columnsForState.length === 0 || datasetKindForState === undefined) {
 			throw new InsightError("Query must select at least one valid column.");
 		}
 
-		return [columnsForState, datasetIdForState];
+		return [columnsForState, datasetKindForState];
 	}
 
 	/**
@@ -128,7 +121,7 @@ export class OptionsProcessor {
 		}
 		const orderKey = DatasetUtils.parseMOrSKey(key);
 		if (orderKey !== undefined) {
-			if (orderKey.idstring !== datasetIdForState) {
+			if (orderKey.kind !== datasetIdForState) {
 				throw new InsightError("Multiple datasets used in query. Only one allowed.");
 			}
 			return key;

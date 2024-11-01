@@ -72,19 +72,18 @@ export class QueryEngine {
 	 * @returns The formatted InsightResult
 	 */
 	private toInsightResult(item: any): InsightResult {
-		// 'any' because it can be Section or Room
 		const result: InsightResult = {};
 		const itemWithKeys = item as Record<string, any>;
 
 		this.options!.columns.forEach((column) => {
 			let value: any;
-			if (column.idstring === "") {
+			if (column.kind === "") {
 				value = itemWithKeys[column.field];
 				result[column.field] = value;
 			} else {
 				const fieldName = column.field;
 				value = itemWithKeys[fieldName];
-				result[`${column.idstring}_${fieldName}`] = value;
+				result[`${column.kind}_${fieldName}`] = value;
 			}
 		});
 		return result;
@@ -160,7 +159,7 @@ export class QueryEngine {
 		const dataset = DatasetUtils.findDatasetByKind(this.datasets, datasetKind);
 
 		if (dataset === undefined) {
-			throw new InsightError("Could not find dataset with id: " + this.options!.datasetId + ".");
+			throw new InsightError(`Could not find dataset with kind: ${datasetKind}.`);
 		}
 
 		let filter: FilterStrategy<any, FilterOperationByDataset<any>>;
@@ -173,10 +172,8 @@ export class QueryEngine {
 			throw new InsightError("Unsupported dataset kind.");
 		}
 
-		// Start constructing filter function
-		const filterFunction = this.checkSingleFilter(filter, bodyRaw);
+		const filterFunction = this.checkSingleFilter(filter, body);
 
-		// Execute filter function
 		const filteredData = filterFunction.apply();
 
 		return filteredData;
