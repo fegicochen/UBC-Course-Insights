@@ -70,7 +70,8 @@ export default class InsightFacade implements IInsightFacade {
 				newRooms.push(dataset);
 			}
 		});
-		if ((await this.data.getDatasets()).sections.length === newSections.length) {
+		const dsets = await this.data.getDatasets();
+		if (dsets.sections.length === newSections.length && dsets.rooms.length === newRooms.length) {
 			throw new NotFoundError("Dataset with id " + id + " not found.");
 		}
 		await this.data.setDatasets({ sections: newSections, rooms: newRooms });

@@ -384,6 +384,38 @@ describe("InsightFacade", function () {
 			}
 		});
 
+		it("should pass removing rooms dataset", async () => {
+			await facade.addDataset("Four", fourCourses, InsightDatasetKind.Sections);
+			await facade.addDataset("rooms", allRooms, InsightDatasetKind.Rooms);
+
+			const res = await facade.removeDataset("rooms");
+			expect(res).to.equal("rooms");
+
+			expect((await facade.listDatasets())[0].id).to.equal("Four");
+		});
+
+		it("should pass removing sections dataset", async () => {
+			await facade.addDataset("Four", fourCourses, InsightDatasetKind.Sections);
+			await facade.addDataset("rooms", allRooms, InsightDatasetKind.Rooms);
+
+			const res = await facade.removeDataset("Four");
+			expect(res).to.equal("Four");
+
+			expect((await facade.listDatasets())[0].id).to.equal("rooms");
+		});
+
+		it("should pass removing all datasets", async () => {
+			await facade.addDataset("Four", fourCourses, InsightDatasetKind.Sections);
+			await facade.addDataset("rooms", allRooms, InsightDatasetKind.Rooms);
+
+			const res = await facade.removeDataset("Four");
+			expect(res).to.equal("Four");
+			const res2 = await facade.removeDataset("rooms");
+			expect(res2).to.equal("rooms");
+
+			expect((await facade.listDatasets()).length).to.equal(0);
+		});
+
 		it("should fail with underscore id", async () => {
 			await facade.addDataset("four", fourCourses, InsightDatasetKind.Sections);
 
