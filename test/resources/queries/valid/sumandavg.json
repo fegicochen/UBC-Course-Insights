@@ -1,0 +1,5193 @@
+{
+	"title": "SUM and AVG on the Same Field with Multiple Groupings and Filters",
+	"input": {
+		"WHERE": {
+			"GT": {
+				"sections_pass": 50
+			}
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"sections_year",
+				"totalAvg",
+				"averageScore"
+			]
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept",
+				"sections_year"
+			],
+			"APPLY": [
+				{
+					"totalAvg": {
+						"SUM": "sections_avg"
+					}
+				},
+				{
+					"averageScore": {
+						"AVG": "sections_avg"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "adhe",
+			"sections_year": 1900,
+			"totalAvg": 2317.89,
+			"averageScore": 82.78
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2013,
+			"totalAvg": 81.82,
+			"averageScore": 81.82
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 1900,
+			"totalAvg": 744.53,
+			"averageScore": 82.73
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2014,
+			"totalAvg": 83.65,
+			"averageScore": 83.65
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2012,
+			"totalAvg": 83.34,
+			"averageScore": 83.34
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2009,
+			"totalAvg": 83.74,
+			"averageScore": 83.74
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2007,
+			"totalAvg": 81.41,
+			"averageScore": 81.41
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2016,
+			"totalAvg": 86.29,
+			"averageScore": 86.29
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2011,
+			"totalAvg": 82.29,
+			"averageScore": 82.29
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2010,
+			"totalAvg": 80.28,
+			"averageScore": 80.28
+		},
+		{
+			"sections_dept": "anat",
+			"sections_year": 2015,
+			"totalAvg": 81.71,
+			"averageScore": 81.71
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2015,
+			"totalAvg": 583.71,
+			"averageScore": 72.96
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 1900,
+			"totalAvg": 3123.38,
+			"averageScore": 74.37
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2014,
+			"totalAvg": 594.03,
+			"averageScore": 74.25
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2011,
+			"totalAvg": 443.39,
+			"averageScore": 73.9
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2013,
+			"totalAvg": 433.14,
+			"averageScore": 72.19
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2010,
+			"totalAvg": 377.37,
+			"averageScore": 75.47
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2007,
+			"totalAvg": 147.02,
+			"averageScore": 73.51
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2008,
+			"totalAvg": 370.88,
+			"averageScore": 74.18
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2012,
+			"totalAvg": 303.34,
+			"averageScore": 75.83
+		},
+		{
+			"sections_dept": "anth",
+			"sections_year": 2016,
+			"totalAvg": 158.83,
+			"averageScore": 79.42
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2013,
+			"totalAvg": 231.07,
+			"averageScore": 77.02
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 1900,
+			"totalAvg": 1477.54,
+			"averageScore": 77.77
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2015,
+			"totalAvg": 304.61,
+			"averageScore": 76.15
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2010,
+			"totalAvg": 142.4,
+			"averageScore": 71.2
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2012,
+			"totalAvg": 234.42,
+			"averageScore": 78.14
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2011,
+			"totalAvg": 228.99,
+			"averageScore": 76.33
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2009,
+			"totalAvg": 64.16,
+			"averageScore": 64.16
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2014,
+			"totalAvg": 300.81,
+			"averageScore": 75.2
+		},
+		{
+			"sections_dept": "apbi",
+			"sections_year": 2016,
+			"totalAvg": 83.22,
+			"averageScore": 83.22
+		},
+		{
+			"sections_dept": "appp",
+			"sections_year": 2015,
+			"totalAvg": 163.15,
+			"averageScore": 81.58
+		},
+		{
+			"sections_dept": "appp",
+			"sections_year": 1900,
+			"totalAvg": 244.79,
+			"averageScore": 81.6
+		},
+		{
+			"sections_dept": "appp",
+			"sections_year": 2016,
+			"totalAvg": 81.64,
+			"averageScore": 81.64
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2015,
+			"totalAvg": 1239.14,
+			"averageScore": 77.45
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 1900,
+			"totalAvg": 6596.34,
+			"averageScore": 75.82
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2013,
+			"totalAvg": 888.63,
+			"averageScore": 74.05
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2010,
+			"totalAvg": 922.98,
+			"averageScore": 76.92
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2011,
+			"totalAvg": 889.88,
+			"averageScore": 74.16
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2012,
+			"totalAvg": 985.45,
+			"averageScore": 75.8
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2008,
+			"totalAvg": 799.88,
+			"averageScore": 72.72
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2007,
+			"totalAvg": 742.54,
+			"averageScore": 74.25
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2009,
+			"totalAvg": 893.51,
+			"averageScore": 74.46
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2014,
+			"totalAvg": 919.4,
+			"averageScore": 76.62
+		},
+		{
+			"sections_dept": "apsc",
+			"sections_year": 2016,
+			"totalAvg": 148.26,
+			"averageScore": 74.13
+		},
+		{
+			"sections_dept": "arch",
+			"sections_year": 1900,
+			"totalAvg": 812.67,
+			"averageScore": 81.27
+		},
+		{
+			"sections_dept": "arch",
+			"sections_year": 2014,
+			"totalAvg": 161.83,
+			"averageScore": 80.92
+		},
+		{
+			"sections_dept": "arch",
+			"sections_year": 2015,
+			"totalAvg": 325.5,
+			"averageScore": 81.38
+		},
+		{
+			"sections_dept": "arch",
+			"sections_year": 2011,
+			"totalAvg": 79.51,
+			"averageScore": 79.51
+		},
+		{
+			"sections_dept": "arcl",
+			"sections_year": 2014,
+			"totalAvg": 140.76,
+			"averageScore": 70.38
+		},
+		{
+			"sections_dept": "arcl",
+			"sections_year": 1900,
+			"totalAvg": 282.15,
+			"averageScore": 70.54
+		},
+		{
+			"sections_dept": "arcl",
+			"sections_year": 2015,
+			"totalAvg": 283.39,
+			"averageScore": 70.85
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2015,
+			"totalAvg": 1068.42,
+			"averageScore": 76.32
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 1900,
+			"totalAvg": 7627.9,
+			"averageScore": 75.52
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2007,
+			"totalAvg": 668.47,
+			"averageScore": 74.27
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2010,
+			"totalAvg": 688.91,
+			"averageScore": 76.55
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2011,
+			"totalAvg": 906.95,
+			"averageScore": 75.58
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2009,
+			"totalAvg": 1000.53,
+			"averageScore": 76.96
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2014,
+			"totalAvg": 596.74,
+			"averageScore": 74.59
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2013,
+			"totalAvg": 666.22,
+			"averageScore": 74.02
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2012,
+			"totalAvg": 752,
+			"averageScore": 75.2
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2008,
+			"totalAvg": 753.63,
+			"averageScore": 75.36
+		},
+		{
+			"sections_dept": "arth",
+			"sections_year": 2016,
+			"totalAvg": 149.61,
+			"averageScore": 74.81
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2013,
+			"totalAvg": 1038.92,
+			"averageScore": 74.21
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 1900,
+			"totalAvg": 8303.15,
+			"averageScore": 73.48
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2011,
+			"totalAvg": 809.42,
+			"averageScore": 73.58
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2008,
+			"totalAvg": 588.07,
+			"averageScore": 73.51
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2012,
+			"totalAvg": 1171.54,
+			"averageScore": 73.22
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2015,
+			"totalAvg": 1635.77,
+			"averageScore": 74.35
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2014,
+			"totalAvg": 1273.26,
+			"averageScore": 74.9
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2007,
+			"totalAvg": 644.12,
+			"averageScore": 71.57
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2010,
+			"totalAvg": 879.65,
+			"averageScore": 73.3
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2009,
+			"totalAvg": 641.99,
+			"averageScore": 71.33
+		},
+		{
+			"sections_dept": "asia",
+			"sections_year": 2016,
+			"totalAvg": 223.5,
+			"averageScore": 74.5
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 2007,
+			"totalAvg": 80.79,
+			"averageScore": 80.79
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 1900,
+			"totalAvg": 544.34,
+			"averageScore": 77.76
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 2011,
+			"totalAvg": 77.36,
+			"averageScore": 77.36
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 2008,
+			"totalAvg": 78.9,
+			"averageScore": 78.9
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 2012,
+			"totalAvg": 77.84,
+			"averageScore": 77.84
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 2010,
+			"totalAvg": 75.4,
+			"averageScore": 75.4
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 2013,
+			"totalAvg": 77.14,
+			"averageScore": 77.14
+		},
+		{
+			"sections_dept": "asic",
+			"sections_year": 2015,
+			"totalAvg": 76.95,
+			"averageScore": 76.95
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2009,
+			"totalAvg": 444.95,
+			"averageScore": 74.16
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 1900,
+			"totalAvg": 3211.13,
+			"averageScore": 74.68
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2015,
+			"totalAvg": 378.1,
+			"averageScore": 75.62
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2012,
+			"totalAvg": 302.81,
+			"averageScore": 75.7
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2014,
+			"totalAvg": 444.88,
+			"averageScore": 74.15
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2011,
+			"totalAvg": 460.74,
+			"averageScore": 76.79
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2016,
+			"totalAvg": 146.2,
+			"averageScore": 73.1
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2008,
+			"totalAvg": 443.58,
+			"averageScore": 73.93
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2013,
+			"totalAvg": 367.01,
+			"averageScore": 73.4
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2010,
+			"totalAvg": 373.75,
+			"averageScore": 74.75
+		},
+		{
+			"sections_dept": "astr",
+			"sections_year": 2007,
+			"totalAvg": 448.6,
+			"averageScore": 74.77
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 2015,
+			"totalAvg": 130.55,
+			"averageScore": 65.28
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 1900,
+			"totalAvg": 957.51,
+			"averageScore": 68.39
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 2007,
+			"totalAvg": 207.34,
+			"averageScore": 69.11
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 2011,
+			"totalAvg": 139.57,
+			"averageScore": 69.78
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 2008,
+			"totalAvg": 136.99,
+			"averageScore": 68.5
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 2014,
+			"totalAvg": 139.03,
+			"averageScore": 69.52
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 2013,
+			"totalAvg": 139.41,
+			"averageScore": 69.7
+		},
+		{
+			"sections_dept": "astu",
+			"sections_year": 2010,
+			"totalAvg": 137.7,
+			"averageScore": 68.85
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2009,
+			"totalAvg": 81.36,
+			"averageScore": 81.36
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 1900,
+			"totalAvg": 747.91,
+			"averageScore": 83.1
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2014,
+			"totalAvg": 82.46,
+			"averageScore": 82.46
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2010,
+			"totalAvg": 84.01,
+			"averageScore": 84.01
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2011,
+			"totalAvg": 82.53,
+			"averageScore": 82.53
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2013,
+			"totalAvg": 85.75,
+			"averageScore": 85.75
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2008,
+			"totalAvg": 83.54,
+			"averageScore": 83.54
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2012,
+			"totalAvg": 85.41,
+			"averageScore": 85.41
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2007,
+			"totalAvg": 80.55,
+			"averageScore": 80.55
+		},
+		{
+			"sections_dept": "atsc",
+			"sections_year": 2015,
+			"totalAvg": 82.3,
+			"averageScore": 82.3
+		},
+		{
+			"sections_dept": "audi",
+			"sections_year": 1900,
+			"totalAvg": 706.48,
+			"averageScore": 78.5
+		},
+		{
+			"sections_dept": "audi",
+			"sections_year": 2015,
+			"totalAvg": 70.96,
+			"averageScore": 70.96
+		},
+		{
+			"sections_dept": "audi",
+			"sections_year": 2013,
+			"totalAvg": 76.38,
+			"averageScore": 76.38
+		},
+		{
+			"sections_dept": "audi",
+			"sections_year": 2012,
+			"totalAvg": 75.64,
+			"averageScore": 75.64
+		},
+		{
+			"sections_dept": "ba",
+			"sections_year": 2014,
+			"totalAvg": 162.98,
+			"averageScore": 81.49
+		},
+		{
+			"sections_dept": "ba",
+			"sections_year": 1900,
+			"totalAvg": 2870.39,
+			"averageScore": 82.01
+		},
+		{
+			"sections_dept": "ba",
+			"sections_year": 2013,
+			"totalAvg": 729.62,
+			"averageScore": 81.07
+		},
+		{
+			"sections_dept": "ba",
+			"sections_year": 2015,
+			"totalAvg": 499.95,
+			"averageScore": 83.33
+		},
+		{
+			"sections_dept": "ba",
+			"sections_year": 2012,
+			"totalAvg": 410.16,
+			"averageScore": 82.03
+		},
+		{
+			"sections_dept": "baac",
+			"sections_year": 1900,
+			"totalAvg": 2166.9,
+			"averageScore": 80.26
+		},
+		{
+			"sections_dept": "baac",
+			"sections_year": 2009,
+			"totalAvg": 166.64,
+			"averageScore": 83.32
+		},
+		{
+			"sections_dept": "baac",
+			"sections_year": 2016,
+			"totalAvg": 158.72,
+			"averageScore": 79.36
+		},
+		{
+			"sections_dept": "baac",
+			"sections_year": 2013,
+			"totalAvg": 244.43,
+			"averageScore": 81.48
+		},
+		{
+			"sections_dept": "baac",
+			"sections_year": 2012,
+			"totalAvg": 240.73,
+			"averageScore": 80.24
+		},
+		{
+			"sections_dept": "babs",
+			"sections_year": 2013,
+			"totalAvg": 154.4,
+			"averageScore": 77.2
+		},
+		{
+			"sections_dept": "babs",
+			"sections_year": 1900,
+			"totalAvg": 653.97,
+			"averageScore": 81.75
+		},
+		{
+			"sections_dept": "babs",
+			"sections_year": 2016,
+			"totalAvg": 164.51,
+			"averageScore": 82.25
+		},
+		{
+			"sections_dept": "babs",
+			"sections_year": 2015,
+			"totalAvg": 88.88,
+			"averageScore": 88.88
+		},
+		{
+			"sections_dept": "babs",
+			"sections_year": 2008,
+			"totalAvg": 80.71,
+			"averageScore": 80.71
+		},
+		{
+			"sections_dept": "babs",
+			"sections_year": 2012,
+			"totalAvg": 84.97,
+			"averageScore": 84.97
+		},
+		{
+			"sections_dept": "babs",
+			"sections_year": 2009,
+			"totalAvg": 82.73,
+			"averageScore": 82.73
+		},
+		{
+			"sections_dept": "baen",
+			"sections_year": 2015,
+			"totalAvg": 82.63,
+			"averageScore": 82.63
+		},
+		{
+			"sections_dept": "baen",
+			"sections_year": 1900,
+			"totalAvg": 489.28,
+			"averageScore": 81.55
+		},
+		{
+			"sections_dept": "baen",
+			"sections_year": 2012,
+			"totalAvg": 82.7,
+			"averageScore": 82.7
+		},
+		{
+			"sections_dept": "bafi",
+			"sections_year": 2015,
+			"totalAvg": 86.55,
+			"averageScore": 86.55
+		},
+		{
+			"sections_dept": "bafi",
+			"sections_year": 1900,
+			"totalAvg": 3601.84,
+			"averageScore": 81.86
+		},
+		{
+			"sections_dept": "bafi",
+			"sections_year": 2008,
+			"totalAvg": 164.21,
+			"averageScore": 82.11
+		},
+		{
+			"sections_dept": "bafi",
+			"sections_year": 2013,
+			"totalAvg": 172.35,
+			"averageScore": 86.17
+		},
+		{
+			"sections_dept": "bafi",
+			"sections_year": 2009,
+			"totalAvg": 240.67,
+			"averageScore": 80.22
+		},
+		{
+			"sections_dept": "bafi",
+			"sections_year": 2016,
+			"totalAvg": 85.58,
+			"averageScore": 85.58
+		},
+		{
+			"sections_dept": "bafi",
+			"sections_year": 2010,
+			"totalAvg": 79.02,
+			"averageScore": 79.02
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 1900,
+			"totalAvg": 2598.11,
+			"averageScore": 81.19
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2010,
+			"totalAvg": 166.3,
+			"averageScore": 83.15
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2012,
+			"totalAvg": 158.56,
+			"averageScore": 79.28
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2011,
+			"totalAvg": 81.92,
+			"averageScore": 81.92
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2009,
+			"totalAvg": 165.79,
+			"averageScore": 82.89
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2008,
+			"totalAvg": 158.16,
+			"averageScore": 79.08
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2016,
+			"totalAvg": 81.07,
+			"averageScore": 81.07
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2015,
+			"totalAvg": 80.43,
+			"averageScore": 80.43
+		},
+		{
+			"sections_dept": "bahr",
+			"sections_year": 2013,
+			"totalAvg": 159.2,
+			"averageScore": 79.6
+		},
+		{
+			"sections_dept": "bait",
+			"sections_year": 2015,
+			"totalAvg": 82.62,
+			"averageScore": 82.62
+		},
+		{
+			"sections_dept": "bait",
+			"sections_year": 1900,
+			"totalAvg": 1080.15,
+			"averageScore": 83.09
+		},
+		{
+			"sections_dept": "bait",
+			"sections_year": 2013,
+			"totalAvg": 86.76,
+			"averageScore": 86.76
+		},
+		{
+			"sections_dept": "bait",
+			"sections_year": 2008,
+			"totalAvg": 79.75,
+			"averageScore": 79.75
+		},
+		{
+			"sections_dept": "bait",
+			"sections_year": 2012,
+			"totalAvg": 83.74,
+			"averageScore": 83.74
+		},
+		{
+			"sections_dept": "bala",
+			"sections_year": 2012,
+			"totalAvg": 79.51,
+			"averageScore": 79.51
+		},
+		{
+			"sections_dept": "bala",
+			"sections_year": 1900,
+			"totalAvg": 229.86,
+			"averageScore": 76.62
+		},
+		{
+			"sections_dept": "bala",
+			"sections_year": 2008,
+			"totalAvg": 77.79,
+			"averageScore": 77.79
+		},
+		{
+			"sections_dept": "bama",
+			"sections_year": 1900,
+			"totalAvg": 2768.04,
+			"averageScore": 81.41
+		},
+		{
+			"sections_dept": "bama",
+			"sections_year": 2010,
+			"totalAvg": 159.74,
+			"averageScore": 79.87
+		},
+		{
+			"sections_dept": "bama",
+			"sections_year": 2012,
+			"totalAvg": 161.6,
+			"averageScore": 80.8
+		},
+		{
+			"sections_dept": "bama",
+			"sections_year": 2016,
+			"totalAvg": 162.38,
+			"averageScore": 81.19
+		},
+		{
+			"sections_dept": "bama",
+			"sections_year": 2014,
+			"totalAvg": 81.6,
+			"averageScore": 81.6
+		},
+		{
+			"sections_dept": "bama",
+			"sections_year": 2011,
+			"totalAvg": 85.73,
+			"averageScore": 85.73
+		},
+		{
+			"sections_dept": "bama",
+			"sections_year": 2013,
+			"totalAvg": 239.7,
+			"averageScore": 79.9
+		},
+		{
+			"sections_dept": "bams",
+			"sections_year": 1900,
+			"totalAvg": 561.71,
+			"averageScore": 80.24
+		},
+		{
+			"sections_dept": "bams",
+			"sections_year": 2008,
+			"totalAvg": 79.6,
+			"averageScore": 79.6
+		},
+		{
+			"sections_dept": "bams",
+			"sections_year": 2009,
+			"totalAvg": 80.51,
+			"averageScore": 80.51
+		},
+		{
+			"sections_dept": "bams",
+			"sections_year": 2012,
+			"totalAvg": 77.91,
+			"averageScore": 77.91
+		},
+		{
+			"sections_dept": "bapa",
+			"sections_year": 2012,
+			"totalAvg": 161.36,
+			"averageScore": 80.68
+		},
+		{
+			"sections_dept": "bapa",
+			"sections_year": 1900,
+			"totalAvg": 735.51,
+			"averageScore": 81.72
+		},
+		{
+			"sections_dept": "bapa",
+			"sections_year": 2008,
+			"totalAvg": 166.74,
+			"averageScore": 83.37
+		},
+		{
+			"sections_dept": "bapa",
+			"sections_year": 2009,
+			"totalAvg": 80.85,
+			"averageScore": 80.85
+		},
+		{
+			"sections_dept": "bapa",
+			"sections_year": 2016,
+			"totalAvg": 164.82,
+			"averageScore": 82.41
+		},
+		{
+			"sections_dept": "bapa",
+			"sections_year": 2013,
+			"totalAvg": 242.59,
+			"averageScore": 80.86
+		},
+		{
+			"sections_dept": "basc",
+			"sections_year": 1900,
+			"totalAvg": 1378.4,
+			"averageScore": 81.08
+		},
+		{
+			"sections_dept": "basc",
+			"sections_year": 2011,
+			"totalAvg": 80.27,
+			"averageScore": 80.27
+		},
+		{
+			"sections_dept": "basc",
+			"sections_year": 2009,
+			"totalAvg": 84.09,
+			"averageScore": 84.09
+		},
+		{
+			"sections_dept": "basc",
+			"sections_year": 2012,
+			"totalAvg": 84.18,
+			"averageScore": 84.18
+		},
+		{
+			"sections_dept": "basc",
+			"sections_year": 2013,
+			"totalAvg": 158.44,
+			"averageScore": 79.22
+		},
+		{
+			"sections_dept": "basm",
+			"sections_year": 1900,
+			"totalAvg": 2474.18,
+			"averageScore": 82.47
+		},
+		{
+			"sections_dept": "basm",
+			"sections_year": 2009,
+			"totalAvg": 243.44,
+			"averageScore": 81.15
+		},
+		{
+			"sections_dept": "basm",
+			"sections_year": 2013,
+			"totalAvg": 84.45,
+			"averageScore": 84.45
+		},
+		{
+			"sections_dept": "basm",
+			"sections_year": 2008,
+			"totalAvg": 78.31,
+			"averageScore": 78.31
+		},
+		{
+			"sections_dept": "basm",
+			"sections_year": 2012,
+			"totalAvg": 84.03,
+			"averageScore": 84.03
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2014,
+			"totalAvg": 952.93,
+			"averageScore": 73.3
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 1900,
+			"totalAvg": 5092.69,
+			"averageScore": 72.75
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2012,
+			"totalAvg": 859.05,
+			"averageScore": 71.59
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2015,
+			"totalAvg": 862.64,
+			"averageScore": 71.89
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2013,
+			"totalAvg": 943.03,
+			"averageScore": 72.54
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2007,
+			"totalAvg": 503.41,
+			"averageScore": 71.92
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2010,
+			"totalAvg": 569.84,
+			"averageScore": 71.23
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2009,
+			"totalAvg": 574.62,
+			"averageScore": 71.83
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2011,
+			"totalAvg": 581.51,
+			"averageScore": 72.69
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2008,
+			"totalAvg": 69.76,
+			"averageScore": 69.76
+		},
+		{
+			"sections_dept": "bioc",
+			"sections_year": 2016,
+			"totalAvg": 75.79,
+			"averageScore": 75.79
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2014,
+			"totalAvg": 5645.42,
+			"averageScore": 74.28
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 1900,
+			"totalAvg": 27137.69,
+			"averageScore": 73.94
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2007,
+			"totalAvg": 4420.65,
+			"averageScore": 71.3
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2011,
+			"totalAvg": 5848.39,
+			"averageScore": 72.2
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2012,
+			"totalAvg": 5475.13,
+			"averageScore": 73
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2008,
+			"totalAvg": 4734.22,
+			"averageScore": 71.73
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2010,
+			"totalAvg": 5271.43,
+			"averageScore": 72.21
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2015,
+			"totalAvg": 4950.48,
+			"averageScore": 75.01
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2013,
+			"totalAvg": 5651.34,
+			"averageScore": 74.36
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2009,
+			"totalAvg": 5222.27,
+			"averageScore": 71.54
+		},
+		{
+			"sections_dept": "biol",
+			"sections_year": 2016,
+			"totalAvg": 910.32,
+			"averageScore": 75.86
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2008,
+			"totalAvg": 4818.51,
+			"averageScore": 71.92
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 1900,
+			"totalAvg": 26912.58,
+			"averageScore": 71.01
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2013,
+			"totalAvg": 3795.99,
+			"averageScore": 70.3
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2012,
+			"totalAvg": 4696.72,
+			"averageScore": 71.16
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2009,
+			"totalAvg": 5791.04,
+			"averageScore": 72.39
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2010,
+			"totalAvg": 5314.46,
+			"averageScore": 69.93
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2014,
+			"totalAvg": 2854.32,
+			"averageScore": 73.19
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2007,
+			"totalAvg": 3014.1,
+			"averageScore": 70.1
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2015,
+			"totalAvg": 2256.93,
+			"averageScore": 70.53
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2011,
+			"totalAvg": 4401.89,
+			"averageScore": 71
+		},
+		{
+			"sections_dept": "busi",
+			"sections_year": 2016,
+			"totalAvg": 291.9,
+			"averageScore": 72.97
+		},
+		{
+			"sections_dept": "caps",
+			"sections_year": 2015,
+			"totalAvg": 214.06,
+			"averageScore": 71.35
+		},
+		{
+			"sections_dept": "caps",
+			"sections_year": 1900,
+			"totalAvg": 1083.78,
+			"averageScore": 72.25
+		},
+		{
+			"sections_dept": "caps",
+			"sections_year": 2014,
+			"totalAvg": 499.99,
+			"averageScore": 71.43
+		},
+		{
+			"sections_dept": "caps",
+			"sections_year": 2013,
+			"totalAvg": 505.89,
+			"averageScore": 72.27
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 1900,
+			"totalAvg": 1041.82,
+			"averageScore": 80.14
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 2013,
+			"totalAvg": 158.33,
+			"averageScore": 79.17
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 2014,
+			"totalAvg": 166.74,
+			"averageScore": 83.37
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 2011,
+			"totalAvg": 75.47,
+			"averageScore": 75.47
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 2012,
+			"totalAvg": 159.88,
+			"averageScore": 79.94
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 2007,
+			"totalAvg": 77.25,
+			"averageScore": 77.25
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 2010,
+			"totalAvg": 327.83,
+			"averageScore": 81.96
+		},
+		{
+			"sections_dept": "cens",
+			"sections_year": 2015,
+			"totalAvg": 83.19,
+			"averageScore": 83.19
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 1900,
+			"totalAvg": 14213.95,
+			"averageScore": 75.61
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2013,
+			"totalAvg": 1837.25,
+			"averageScore": 76.55
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2011,
+			"totalAvg": 1584.88,
+			"averageScore": 75.47
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2007,
+			"totalAvg": 1258.68,
+			"averageScore": 74.04
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2015,
+			"totalAvg": 1830.27,
+			"averageScore": 76.26
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2014,
+			"totalAvg": 1849.49,
+			"averageScore": 77.06
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2012,
+			"totalAvg": 1644.56,
+			"averageScore": 74.75
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2009,
+			"totalAvg": 1357.5,
+			"averageScore": 75.42
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2008,
+			"totalAvg": 1456.88,
+			"averageScore": 76.68
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2010,
+			"totalAvg": 1478.52,
+			"averageScore": 73.93
+		},
+		{
+			"sections_dept": "chbe",
+			"sections_year": 2016,
+			"totalAvg": 71.41,
+			"averageScore": 71.41
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2013,
+			"totalAvg": 4760.67,
+			"averageScore": 71.05
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 1900,
+			"totalAvg": 16279.72,
+			"averageScore": 70.47
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2016,
+			"totalAvg": 1694.58,
+			"averageScore": 70.61
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2010,
+			"totalAvg": 4575.16,
+			"averageScore": 70.39
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2011,
+			"totalAvg": 4891.51,
+			"averageScore": 70.89
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2009,
+			"totalAvg": 4515.26,
+			"averageScore": 70.55
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2014,
+			"totalAvg": 4608.36,
+			"averageScore": 70.9
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2012,
+			"totalAvg": 4512.22,
+			"averageScore": 70.5
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2015,
+			"totalAvg": 4526.5,
+			"averageScore": 70.73
+		},
+		{
+			"sections_dept": "chem",
+			"sections_year": 2008,
+			"totalAvg": 345.63,
+			"averageScore": 69.13
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 1900,
+			"totalAvg": 7359.8,
+			"averageScore": 75.87
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 2012,
+			"totalAvg": 1286.95,
+			"averageScore": 75.7
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 2014,
+			"totalAvg": 1684.76,
+			"averageScore": 76.58
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 2010,
+			"totalAvg": 1091,
+			"averageScore": 77.93
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 2015,
+			"totalAvg": 1827.95,
+			"averageScore": 76.16
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 2011,
+			"totalAvg": 1233.94,
+			"averageScore": 77.12
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 2013,
+			"totalAvg": 1438.6,
+			"averageScore": 75.72
+		},
+		{
+			"sections_dept": "chin",
+			"sections_year": 2016,
+			"totalAvg": 613.74,
+			"averageScore": 76.72
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2015,
+			"totalAvg": 2500.24,
+			"averageScore": 78.13
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 1900,
+			"totalAvg": 19174.06,
+			"averageScore": 77.31
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2009,
+			"totalAvg": 2253.09,
+			"averageScore": 75.1
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2014,
+			"totalAvg": 2716.77,
+			"averageScore": 77.62
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2008,
+			"totalAvg": 2125.67,
+			"averageScore": 75.92
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2007,
+			"totalAvg": 2015.66,
+			"averageScore": 74.65
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2010,
+			"totalAvg": 2347.37,
+			"averageScore": 75.72
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2011,
+			"totalAvg": 2309.24,
+			"averageScore": 76.97
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2012,
+			"totalAvg": 2361.2,
+			"averageScore": 78.71
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2016,
+			"totalAvg": 165.29,
+			"averageScore": 82.64
+		},
+		{
+			"sections_dept": "civl",
+			"sections_year": 2013,
+			"totalAvg": 2163.71,
+			"averageScore": 77.28
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2009,
+			"totalAvg": 521.47,
+			"averageScore": 74.5
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 1900,
+			"totalAvg": 3964.32,
+			"averageScore": 73.41
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2012,
+			"totalAvg": 791.48,
+			"averageScore": 71.95
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2015,
+			"totalAvg": 598.98,
+			"averageScore": 74.87
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2014,
+			"totalAvg": 504.31,
+			"averageScore": 72.04
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2011,
+			"totalAvg": 791.47,
+			"averageScore": 71.95
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2010,
+			"totalAvg": 897.73,
+			"averageScore": 74.81
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2013,
+			"totalAvg": 432.46,
+			"averageScore": 72.08
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2008,
+			"totalAvg": 317.04,
+			"averageScore": 79.26
+		},
+		{
+			"sections_dept": "clst",
+			"sections_year": 2007,
+			"totalAvg": 227.2,
+			"averageScore": 75.73
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 1900,
+			"totalAvg": 6381.4,
+			"averageScore": 83.97
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2014,
+			"totalAvg": 868.43,
+			"averageScore": 86.84
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2015,
+			"totalAvg": 750.27,
+			"averageScore": 83.36
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2013,
+			"totalAvg": 825.82,
+			"averageScore": 82.58
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2016,
+			"totalAvg": 175.87,
+			"averageScore": 87.94
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2011,
+			"totalAvg": 393.27,
+			"averageScore": 78.65
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2009,
+			"totalAvg": 157.22,
+			"averageScore": 78.61
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2010,
+			"totalAvg": 318.71,
+			"averageScore": 79.68
+		},
+		{
+			"sections_dept": "cnps",
+			"sections_year": 2012,
+			"totalAvg": 556.07,
+			"averageScore": 79.44
+		},
+		{
+			"sections_dept": "cnrs",
+			"sections_year": 2010,
+			"totalAvg": 73.62,
+			"averageScore": 73.62
+		},
+		{
+			"sections_dept": "cnrs",
+			"sections_year": 1900,
+			"totalAvg": 73.62,
+			"averageScore": 73.62
+		},
+		{
+			"sections_dept": "coec",
+			"sections_year": 2015,
+			"totalAvg": 149.89,
+			"averageScore": 74.94
+		},
+		{
+			"sections_dept": "coec",
+			"sections_year": 1900,
+			"totalAvg": 390.66,
+			"averageScore": 78.13
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2008,
+			"totalAvg": 147.07,
+			"averageScore": 73.53
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 1900,
+			"totalAvg": 1702.2,
+			"averageScore": 74.01
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2015,
+			"totalAvg": 137.57,
+			"averageScore": 68.78
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2009,
+			"totalAvg": 139.68,
+			"averageScore": 69.84
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2007,
+			"totalAvg": 71.13,
+			"averageScore": 71.13
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2010,
+			"totalAvg": 139.88,
+			"averageScore": 69.94
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2016,
+			"totalAvg": 70.53,
+			"averageScore": 70.53
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2014,
+			"totalAvg": 137.98,
+			"averageScore": 68.99
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2011,
+			"totalAvg": 137.65,
+			"averageScore": 68.83
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2013,
+			"totalAvg": 134.38,
+			"averageScore": 67.19
+		},
+		{
+			"sections_dept": "cogs",
+			"sections_year": 2012,
+			"totalAvg": 141.4,
+			"averageScore": 70.7
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2011,
+			"totalAvg": 4689.64,
+			"averageScore": 74.44
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 1900,
+			"totalAvg": 41074.59,
+			"averageScore": 76.49
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2015,
+			"totalAvg": 10257.34,
+			"averageScore": 75.98
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2012,
+			"totalAvg": 5747.85,
+			"averageScore": 74.65
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2014,
+			"totalAvg": 7516.05,
+			"averageScore": 74.42
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2013,
+			"totalAvg": 6565.57,
+			"averageScore": 75.47
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2010,
+			"totalAvg": 3955.34,
+			"averageScore": 73.25
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2016,
+			"totalAvg": 1110.59,
+			"averageScore": 74.04
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2007,
+			"totalAvg": 4645.91,
+			"averageScore": 73.74
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2009,
+			"totalAvg": 4160.23,
+			"averageScore": 72.99
+		},
+		{
+			"sections_dept": "comm",
+			"sections_year": 2008,
+			"totalAvg": 161.31,
+			"averageScore": 80.66
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2010,
+			"totalAvg": 378.87,
+			"averageScore": 75.77
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 1900,
+			"totalAvg": 4149.55,
+			"averageScore": 76.84
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2012,
+			"totalAvg": 547.4,
+			"averageScore": 78.2
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2013,
+			"totalAvg": 540.99,
+			"averageScore": 77.28
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2009,
+			"totalAvg": 316.51,
+			"averageScore": 79.13
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2008,
+			"totalAvg": 388.01,
+			"averageScore": 77.6
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2015,
+			"totalAvg": 679.76,
+			"averageScore": 75.53
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2007,
+			"totalAvg": 313.49,
+			"averageScore": 78.37
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2011,
+			"totalAvg": 378.43,
+			"averageScore": 75.69
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2014,
+			"totalAvg": 673.74,
+			"averageScore": 74.86
+		},
+		{
+			"sections_dept": "cons",
+			"sections_year": 2016,
+			"totalAvg": 71.76,
+			"averageScore": 71.76
+		},
+		{
+			"sections_dept": "cpen",
+			"sections_year": 2015,
+			"totalAvg": 1005.9,
+			"averageScore": 77.38
+		},
+		{
+			"sections_dept": "cpen",
+			"sections_year": 1900,
+			"totalAvg": 1002.93,
+			"averageScore": 77.15
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2014,
+			"totalAvg": 4882.5,
+			"averageScore": 76.29
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 1900,
+			"totalAvg": 17990.92,
+			"averageScore": 75.91
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2012,
+			"totalAvg": 4009.42,
+			"averageScore": 74.25
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2013,
+			"totalAvg": 4154.49,
+			"averageScore": 75.54
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2011,
+			"totalAvg": 3067.64,
+			"averageScore": 74.82
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2015,
+			"totalAvg": 4411.93,
+			"averageScore": 76.07
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2010,
+			"totalAvg": 2289.35,
+			"averageScore": 73.85
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2009,
+			"totalAvg": 1936.61,
+			"averageScore": 74.48
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2008,
+			"totalAvg": 1931.57,
+			"averageScore": 74.29
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2007,
+			"totalAvg": 1367.94,
+			"averageScore": 72
+		},
+		{
+			"sections_dept": "cpsc",
+			"sections_year": 2016,
+			"totalAvg": 313.48,
+			"averageScore": 78.37
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2013,
+			"totalAvg": 1169.61,
+			"averageScore": 77.97
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 1900,
+			"totalAvg": 3755.6,
+			"averageScore": 78.24
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2014,
+			"totalAvg": 1806.08,
+			"averageScore": 78.53
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2016,
+			"totalAvg": 1041.85,
+			"averageScore": 80.14
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2012,
+			"totalAvg": 619.09,
+			"averageScore": 77.39
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2015,
+			"totalAvg": 1793.1,
+			"averageScore": 77.96
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2010,
+			"totalAvg": 151.94,
+			"averageScore": 75.97
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2008,
+			"totalAvg": 79.51,
+			"averageScore": 79.51
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2011,
+			"totalAvg": 150.59,
+			"averageScore": 75.3
+		},
+		{
+			"sections_dept": "crwr",
+			"sections_year": 2009,
+			"totalAvg": 87.12,
+			"averageScore": 87.12
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2012,
+			"totalAvg": 247.4,
+			"averageScore": 82.47
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 1900,
+			"totalAvg": 1376.97,
+			"averageScore": 81
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2013,
+			"totalAvg": 243.76,
+			"averageScore": 81.25
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2011,
+			"totalAvg": 160.35,
+			"averageScore": 80.17
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2008,
+			"totalAvg": 80.6,
+			"averageScore": 80.6
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2014,
+			"totalAvg": 160.33,
+			"averageScore": 80.17
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2015,
+			"totalAvg": 163.54,
+			"averageScore": 81.77
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2009,
+			"totalAvg": 161.42,
+			"averageScore": 80.71
+		},
+		{
+			"sections_dept": "dent",
+			"sections_year": 2010,
+			"totalAvg": 79.71,
+			"averageScore": 79.71
+		},
+		{
+			"sections_dept": "dhyg",
+			"sections_year": 1900,
+			"totalAvg": 707.49,
+			"averageScore": 78.61
+		},
+		{
+			"sections_dept": "eced",
+			"sections_year": 1900,
+			"totalAvg": 263.03,
+			"averageScore": 87.68
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2014,
+			"totalAvg": 7286.73,
+			"averageScore": 72.87
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 1900,
+			"totalAvg": 31669.07,
+			"averageScore": 73.82
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2013,
+			"totalAvg": 6545.01,
+			"averageScore": 71.92
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2016,
+			"totalAvg": 1597.86,
+			"averageScore": 72.63
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2009,
+			"totalAvg": 6592.55,
+			"averageScore": 72.45
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2008,
+			"totalAvg": 6185.2,
+			"averageScore": 71.92
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2011,
+			"totalAvg": 6747.61,
+			"averageScore": 72.55
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2010,
+			"totalAvg": 6578.04,
+			"averageScore": 73.09
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2007,
+			"totalAvg": 4455.49,
+			"averageScore": 70.72
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2015,
+			"totalAvg": 6175.08,
+			"averageScore": 73.51
+		},
+		{
+			"sections_dept": "econ",
+			"sections_year": 2012,
+			"totalAvg": 6336.76,
+			"averageScore": 72.01
+		},
+		{
+			"sections_dept": "edcp",
+			"sections_year": 1900,
+			"totalAvg": 449.21,
+			"averageScore": 89.84
+		},
+		{
+			"sections_dept": "edst",
+			"sections_year": 1900,
+			"totalAvg": 350.56,
+			"averageScore": 87.64
+		},
+		{
+			"sections_dept": "educ",
+			"sections_year": 2014,
+			"totalAvg": 69,
+			"averageScore": 69
+		},
+		{
+			"sections_dept": "educ",
+			"sections_year": 1900,
+			"totalAvg": 1207.87,
+			"averageScore": 86.28
+		},
+		{
+			"sections_dept": "educ",
+			"sections_year": 2015,
+			"totalAvg": 76.01,
+			"averageScore": 76.01
+		},
+		{
+			"sections_dept": "eece",
+			"sections_year": 2014,
+			"totalAvg": 82.56,
+			"averageScore": 82.56
+		},
+		{
+			"sections_dept": "eece",
+			"sections_year": 1900,
+			"totalAvg": 82.56,
+			"averageScore": 82.56
+		},
+		{
+			"sections_dept": "elec",
+			"sections_year": 2015,
+			"totalAvg": 2561.58,
+			"averageScore": 73.19
+		},
+		{
+			"sections_dept": "elec",
+			"sections_year": 1900,
+			"totalAvg": 1949.99,
+			"averageScore": 75
+		},
+		{
+			"sections_dept": "elec",
+			"sections_year": 2016,
+			"totalAvg": 148.49,
+			"averageScore": 74.25
+		},
+		{
+			"sections_dept": "ends",
+			"sections_year": 2011,
+			"totalAvg": 82.65,
+			"averageScore": 82.65
+		},
+		{
+			"sections_dept": "ends",
+			"sections_year": 1900,
+			"totalAvg": 566.18,
+			"averageScore": 80.88
+		},
+		{
+			"sections_dept": "ends",
+			"sections_year": 2015,
+			"totalAvg": 161.7,
+			"averageScore": 80.85
+		},
+		{
+			"sections_dept": "ends",
+			"sections_year": 2013,
+			"totalAvg": 81.16,
+			"averageScore": 81.16
+		},
+		{
+			"sections_dept": "ends",
+			"sections_year": 2014,
+			"totalAvg": 159.03,
+			"averageScore": 79.52
+		},
+		{
+			"sections_dept": "ends",
+			"sections_year": 2012,
+			"totalAvg": 81.64,
+			"averageScore": 81.64
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 1900,
+			"totalAvg": 12760.55,
+			"averageScore": 74.62
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2015,
+			"totalAvg": 1032.53,
+			"averageScore": 73.75
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2007,
+			"totalAvg": 1812.19,
+			"averageScore": 72.49
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2009,
+			"totalAvg": 1172.81,
+			"averageScore": 73.3
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2012,
+			"totalAvg": 1014.8,
+			"averageScore": 72.49
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2013,
+			"totalAvg": 948.22,
+			"averageScore": 72.94
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2016,
+			"totalAvg": 430.65,
+			"averageScore": 71.77
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2010,
+			"totalAvg": 1386.98,
+			"averageScore": 73
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2011,
+			"totalAvg": 1231.08,
+			"averageScore": 72.42
+		},
+		{
+			"sections_dept": "engl",
+			"sections_year": 2014,
+			"totalAvg": 1015.96,
+			"averageScore": 72.57
+		},
+		{
+			"sections_dept": "enph",
+			"sections_year": 2015,
+			"totalAvg": 249.17,
+			"averageScore": 83.06
+		},
+		{
+			"sections_dept": "enph",
+			"sections_year": 1900,
+			"totalAvg": 1380.47,
+			"averageScore": 81.2
+		},
+		{
+			"sections_dept": "enph",
+			"sections_year": 2013,
+			"totalAvg": 241.92,
+			"averageScore": 80.64
+		},
+		{
+			"sections_dept": "enph",
+			"sections_year": 2011,
+			"totalAvg": 252.43,
+			"averageScore": 84.14
+		},
+		{
+			"sections_dept": "enph",
+			"sections_year": 2014,
+			"totalAvg": 247.25,
+			"averageScore": 82.42
+		},
+		{
+			"sections_dept": "enph",
+			"sections_year": 2012,
+			"totalAvg": 159.59,
+			"averageScore": 79.8
+		},
+		{
+			"sections_dept": "envr",
+			"sections_year": 1900,
+			"totalAvg": 717.33,
+			"averageScore": 79.7
+		},
+		{
+			"sections_dept": "envr",
+			"sections_year": 2011,
+			"totalAvg": 79.06,
+			"averageScore": 79.06
+		},
+		{
+			"sections_dept": "envr",
+			"sections_year": 2015,
+			"totalAvg": 79.42,
+			"averageScore": 79.42
+		},
+		{
+			"sections_dept": "envr",
+			"sections_year": 2014,
+			"totalAvg": 83.93,
+			"averageScore": 83.93
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2013,
+			"totalAvg": 4048.68,
+			"averageScore": 73.61
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 1900,
+			"totalAvg": 20263.86,
+			"averageScore": 74.5
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2011,
+			"totalAvg": 3569.72,
+			"averageScore": 74.37
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2010,
+			"totalAvg": 3065.02,
+			"averageScore": 74.76
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2014,
+			"totalAvg": 3856.62,
+			"averageScore": 74.17
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2012,
+			"totalAvg": 3748.49,
+			"averageScore": 73.5
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2015,
+			"totalAvg": 3202.71,
+			"averageScore": 74.48
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2008,
+			"totalAvg": 2370.32,
+			"averageScore": 74.07
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2007,
+			"totalAvg": 1967.37,
+			"averageScore": 72.87
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2009,
+			"totalAvg": 3107.91,
+			"averageScore": 74
+		},
+		{
+			"sections_dept": "eosc",
+			"sections_year": 2016,
+			"totalAvg": 369.6,
+			"averageScore": 73.92
+		},
+		{
+			"sections_dept": "epse",
+			"sections_year": 2014,
+			"totalAvg": 522.4,
+			"averageScore": 87.07
+		},
+		{
+			"sections_dept": "epse",
+			"sections_year": 1900,
+			"totalAvg": 4386.4,
+			"averageScore": 89.52
+		},
+		{
+			"sections_dept": "epse",
+			"sections_year": 2016,
+			"totalAvg": 276.21,
+			"averageScore": 92.07
+		},
+		{
+			"sections_dept": "epse",
+			"sections_year": 2015,
+			"totalAvg": 370.52,
+			"averageScore": 92.63
+		},
+		{
+			"sections_dept": "etec",
+			"sections_year": 1900,
+			"totalAvg": 3386.65,
+			"averageScore": 89.12
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2016,
+			"totalAvg": 73.85,
+			"averageScore": 73.85
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 1900,
+			"totalAvg": 868.63,
+			"averageScore": 78.97
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2015,
+			"totalAvg": 149.71,
+			"averageScore": 74.86
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2014,
+			"totalAvg": 81.74,
+			"averageScore": 81.74
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2009,
+			"totalAvg": 75.02,
+			"averageScore": 75.02
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2010,
+			"totalAvg": 75.75,
+			"averageScore": 75.75
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2012,
+			"totalAvg": 78.96,
+			"averageScore": 78.96
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2011,
+			"totalAvg": 80.4,
+			"averageScore": 80.4
+		},
+		{
+			"sections_dept": "fipr",
+			"sections_year": 2008,
+			"totalAvg": 79.78,
+			"averageScore": 79.78
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2009,
+			"totalAvg": 440.5,
+			"averageScore": 73.42
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 1900,
+			"totalAvg": 2621.31,
+			"averageScore": 74.89
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2010,
+			"totalAvg": 452.53,
+			"averageScore": 75.42
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2008,
+			"totalAvg": 138.08,
+			"averageScore": 69.04
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2014,
+			"totalAvg": 522.4,
+			"averageScore": 74.63
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2012,
+			"totalAvg": 370.47,
+			"averageScore": 74.09
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2011,
+			"totalAvg": 455.28,
+			"averageScore": 75.88
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2013,
+			"totalAvg": 367.14,
+			"averageScore": 73.43
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2016,
+			"totalAvg": 79.74,
+			"averageScore": 79.74
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2015,
+			"totalAvg": 378.68,
+			"averageScore": 75.74
+		},
+		{
+			"sections_dept": "fist",
+			"sections_year": 2007,
+			"totalAvg": 221.87,
+			"averageScore": 73.96
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2007,
+			"totalAvg": 937.69,
+			"averageScore": 72.13
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 1900,
+			"totalAvg": 4863.35,
+			"averageScore": 72.59
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2013,
+			"totalAvg": 1229.12,
+			"averageScore": 72.3
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2009,
+			"totalAvg": 1010.89,
+			"averageScore": 72.21
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2011,
+			"totalAvg": 1295.65,
+			"averageScore": 71.98
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2008,
+			"totalAvg": 1079.84,
+			"averageScore": 71.99
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2015,
+			"totalAvg": 1094.17,
+			"averageScore": 72.94
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2012,
+			"totalAvg": 1364.52,
+			"averageScore": 71.82
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2010,
+			"totalAvg": 1139,
+			"averageScore": 71.19
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2014,
+			"totalAvg": 1458.29,
+			"averageScore": 72.91
+		},
+		{
+			"sections_dept": "fmst",
+			"sections_year": 2016,
+			"totalAvg": 354.6,
+			"averageScore": 70.92
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2009,
+			"totalAvg": 1998.33,
+			"averageScore": 76.86
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 1900,
+			"totalAvg": 15037.78,
+			"averageScore": 77.12
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2015,
+			"totalAvg": 2006.49,
+			"averageScore": 77.17
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2013,
+			"totalAvg": 2351.96,
+			"averageScore": 75.87
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2008,
+			"totalAvg": 1888.61,
+			"averageScore": 75.54
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2014,
+			"totalAvg": 2516.58,
+			"averageScore": 76.26
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2010,
+			"totalAvg": 1985.84,
+			"averageScore": 76.38
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2011,
+			"totalAvg": 2069.89,
+			"averageScore": 76.66
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2012,
+			"totalAvg": 1987.88,
+			"averageScore": 76.46
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2007,
+			"totalAvg": 1755.74,
+			"averageScore": 76.34
+		},
+		{
+			"sections_dept": "fnh",
+			"sections_year": 2016,
+			"totalAvg": 161.72,
+			"averageScore": 80.86
+		},
+		{
+			"sections_dept": "fnis",
+			"sections_year": 1900,
+			"totalAvg": 152.58,
+			"averageScore": 76.29
+		},
+		{
+			"sections_dept": "fopr",
+			"sections_year": 2015,
+			"totalAvg": 75.98,
+			"averageScore": 75.98
+		},
+		{
+			"sections_dept": "fopr",
+			"sections_year": 1900,
+			"totalAvg": 75.98,
+			"averageScore": 75.98
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2016,
+			"totalAvg": 75.33,
+			"averageScore": 75.33
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 1900,
+			"totalAvg": 1612.54,
+			"averageScore": 76.79
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2015,
+			"totalAvg": 229.64,
+			"averageScore": 76.55
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2011,
+			"totalAvg": 228.43,
+			"averageScore": 76.14
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2013,
+			"totalAvg": 234.58,
+			"averageScore": 78.19
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2014,
+			"totalAvg": 158.22,
+			"averageScore": 79.11
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2009,
+			"totalAvg": 74.61,
+			"averageScore": 74.61
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2010,
+			"totalAvg": 152.54,
+			"averageScore": 76.27
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2008,
+			"totalAvg": 148.66,
+			"averageScore": 74.33
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2012,
+			"totalAvg": 158.54,
+			"averageScore": 79.27
+		},
+		{
+			"sections_dept": "fre",
+			"sections_year": 2007,
+			"totalAvg": 75.05,
+			"averageScore": 75.05
+		},
+		{
+			"sections_dept": "fren",
+			"sections_year": 1900,
+			"totalAvg": 7120.73,
+			"averageScore": 73.41
+		},
+		{
+			"sections_dept": "fren",
+			"sections_year": 2011,
+			"totalAvg": 220.63,
+			"averageScore": 73.54
+		},
+		{
+			"sections_dept": "fren",
+			"sections_year": 2013,
+			"totalAvg": 71.93,
+			"averageScore": 71.93
+		},
+		{
+			"sections_dept": "fren",
+			"sections_year": 2012,
+			"totalAvg": 143.13,
+			"averageScore": 71.56
+		},
+		{
+			"sections_dept": "fren",
+			"sections_year": 2014,
+			"totalAvg": 72.35,
+			"averageScore": 72.35
+		},
+		{
+			"sections_dept": "fren",
+			"sections_year": 2010,
+			"totalAvg": 143.56,
+			"averageScore": 71.78
+		},
+		{
+			"sections_dept": "fren",
+			"sections_year": 2009,
+			"totalAvg": 138.5,
+			"averageScore": 69.25
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2012,
+			"totalAvg": 1351.97,
+			"averageScore": 75.11
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 1900,
+			"totalAvg": 9984.33,
+			"averageScore": 74.51
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2011,
+			"totalAvg": 1031.43,
+			"averageScore": 73.67
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2010,
+			"totalAvg": 816.74,
+			"averageScore": 74.25
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2015,
+			"totalAvg": 1893.57,
+			"averageScore": 75.74
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2008,
+			"totalAvg": 653.08,
+			"averageScore": 72.56
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2016,
+			"totalAvg": 521.64,
+			"averageScore": 74.52
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2014,
+			"totalAvg": 1740.83,
+			"averageScore": 75.69
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2007,
+			"totalAvg": 712.66,
+			"averageScore": 71.27
+		},
+		{
+			"sections_dept": "frst",
+			"sections_year": 2013,
+			"totalAvg": 1420.94,
+			"averageScore": 74.79
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2014,
+			"totalAvg": 868.65,
+			"averageScore": 72.39
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 1900,
+			"totalAvg": 3727.68,
+			"averageScore": 71.69
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2013,
+			"totalAvg": 776.33,
+			"averageScore": 70.58
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2009,
+			"totalAvg": 704.58,
+			"averageScore": 70.46
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2010,
+			"totalAvg": 819.05,
+			"averageScore": 68.25
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2015,
+			"totalAvg": 877.35,
+			"averageScore": 73.11
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2012,
+			"totalAvg": 720.11,
+			"averageScore": 72.01
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2011,
+			"totalAvg": 988.49,
+			"averageScore": 70.61
+		},
+		{
+			"sections_dept": "geob",
+			"sections_year": 2016,
+			"totalAvg": 147.11,
+			"averageScore": 73.56
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2010,
+			"totalAvg": 1782.84,
+			"averageScore": 71.31
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 1900,
+			"totalAvg": 15243.75,
+			"averageScore": 72.25
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2011,
+			"totalAvg": 1919.72,
+			"averageScore": 71.1
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2015,
+			"totalAvg": 2321.26,
+			"averageScore": 72.54
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2014,
+			"totalAvg": 2397.98,
+			"averageScore": 72.67
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2009,
+			"totalAvg": 1604.9,
+			"averageScore": 69.78
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2007,
+			"totalAvg": 1480.73,
+			"averageScore": 70.51
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2008,
+			"totalAvg": 1497.17,
+			"averageScore": 71.29
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2012,
+			"totalAvg": 2193.4,
+			"averageScore": 73.11
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2013,
+			"totalAvg": 2048.61,
+			"averageScore": 73.16
+		},
+		{
+			"sections_dept": "geog",
+			"sections_year": 2016,
+			"totalAvg": 368.45,
+			"averageScore": 73.69
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 1900,
+			"totalAvg": 6885.22,
+			"averageScore": 79.14
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 2015,
+			"totalAvg": 322.97,
+			"averageScore": 80.74
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 2012,
+			"totalAvg": 158.96,
+			"averageScore": 79.48
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 2011,
+			"totalAvg": 153.3,
+			"averageScore": 76.65
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 2007,
+			"totalAvg": 75.03,
+			"averageScore": 75.03
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 2010,
+			"totalAvg": 157.56,
+			"averageScore": 78.78
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 2014,
+			"totalAvg": 243.48,
+			"averageScore": 81.16
+		},
+		{
+			"sections_dept": "germ",
+			"sections_year": 2013,
+			"totalAvg": 79.44,
+			"averageScore": 79.44
+		},
+		{
+			"sections_dept": "grsj",
+			"sections_year": 2015,
+			"totalAvg": 558.36,
+			"averageScore": 79.77
+		},
+		{
+			"sections_dept": "grsj",
+			"sections_year": 1900,
+			"totalAvg": 932.56,
+			"averageScore": 77.71
+		},
+		{
+			"sections_dept": "grsj",
+			"sections_year": 2013,
+			"totalAvg": 467.56,
+			"averageScore": 77.93
+		},
+		{
+			"sections_dept": "grsj",
+			"sections_year": 2014,
+			"totalAvg": 458.23,
+			"averageScore": 76.37
+		},
+		{
+			"sections_dept": "grsj",
+			"sections_year": 2016,
+			"totalAvg": 79.46,
+			"averageScore": 79.46
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2008,
+			"totalAvg": 1171.74,
+			"averageScore": 73.23
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 1900,
+			"totalAvg": 9389.98,
+			"averageScore": 72.79
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2007,
+			"totalAvg": 1086.18,
+			"averageScore": 72.41
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2015,
+			"totalAvg": 1252.88,
+			"averageScore": 73.7
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2012,
+			"totalAvg": 943.26,
+			"averageScore": 72.56
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2011,
+			"totalAvg": 930.03,
+			"averageScore": 71.54
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2010,
+			"totalAvg": 1082.82,
+			"averageScore": 72.19
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2009,
+			"totalAvg": 716.95,
+			"averageScore": 71.7
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2014,
+			"totalAvg": 1113.63,
+			"averageScore": 74.24
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2013,
+			"totalAvg": 1071.88,
+			"averageScore": 71.46
+		},
+		{
+			"sections_dept": "hist",
+			"sections_year": 2016,
+			"totalAvg": 149.08,
+			"averageScore": 74.54
+		},
+		{
+			"sections_dept": "igen",
+			"sections_year": 2015,
+			"totalAvg": 81.77,
+			"averageScore": 81.77
+		},
+		{
+			"sections_dept": "igen",
+			"sections_year": 1900,
+			"totalAvg": 330.31,
+			"averageScore": 82.58
+		},
+		{
+			"sections_dept": "igen",
+			"sections_year": 2012,
+			"totalAvg": 82.31,
+			"averageScore": 82.31
+		},
+		{
+			"sections_dept": "igen",
+			"sections_year": 2016,
+			"totalAvg": 83.92,
+			"averageScore": 83.92
+		},
+		{
+			"sections_dept": "igen",
+			"sections_year": 2014,
+			"totalAvg": 82.31,
+			"averageScore": 82.31
+		},
+		{
+			"sections_dept": "isci",
+			"sections_year": 2015,
+			"totalAvg": 83.48,
+			"averageScore": 83.48
+		},
+		{
+			"sections_dept": "isci",
+			"sections_year": 1900,
+			"totalAvg": 83.48,
+			"averageScore": 83.48
+		},
+		{
+			"sections_dept": "ital",
+			"sections_year": 1900,
+			"totalAvg": 1660.72,
+			"averageScore": 72.21
+		},
+		{
+			"sections_dept": "japn",
+			"sections_year": 1900,
+			"totalAvg": 3693.17,
+			"averageScore": 72.42
+		},
+		{
+			"sections_dept": "jrnl",
+			"sections_year": 1900,
+			"totalAvg": 253.39,
+			"averageScore": 84.46
+		},
+		{
+			"sections_dept": "kin",
+			"sections_year": 1900,
+			"totalAvg": 11337.73,
+			"averageScore": 79.28
+		},
+		{
+			"sections_dept": "kin",
+			"sections_year": 2012,
+			"totalAvg": 2457.66,
+			"averageScore": 79.28
+		},
+		{
+			"sections_dept": "kin",
+			"sections_year": 2013,
+			"totalAvg": 2496.56,
+			"averageScore": 80.53
+		},
+		{
+			"sections_dept": "kin",
+			"sections_year": 2015,
+			"totalAvg": 2536.16,
+			"averageScore": 79.25
+		},
+		{
+			"sections_dept": "kin",
+			"sections_year": 2014,
+			"totalAvg": 2743.54,
+			"averageScore": 80.69
+		},
+		{
+			"sections_dept": "kin",
+			"sections_year": 2016,
+			"totalAvg": 405.65,
+			"averageScore": 81.13
+		},
+		{
+			"sections_dept": "korn",
+			"sections_year": 1900,
+			"totalAvg": 517.26,
+			"averageScore": 73.89
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 2010,
+			"totalAvg": 68.53,
+			"averageScore": 68.53
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 1900,
+			"totalAvg": 514.67,
+			"averageScore": 73.52
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 2015,
+			"totalAvg": 77.22,
+			"averageScore": 77.22
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 2014,
+			"totalAvg": 71.42,
+			"averageScore": 71.42
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 2013,
+			"totalAvg": 78.72,
+			"averageScore": 78.72
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 2009,
+			"totalAvg": 70.07,
+			"averageScore": 70.07
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 2012,
+			"totalAvg": 73.71,
+			"averageScore": 73.71
+		},
+		{
+			"sections_dept": "laso",
+			"sections_year": 2011,
+			"totalAvg": 75,
+			"averageScore": 75
+		},
+		{
+			"sections_dept": "latn",
+			"sections_year": 1900,
+			"totalAvg": 299.48,
+			"averageScore": 74.87
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 1900,
+			"totalAvg": 7199.29,
+			"averageScore": 74.22
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2015,
+			"totalAvg": 957.76,
+			"averageScore": 73.67
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2014,
+			"totalAvg": 1536.57,
+			"averageScore": 73.17
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2007,
+			"totalAvg": 367.09,
+			"averageScore": 73.42
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2013,
+			"totalAvg": 441.94,
+			"averageScore": 73.66
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2012,
+			"totalAvg": 513.7,
+			"averageScore": 73.39
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2008,
+			"totalAvg": 290.92,
+			"averageScore": 72.73
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2009,
+			"totalAvg": 147.16,
+			"averageScore": 73.58
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2010,
+			"totalAvg": 147.28,
+			"averageScore": 73.64
+		},
+		{
+			"sections_dept": "law",
+			"sections_year": 2011,
+			"totalAvg": 73.87,
+			"averageScore": 73.87
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2010,
+			"totalAvg": 557.28,
+			"averageScore": 79.61
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 1900,
+			"totalAvg": 2777.79,
+			"averageScore": 79.37
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2012,
+			"totalAvg": 396.12,
+			"averageScore": 79.22
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2013,
+			"totalAvg": 486.51,
+			"averageScore": 81.08
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2014,
+			"totalAvg": 398.41,
+			"averageScore": 79.68
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2016,
+			"totalAvg": 152.11,
+			"averageScore": 76.06
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2015,
+			"totalAvg": 394.18,
+			"averageScore": 78.84
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2011,
+			"totalAvg": 587.43,
+			"averageScore": 83.92
+		},
+		{
+			"sections_dept": "lfs",
+			"sections_year": 2009,
+			"totalAvg": 473.91,
+			"averageScore": 78.98
+		},
+		{
+			"sections_dept": "libe",
+			"sections_year": 1900,
+			"totalAvg": 600.44,
+			"averageScore": 85.78
+		},
+		{
+			"sections_dept": "libr",
+			"sections_year": 1900,
+			"totalAvg": 1765.68,
+			"averageScore": 84.08
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2013,
+			"totalAvg": 897.23,
+			"averageScore": 74.77
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 1900,
+			"totalAvg": 5508.65,
+			"averageScore": 74.44
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2010,
+			"totalAvg": 799.65,
+			"averageScore": 72.7
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2007,
+			"totalAvg": 358.76,
+			"averageScore": 71.75
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2014,
+			"totalAvg": 917.3,
+			"averageScore": 76.44
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2009,
+			"totalAvg": 589.09,
+			"averageScore": 73.64
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2008,
+			"totalAvg": 398,
+			"averageScore": 79.6
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2016,
+			"totalAvg": 296.7,
+			"averageScore": 74.17
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2015,
+			"totalAvg": 903.8,
+			"averageScore": 75.32
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2011,
+			"totalAvg": 805.71,
+			"averageScore": 73.25
+		},
+		{
+			"sections_dept": "ling",
+			"sections_year": 2012,
+			"totalAvg": 968.64,
+			"averageScore": 74.51
+		},
+		{
+			"sections_dept": "lled",
+			"sections_year": 1900,
+			"totalAvg": 2154.99,
+			"averageScore": 74.31
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2011,
+			"totalAvg": 8174.1,
+			"averageScore": 68.12
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 1900,
+			"totalAvg": 26376.63,
+			"averageScore": 68.51
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2009,
+			"totalAvg": 7927.07,
+			"averageScore": 67.75
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2007,
+			"totalAvg": 6865.81,
+			"averageScore": 67.98
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2012,
+			"totalAvg": 9045.17,
+			"averageScore": 67.5
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2008,
+			"totalAvg": 6814.19,
+			"averageScore": 68.14
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2016,
+			"totalAvg": 3047.83,
+			"averageScore": 67.73
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2013,
+			"totalAvg": 9116.25,
+			"averageScore": 68.03
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2014,
+			"totalAvg": 9410.21,
+			"averageScore": 67.7
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2010,
+			"totalAvg": 8284.74,
+			"averageScore": 68.47
+		},
+		{
+			"sections_dept": "math",
+			"sections_year": 2015,
+			"totalAvg": 8667.11,
+			"averageScore": 68.79
+		},
+		{
+			"sections_dept": "mdvl",
+			"sections_year": 2014,
+			"totalAvg": 69.28,
+			"averageScore": 69.28
+		},
+		{
+			"sections_dept": "mdvl",
+			"sections_year": 1900,
+			"totalAvg": 69.28,
+			"averageScore": 69.28
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2014,
+			"totalAvg": 2277.45,
+			"averageScore": 75.91
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 1900,
+			"totalAvg": 15097.51,
+			"averageScore": 74.74
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2009,
+			"totalAvg": 1881.06,
+			"averageScore": 72.35
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2012,
+			"totalAvg": 2015.61,
+			"averageScore": 74.65
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2008,
+			"totalAvg": 1811.56,
+			"averageScore": 72.46
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2013,
+			"totalAvg": 2178.19,
+			"averageScore": 75.11
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2007,
+			"totalAvg": 1628.27,
+			"averageScore": 74.01
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2010,
+			"totalAvg": 1842.27,
+			"averageScore": 73.69
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2015,
+			"totalAvg": 2397.53,
+			"averageScore": 74.92
+		},
+		{
+			"sections_dept": "mech",
+			"sections_year": 2011,
+			"totalAvg": 1928.93,
+			"averageScore": 74.19
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2012,
+			"totalAvg": 1277.73,
+			"averageScore": 75.16
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 1900,
+			"totalAvg": 8847.17,
+			"averageScore": 76.27
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2013,
+			"totalAvg": 1288.29,
+			"averageScore": 75.78
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2009,
+			"totalAvg": 971.61,
+			"averageScore": 74.74
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2011,
+			"totalAvg": 1372.09,
+			"averageScore": 76.23
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2008,
+			"totalAvg": 912.01,
+			"averageScore": 76
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2014,
+			"totalAvg": 1297.99,
+			"averageScore": 76.35
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2007,
+			"totalAvg": 977.96,
+			"averageScore": 75.23
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2010,
+			"totalAvg": 1117.85,
+			"averageScore": 74.52
+		},
+		{
+			"sections_dept": "micb",
+			"sections_year": 2015,
+			"totalAvg": 1158.65,
+			"averageScore": 77.24
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2015,
+			"totalAvg": 1148.1,
+			"averageScore": 76.54
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 1900,
+			"totalAvg": 6367.04,
+			"averageScore": 77.65
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2012,
+			"totalAvg": 957.94,
+			"averageScore": 79.83
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2013,
+			"totalAvg": 1173.98,
+			"averageScore": 78.27
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2014,
+			"totalAvg": 1114.87,
+			"averageScore": 79.63
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2011,
+			"totalAvg": 686.49,
+			"averageScore": 76.28
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2009,
+			"totalAvg": 298.67,
+			"averageScore": 74.67
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2010,
+			"totalAvg": 524.24,
+			"averageScore": 74.89
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2016,
+			"totalAvg": 158.45,
+			"averageScore": 79.22
+		},
+		{
+			"sections_dept": "mine",
+			"sections_year": 2007,
+			"totalAvg": 222.42,
+			"averageScore": 74.14
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2015,
+			"totalAvg": 419.48,
+			"averageScore": 69.91
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 1900,
+			"totalAvg": 2808.99,
+			"averageScore": 72.03
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2014,
+			"totalAvg": 669.28,
+			"averageScore": 74.36
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2011,
+			"totalAvg": 142,
+			"averageScore": 71
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2007,
+			"totalAvg": 144.89,
+			"averageScore": 72.44
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2013,
+			"totalAvg": 717.47,
+			"averageScore": 71.75
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2012,
+			"totalAvg": 204.44,
+			"averageScore": 68.15
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2009,
+			"totalAvg": 292.94,
+			"averageScore": 73.23
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2010,
+			"totalAvg": 62.89,
+			"averageScore": 62.89
+		},
+		{
+			"sections_dept": "mtrl",
+			"sections_year": 2008,
+			"totalAvg": 67.85,
+			"averageScore": 67.85
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2014,
+			"totalAvg": 730.22,
+			"averageScore": 73.02
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 1900,
+			"totalAvg": 6228.5,
+			"averageScore": 72.42
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2015,
+			"totalAvg": 894.66,
+			"averageScore": 74.55
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2010,
+			"totalAvg": 498.77,
+			"averageScore": 71.25
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2013,
+			"totalAvg": 504.74,
+			"averageScore": 72.11
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2007,
+			"totalAvg": 635.39,
+			"averageScore": 70.6
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2009,
+			"totalAvg": 708.38,
+			"averageScore": 70.84
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2008,
+			"totalAvg": 635.01,
+			"averageScore": 70.56
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2011,
+			"totalAvg": 582.98,
+			"averageScore": 72.87
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2016,
+			"totalAvg": 240.6,
+			"averageScore": 80.2
+		},
+		{
+			"sections_dept": "musc",
+			"sections_year": 2012,
+			"totalAvg": 648.73,
+			"averageScore": 72.08
+		},
+		{
+			"sections_dept": "nest",
+			"sections_year": 2007,
+			"totalAvg": 70.04,
+			"averageScore": 70.04
+		},
+		{
+			"sections_dept": "nest",
+			"sections_year": 1900,
+			"totalAvg": 511.27,
+			"averageScore": 73.04
+		},
+		{
+			"sections_dept": "nest",
+			"sections_year": 2010,
+			"totalAvg": 77.52,
+			"averageScore": 77.52
+		},
+		{
+			"sections_dept": "nest",
+			"sections_year": 2008,
+			"totalAvg": 143.24,
+			"averageScore": 71.62
+		},
+		{
+			"sections_dept": "nest",
+			"sections_year": 2011,
+			"totalAvg": 141.16,
+			"averageScore": 70.58
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 2011,
+			"totalAvg": 829.31,
+			"averageScore": 82.93
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 1900,
+			"totalAvg": 8119.9,
+			"averageScore": 83.71
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 2012,
+			"totalAvg": 759.88,
+			"averageScore": 84.43
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 2015,
+			"totalAvg": 844.47,
+			"averageScore": 84.45
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 2014,
+			"totalAvg": 883.13,
+			"averageScore": 88.31
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 2013,
+			"totalAvg": 768.06,
+			"averageScore": 85.34
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 2016,
+			"totalAvg": 327.65,
+			"averageScore": 81.91
+		},
+		{
+			"sections_dept": "nurs",
+			"sections_year": 2010,
+			"totalAvg": 848.29,
+			"averageScore": 84.83
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2013,
+			"totalAvg": 81.83,
+			"averageScore": 81.83
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 1900,
+			"totalAvg": 663.09,
+			"averageScore": 82.89
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2011,
+			"totalAvg": 79.07,
+			"averageScore": 79.07
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2008,
+			"totalAvg": 87.81,
+			"averageScore": 87.81
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2010,
+			"totalAvg": 80.11,
+			"averageScore": 80.11
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2015,
+			"totalAvg": 81.53,
+			"averageScore": 81.53
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2009,
+			"totalAvg": 84.39,
+			"averageScore": 84.39
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2014,
+			"totalAvg": 82.39,
+			"averageScore": 82.39
+		},
+		{
+			"sections_dept": "path",
+			"sections_year": 2007,
+			"totalAvg": 85.96,
+			"averageScore": 85.96
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2015,
+			"totalAvg": 165.91,
+			"averageScore": 82.95
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 1900,
+			"totalAvg": 812.95,
+			"averageScore": 81.3
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2016,
+			"totalAvg": 159.91,
+			"averageScore": 79.95
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2010,
+			"totalAvg": 79.69,
+			"averageScore": 79.69
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2013,
+			"totalAvg": 82.82,
+			"averageScore": 82.82
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2009,
+			"totalAvg": 82.55,
+			"averageScore": 82.55
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2012,
+			"totalAvg": 77.02,
+			"averageScore": 77.02
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2014,
+			"totalAvg": 86.36,
+			"averageScore": 86.36
+		},
+		{
+			"sections_dept": "pcth",
+			"sections_year": 2011,
+			"totalAvg": 78.69,
+			"averageScore": 78.69
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 1900,
+			"totalAvg": 19784.24,
+			"averageScore": 80.75
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2012,
+			"totalAvg": 2243.81,
+			"averageScore": 80.14
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2007,
+			"totalAvg": 2313.58,
+			"averageScore": 79.78
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2011,
+			"totalAvg": 2437.66,
+			"averageScore": 81.26
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2013,
+			"totalAvg": 2264.9,
+			"averageScore": 80.89
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2008,
+			"totalAvg": 2355.39,
+			"averageScore": 81.22
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2009,
+			"totalAvg": 2450.24,
+			"averageScore": 81.67
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2015,
+			"totalAvg": 2734.17,
+			"averageScore": 82.85
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2014,
+			"totalAvg": 2694.09,
+			"averageScore": 81.64
+		},
+		{
+			"sections_dept": "phar",
+			"sections_year": 2016,
+			"totalAvg": 259.52,
+			"averageScore": 86.51
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2011,
+			"totalAvg": 842.1,
+			"averageScore": 70.17
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 1900,
+			"totalAvg": 4478.2,
+			"averageScore": 71.08
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2009,
+			"totalAvg": 929.47,
+			"averageScore": 71.5
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2010,
+			"totalAvg": 833.67,
+			"averageScore": 69.47
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2007,
+			"totalAvg": 901.82,
+			"averageScore": 69.37
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2008,
+			"totalAvg": 794,
+			"averageScore": 72.18
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2012,
+			"totalAvg": 1114.08,
+			"averageScore": 69.63
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2013,
+			"totalAvg": 1117.65,
+			"averageScore": 69.85
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2014,
+			"totalAvg": 997.8,
+			"averageScore": 71.27
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2015,
+			"totalAvg": 943.32,
+			"averageScore": 72.56
+		},
+		{
+			"sections_dept": "phil",
+			"sections_year": 2016,
+			"totalAvg": 147.74,
+			"averageScore": 73.87
+		},
+		{
+			"sections_dept": "phrm",
+			"sections_year": 2015,
+			"totalAvg": 428.69,
+			"averageScore": 85.74
+		},
+		{
+			"sections_dept": "phrm",
+			"sections_year": 1900,
+			"totalAvg": 427.74,
+			"averageScore": 85.55
+		},
+		{
+			"sections_dept": "phth",
+			"sections_year": 2014,
+			"totalAvg": 1383.57,
+			"averageScore": 86.47
+		},
+		{
+			"sections_dept": "phth",
+			"sections_year": 1900,
+			"totalAvg": 5197.02,
+			"averageScore": 86.62
+		},
+		{
+			"sections_dept": "phth",
+			"sections_year": 2012,
+			"totalAvg": 1122.12,
+			"averageScore": 86.32
+		},
+		{
+			"sections_dept": "phth",
+			"sections_year": 2016,
+			"totalAvg": 349.57,
+			"averageScore": 87.39
+		},
+		{
+			"sections_dept": "phth",
+			"sections_year": 2013,
+			"totalAvg": 1216.75,
+			"averageScore": 86.91
+		},
+		{
+			"sections_dept": "phth",
+			"sections_year": 2015,
+			"totalAvg": 1125.01,
+			"averageScore": 86.54
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2015,
+			"totalAvg": 3487.21,
+			"averageScore": 74.2
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 1900,
+			"totalAvg": 11398.02,
+			"averageScore": 75.48
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2013,
+			"totalAvg": 2343.77,
+			"averageScore": 75.61
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2010,
+			"totalAvg": 2245.67,
+			"averageScore": 72.44
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2007,
+			"totalAvg": 1577.89,
+			"averageScore": 71.72
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2009,
+			"totalAvg": 1900.28,
+			"averageScore": 73.09
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2012,
+			"totalAvg": 2296.93,
+			"averageScore": 74.09
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2011,
+			"totalAvg": 2246.98,
+			"averageScore": 74.9
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2014,
+			"totalAvg": 3988.26,
+			"averageScore": 75.25
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2008,
+			"totalAvg": 142.52,
+			"averageScore": 71.26
+		},
+		{
+			"sections_dept": "phys",
+			"sections_year": 2016,
+			"totalAvg": 449.68,
+			"averageScore": 74.95
+		},
+		{
+			"sections_dept": "plan",
+			"sections_year": 1900,
+			"totalAvg": 78.64,
+			"averageScore": 78.64
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2014,
+			"totalAvg": 2925.61,
+			"averageScore": 73.14
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 1900,
+			"totalAvg": 10408.87,
+			"averageScore": 73.82
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2013,
+			"totalAvg": 2200.73,
+			"averageScore": 73.36
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2016,
+			"totalAvg": 509.51,
+			"averageScore": 72.79
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2015,
+			"totalAvg": 2622.37,
+			"averageScore": 72.84
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2012,
+			"totalAvg": 2213.13,
+			"averageScore": 73.77
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2010,
+			"totalAvg": 2206.81,
+			"averageScore": 73.56
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2009,
+			"totalAvg": 1986.94,
+			"averageScore": 73.59
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2008,
+			"totalAvg": 2201.49,
+			"averageScore": 73.38
+		},
+		{
+			"sections_dept": "poli",
+			"sections_year": 2011,
+			"totalAvg": 1892.14,
+			"averageScore": 72.77
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2011,
+			"totalAvg": 5225.74,
+			"averageScore": 69.68
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 1900,
+			"totalAvg": 18816.81,
+			"averageScore": 69.95
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2007,
+			"totalAvg": 3615.32,
+			"averageScore": 69.53
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2009,
+			"totalAvg": 4796.95,
+			"averageScore": 69.52
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2013,
+			"totalAvg": 5449.42,
+			"averageScore": 69.86
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2012,
+			"totalAvg": 4727.96,
+			"averageScore": 69.53
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2010,
+			"totalAvg": 5215.83,
+			"averageScore": 69.54
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2014,
+			"totalAvg": 6145.09,
+			"averageScore": 69.83
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2015,
+			"totalAvg": 5937.73,
+			"averageScore": 69.86
+		},
+		{
+			"sections_dept": "psyc",
+			"sections_year": 2008,
+			"totalAvg": 4149.73,
+			"averageScore": 69.16
+		},
+		{
+			"sections_dept": "punj",
+			"sections_year": 1900,
+			"totalAvg": 81.02,
+			"averageScore": 81.02
+		},
+		{
+			"sections_dept": "relg",
+			"sections_year": 2014,
+			"totalAvg": 226.54,
+			"averageScore": 75.51
+		},
+		{
+			"sections_dept": "relg",
+			"sections_year": 1900,
+			"totalAvg": 980.44,
+			"averageScore": 75.42
+		},
+		{
+			"sections_dept": "relg",
+			"sections_year": 2015,
+			"totalAvg": 223.14,
+			"averageScore": 74.38
+		},
+		{
+			"sections_dept": "relg",
+			"sections_year": 2011,
+			"totalAvg": 153.68,
+			"averageScore": 76.84
+		},
+		{
+			"sections_dept": "relg",
+			"sections_year": 2012,
+			"totalAvg": 153.33,
+			"averageScore": 76.67
+		},
+		{
+			"sections_dept": "relg",
+			"sections_year": 2013,
+			"totalAvg": 78.23,
+			"averageScore": 78.23
+		},
+		{
+			"sections_dept": "relg",
+			"sections_year": 2010,
+			"totalAvg": 74.17,
+			"averageScore": 74.17
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2014,
+			"totalAvg": 170.72,
+			"averageScore": 85.36
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 1900,
+			"totalAvg": 772.95,
+			"averageScore": 85.88
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2009,
+			"totalAvg": 85.88,
+			"averageScore": 85.88
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2010,
+			"totalAvg": 87.92,
+			"averageScore": 87.92
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2012,
+			"totalAvg": 87.35,
+			"averageScore": 87.35
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2013,
+			"totalAvg": 81.08,
+			"averageScore": 81.08
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2011,
+			"totalAvg": 86.29,
+			"averageScore": 86.29
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2008,
+			"totalAvg": 87.11,
+			"averageScore": 87.11
+		},
+		{
+			"sections_dept": "rhsc",
+			"sections_year": 2015,
+			"totalAvg": 86.6,
+			"averageScore": 86.6
+		},
+		{
+			"sections_dept": "rsot",
+			"sections_year": 2013,
+			"totalAvg": 420.87,
+			"averageScore": 84.17
+		},
+		{
+			"sections_dept": "rsot",
+			"sections_year": 1900,
+			"totalAvg": 844.14,
+			"averageScore": 84.41
+		},
+		{
+			"sections_dept": "rsot",
+			"sections_year": 2015,
+			"totalAvg": 423.27,
+			"averageScore": 84.65
+		},
+		{
+			"sections_dept": "russ",
+			"sections_year": 1900,
+			"totalAvg": 727.23,
+			"averageScore": 80.8
+		},
+		{
+			"sections_dept": "russ",
+			"sections_year": 2010,
+			"totalAvg": 161.09,
+			"averageScore": 80.55
+		},
+		{
+			"sections_dept": "russ",
+			"sections_year": 2012,
+			"totalAvg": 158.86,
+			"averageScore": 79.43
+		},
+		{
+			"sections_dept": "russ",
+			"sections_year": 2008,
+			"totalAvg": 160.55,
+			"averageScore": 80.28
+		},
+		{
+			"sections_dept": "scan",
+			"sections_year": 2012,
+			"totalAvg": 153.92,
+			"averageScore": 76.96
+		},
+		{
+			"sections_dept": "scan",
+			"sections_year": 1900,
+			"totalAvg": 468.15,
+			"averageScore": 78.02
+		},
+		{
+			"sections_dept": "scan",
+			"sections_year": 2010,
+			"totalAvg": 160.59,
+			"averageScore": 80.3
+		},
+		{
+			"sections_dept": "scan",
+			"sections_year": 2013,
+			"totalAvg": 77.01,
+			"averageScore": 77.01
+		},
+		{
+			"sections_dept": "scan",
+			"sections_year": 2015,
+			"totalAvg": 76.63,
+			"averageScore": 76.63
+		},
+		{
+			"sections_dept": "scie",
+			"sections_year": 1900,
+			"totalAvg": 839.34,
+			"averageScore": 76.3
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2008,
+			"totalAvg": 565.94,
+			"averageScore": 70.74
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 1900,
+			"totalAvg": 4109.08,
+			"averageScore": 73.38
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2009,
+			"totalAvg": 863.31,
+			"averageScore": 71.94
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2012,
+			"totalAvg": 1108.66,
+			"averageScore": 73.91
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2011,
+			"totalAvg": 726.64,
+			"averageScore": 72.66
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2010,
+			"totalAvg": 854.28,
+			"averageScore": 71.19
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2014,
+			"totalAvg": 863.48,
+			"averageScore": 71.96
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2013,
+			"totalAvg": 721.04,
+			"averageScore": 72.1
+		},
+		{
+			"sections_dept": "soci",
+			"sections_year": 2015,
+			"totalAvg": 953.32,
+			"averageScore": 73.33
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 2010,
+			"totalAvg": 78.96,
+			"averageScore": 78.96
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 1900,
+			"totalAvg": 2495.24,
+			"averageScore": 83.17
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 2011,
+			"totalAvg": 154.48,
+			"averageScore": 77.24
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 2014,
+			"totalAvg": 509.19,
+			"averageScore": 84.86
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 2013,
+			"totalAvg": 327.02,
+			"averageScore": 81.75
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 2012,
+			"totalAvg": 153.66,
+			"averageScore": 76.83
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 2015,
+			"totalAvg": 345.12,
+			"averageScore": 86.28
+		},
+		{
+			"sections_dept": "sowk",
+			"sections_year": 2009,
+			"totalAvg": 161.88,
+			"averageScore": 80.94
+		},
+		{
+			"sections_dept": "span",
+			"sections_year": 1900,
+			"totalAvg": 4541.45,
+			"averageScore": 74.45
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 2015,
+			"totalAvg": 621.05,
+			"averageScore": 88.72
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 1900,
+			"totalAvg": 2385.34,
+			"averageScore": 85.19
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 2011,
+			"totalAvg": 249.53,
+			"averageScore": 83.18
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 2014,
+			"totalAvg": 245.77,
+			"averageScore": 81.92
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 2012,
+			"totalAvg": 262.83,
+			"averageScore": 87.61
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 2009,
+			"totalAvg": 252.46,
+			"averageScore": 84.15
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 2013,
+			"totalAvg": 248.99,
+			"averageScore": 83
+		},
+		{
+			"sections_dept": "spph",
+			"sections_year": 2010,
+			"totalAvg": 170.03,
+			"averageScore": 85.02
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2011,
+			"totalAvg": 1175.21,
+			"averageScore": 73.45
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 1900,
+			"totalAvg": 6502.95,
+			"averageScore": 72.25
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2008,
+			"totalAvg": 1226.72,
+			"averageScore": 72.16
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2009,
+			"totalAvg": 1087.7,
+			"averageScore": 72.51
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2013,
+			"totalAvg": 1216.3,
+			"averageScore": 71.55
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2015,
+			"totalAvg": 1207.16,
+			"averageScore": 71.01
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2012,
+			"totalAvg": 1161.59,
+			"averageScore": 72.6
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2010,
+			"totalAvg": 1162.27,
+			"averageScore": 72.64
+		},
+		{
+			"sections_dept": "stat",
+			"sections_year": 2014,
+			"totalAvg": 1327.31,
+			"averageScore": 73.74
+		},
+		{
+			"sections_dept": "swed",
+			"sections_year": 1900,
+			"totalAvg": 244.8,
+			"averageScore": 81.6
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2008,
+			"totalAvg": 155.09,
+			"averageScore": 77.55
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 1900,
+			"totalAvg": 1250.61,
+			"averageScore": 78.16
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2011,
+			"totalAvg": 309.56,
+			"averageScore": 77.39
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2014,
+			"totalAvg": 229.73,
+			"averageScore": 76.58
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2009,
+			"totalAvg": 150.78,
+			"averageScore": 75.39
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2012,
+			"totalAvg": 232.5,
+			"averageScore": 77.5
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2010,
+			"totalAvg": 79.82,
+			"averageScore": 79.82
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2015,
+			"totalAvg": 87.43,
+			"averageScore": 87.43
+		},
+		{
+			"sections_dept": "thtr",
+			"sections_year": 2013,
+			"totalAvg": 78.49,
+			"averageScore": 78.49
+		},
+		{
+			"sections_dept": "ufor",
+			"sections_year": 2015,
+			"totalAvg": 160.44,
+			"averageScore": 80.22
+		},
+		{
+			"sections_dept": "ufor",
+			"sections_year": 1900,
+			"totalAvg": 160.44,
+			"averageScore": 80.22
+		},
+		{
+			"sections_dept": "urst",
+			"sections_year": 2015,
+			"totalAvg": 75.75,
+			"averageScore": 75.75
+		},
+		{
+			"sections_dept": "urst",
+			"sections_year": 1900,
+			"totalAvg": 383.3,
+			"averageScore": 76.66
+		},
+		{
+			"sections_dept": "urst",
+			"sections_year": 2014,
+			"totalAvg": 78.3,
+			"averageScore": 78.3
+		},
+		{
+			"sections_dept": "urst",
+			"sections_year": 2008,
+			"totalAvg": 75.33,
+			"averageScore": 75.33
+		},
+		{
+			"sections_dept": "urst",
+			"sections_year": 2013,
+			"totalAvg": 75.45,
+			"averageScore": 75.45
+		},
+		{
+			"sections_dept": "urst",
+			"sections_year": 2012,
+			"totalAvg": 78.47,
+			"averageScore": 78.47
+		},
+		{
+			"sections_dept": "vant",
+			"sections_year": 1900,
+			"totalAvg": 136.2,
+			"averageScore": 68.1
+		},
+		{
+			"sections_dept": "vant",
+			"sections_year": 2014,
+			"totalAvg": 71.98,
+			"averageScore": 71.98
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2011,
+			"totalAvg": 355.37,
+			"averageScore": 71.07
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 1900,
+			"totalAvg": 4689.15,
+			"averageScore": 74.43
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2012,
+			"totalAvg": 353.91,
+			"averageScore": 70.78
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2013,
+			"totalAvg": 352.63,
+			"averageScore": 70.53
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2010,
+			"totalAvg": 506.16,
+			"averageScore": 72.31
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2009,
+			"totalAvg": 439.27,
+			"averageScore": 73.21
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2015,
+			"totalAvg": 430.72,
+			"averageScore": 71.79
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2008,
+			"totalAvg": 290.91,
+			"averageScore": 72.73
+		},
+		{
+			"sections_dept": "visa",
+			"sections_year": 2014,
+			"totalAvg": 433.61,
+			"averageScore": 72.27
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 1900,
+			"totalAvg": 1213.12,
+			"averageScore": 75.82
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2009,
+			"totalAvg": 74.63,
+			"averageScore": 74.63
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2012,
+			"totalAvg": 154.36,
+			"averageScore": 77.18
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2013,
+			"totalAvg": 232.91,
+			"averageScore": 77.64
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2014,
+			"totalAvg": 142.31,
+			"averageScore": 71.16
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2011,
+			"totalAvg": 75.41,
+			"averageScore": 75.41
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2015,
+			"totalAvg": 229.3,
+			"averageScore": 76.43
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2010,
+			"totalAvg": 77.92,
+			"averageScore": 77.92
+		},
+		{
+			"sections_dept": "wood",
+			"sections_year": 2008,
+			"totalAvg": 156.66,
+			"averageScore": 78.33
+		},
+		{
+			"sections_dept": "wrds",
+			"sections_year": 1900,
+			"totalAvg": 140.91,
+			"averageScore": 70.45
+		}
+	]
+}

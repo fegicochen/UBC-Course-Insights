@@ -652,6 +652,10 @@ describe("InsightFacade", function () {
 		it("[valid/minPass.json] Combination Query with Multiple APPLY Rules", checkQuery);
 		it("[valid/countandgroup.json] Combination Query with Multiple APPLY Rules", checkQuery);
 		it("[valid/useavgnonum.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/countcase.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/sumcase.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/sumandavg.json] Combination Query with Multiple APPLY Rules", checkQuery);
+		it("[valid/avgedge.json] Combination Query with Multiple APPLY Rules", checkQuery);
 
 		it("[invalid/invalidmax.json] Invalid key sectiear in LT", checkQuery);
 		it("[invalid/invalidapply.json] Invalid key sectiear in LT", checkQuery);
