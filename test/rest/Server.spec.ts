@@ -22,8 +22,8 @@ describe("Facade C3", function () {
 
 	// Sample on how to format PUT requests
 	it("PUT test for courses dataset", function () {
-		const SERVER_URL = "TBD";
-		const ENDPOINT_URL = "TBD";
+		const SERVER_URL = "http://localhost:4321";
+		const ENDPOINT_URL = "dataset/sections/sections";
 		const ZIP_FILE_DATA = "TBD";
 
 		try {
