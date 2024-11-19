@@ -4,7 +4,13 @@ import Log from "@ubccpsc310/folder-test/build/Log";
 import * as http from "http";
 import cors from "cors";
 import InsightFacade from "../controller/InsightFacade";
-import { InsightDataset, InsightDatasetKind, InsightError, InsightResult, NotFoundError } from "../controller/IInsightFacade";
+import {
+	InsightDataset,
+	InsightDatasetKind,
+	InsightError,
+	InsightResult,
+	NotFoundError,
+} from "../controller/IInsightFacade";
 
 export default class Server {
 	private readonly port: number;
@@ -100,7 +106,7 @@ export default class Server {
 		// TODO: your other endpoints should go here
 	}
 
-	private static async getDatasets(_req: Request, res:Response): Promise<void> {
+	private static async getDatasets(_req: Request, res: Response): Promise<void> {
 		try {
 			Log.info(`Getting datasets`);
 			const response = await Server.performGetDatasets();
@@ -133,7 +139,6 @@ export default class Server {
 		return await facade.addDataset(id, content, kind as InsightDatasetKind);
 	}
 
-
 	private static async deleteDataset(req: Request, res: Response): Promise<void> {
 		try {
 			Log.info(`Delete dataset: ${req.params.id}`);
@@ -141,17 +146,17 @@ export default class Server {
 			res.status(StatusCodes.OK).json({ result: response });
 		} catch (err) {
 			if (err instanceof NotFoundError) {
-				res.status(StatusCodes.NOT_FOUND).json({error: (err as any)?.message ?? err});
+				res.status(StatusCodes.NOT_FOUND).json({ error: (err as any)?.message ?? err });
 			} else {
-			res.status(StatusCodes.BAD_REQUEST).json({ error: (err as any)?.message ?? err });
+				res.status(StatusCodes.BAD_REQUEST).json({ error: (err as any)?.message ?? err });
+			}
 		}
 	}
-}
 	private static async performDeleteDataset(id: string): Promise<string> {
 		const facade = new InsightFacade();
 		return await facade.removeDataset(id);
 	}
-	private static async postQuery(req: Request, res:Response): Promise<void> {
+	private static async postQuery(req: Request, res: Response): Promise<void> {
 		try {
 			Log.info(`Performing query: ${req.body}`);
 			const response = await Server.performPostQuery(req.body);
