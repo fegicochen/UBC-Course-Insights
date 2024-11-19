@@ -152,7 +152,7 @@ export interface OptionsState {
 		keys: string[];
 	};
 	columns: InsightFacadeKey[];
-	datasetKind: string;
+	datasetId: string;
 }
 
 export class DatasetUtils {
@@ -174,17 +174,20 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDatasetByKind(
+	public static findDatasetById(
 		provider: DatasetsProvider,
-		kind: string
+		id: string
 	): SectionsDataset | RoomsDataset | undefined {
 		const datasets = provider();
-		if (kind === InsightDatasetKind.Sections) {
-			// Assuming only one Sections dataset exists
-			return datasets.sections[0];
-		} else if (kind === InsightDatasetKind.Rooms) {
-			// Assuming only one Rooms dataset exists
-			return datasets.rooms[0];
+		for (const x of datasets.rooms) {
+			if (x.id === id) {
+				return x;
+			}
+		}
+		for (const y of datasets.sections) {
+			if (y.id === id) {
+				return y;
+			}
 		}
 		return undefined;
 	}
@@ -254,12 +257,7 @@ export class DatasetUtils {
 	 * @reutrns undefined if string is not an mkey or skey, otherwise produces id string and key split.
 	 */
 	public static parseMOrSKey(key: string): InsightFacadeKey | undefined {
-		const mkeyParse = this.parseMKey(key);
-		if (mkeyParse !== undefined) {
-			return mkeyParse;
-		} else {
-			return this.parseSKey(key);
-		}
+		return this.parseMKey(key) ?? this.parseSKey(key);
 	}
 
 	/**
@@ -268,10 +266,7 @@ export class DatasetUtils {
 	 * @returns whether it is an mkey or not
 	 */
 	public static isMKey(key: InsightFacadeKey | string | undefined): boolean {
-		if (key === undefined) {
-			return false;
-		}
-		return MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
+		return key === undefined ? false : MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
 	}
 
 	/**

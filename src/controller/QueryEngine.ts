@@ -54,7 +54,7 @@ export class QueryEngine {
 
 		// Initialize ApplyProcessor if APPLY rules exist
 		if (applyKeys.length > 0) {
-			this.applyProcessor = new ApplyProcessor(this.options.datasetKind);
+			this.applyProcessor = new ApplyProcessor(this.options.datasetId);
 		}
 
 		const data = this.processBody(rootStructure.get(Keywords.Body));
@@ -139,7 +139,7 @@ export class QueryEngine {
 
 	// Helper method to extract the value from an item based on the key
 	private extractValue(item: any, key: string): any {
-		const datasetPrefix = `${this.options!.datasetKind}_`;
+		const datasetPrefix = `${this.options!.datasetId}_`;
 		if (key.startsWith(datasetPrefix)) {
 			const fieldName = key.substring(datasetPrefix.length);
 			return item[fieldName];
@@ -156,8 +156,8 @@ export class QueryEngine {
 		const body = DatasetUtils.checkIsObject(Keywords.Body, bodyRaw);
 
 		// Determine the dataset based on the datasetKind from options
-		const datasetKind = this.options!.datasetKind;
-		const dataset = DatasetUtils.findDatasetByKind(this.datasets, datasetKind);
+		const datasetKind = this.options!.datasetId;
+		const dataset = DatasetUtils.findDatasetById(this.datasets, this.options!.datasetId);
 
 		if (dataset === undefined) {
 			throw new InsightError(`Could not find dataset with kind: ${datasetKind}.`);
@@ -290,9 +290,9 @@ export class QueryEngine {
 		}
 
 		// Ensure the key belongs to the correct dataset
-		if (this.options!.datasetKind !== key.kind) {
-			throw new InsightError("Key does not belong to the dataset kind");
-		}
+		// if (this.options!.datasetId !== key.kind) {
+		// 	throw new InsightError("Key does not belong to the data");
+		// }
 
 		// Validate key type based on operation
 		if (DatasetUtils.isMKey(key)) {
@@ -322,8 +322,8 @@ export class QueryEngine {
 		for (const item of data) {
 			const key = groupKeys
 				.map((keyOfGroup) => {
-					const fieldName = keyOfGroup.startsWith(`${this.options!.datasetKind}_`)
-						? keyOfGroup.substring(this.options!.datasetKind.length + 1)
+					const fieldName = keyOfGroup.startsWith(`${this.options!.datasetId}_`)
+						? keyOfGroup.substring(this.options!.datasetId.length + 1)
 						: keyOfGroup;
 					return (item as Record<string, any>)[fieldName];
 				})
@@ -377,8 +377,8 @@ export class QueryEngine {
 		const result: any = {};
 		const itemWithKeys = items[0] as Record<string, any>;
 		GROUP.forEach((groupKey) => {
-			const fieldName = groupKey.startsWith(`${this.options!.datasetKind}_`)
-				? groupKey.substring(this.options!.datasetKind.length + 1)
+			const fieldName = groupKey.startsWith(`${this.options!.datasetId}_`)
+				? groupKey.substring(this.options!.datasetId.length + 1)
 				: groupKey;
 			result[fieldName] = itemWithKeys[fieldName];
 		});

@@ -55,7 +55,7 @@ export class OptionsProcessor {
 		return {
 			columns: columnsForState,
 			order: orderForState,
-			datasetKind: this.datasetId,
+			datasetId: this.datasetId,
 		};
 	}
 
