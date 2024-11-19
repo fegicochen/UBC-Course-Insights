@@ -1,0 +1,276 @@
+{
+	"title": "AVG with Small Data Sets to Test Rounding and Edge Values",
+	"input": {
+		"WHERE": {
+			"AND": [
+				{
+					"GT": {
+						"sections_avg": 60
+					}
+				},
+				{
+					"LT": {
+						"sections_avg": 65
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [
+				"sections_dept",
+				"averageScore"
+			]
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				"sections_dept"
+			],
+			"APPLY": [
+				{
+					"averageScore": {
+						"AVG": "sections_avg"
+					}
+				}
+			]
+		}
+	},
+	"errorExpected": false,
+	"expected": [
+		{
+			"sections_dept": "anth",
+			"averageScore": 60.05
+		},
+		{
+			"sections_dept": "apbi",
+			"averageScore": 63.87
+		},
+		{
+			"sections_dept": "apsc",
+			"averageScore": 63.69
+		},
+		{
+			"sections_dept": "arcl",
+			"averageScore": 64.5
+		},
+		{
+			"sections_dept": "asia",
+			"averageScore": 64.15
+		},
+		{
+			"sections_dept": "astr",
+			"averageScore": 63.34
+		},
+		{
+			"sections_dept": "astu",
+			"averageScore": 64.21
+		},
+		{
+			"sections_dept": "audi",
+			"averageScore": 63.13
+		},
+		{
+			"sections_dept": "bioc",
+			"averageScore": 64.67
+		},
+		{
+			"sections_dept": "biol",
+			"averageScore": 63.53
+		},
+		{
+			"sections_dept": "busi",
+			"averageScore": 62.71
+		},
+		{
+			"sections_dept": "chbe",
+			"averageScore": 63.72
+		},
+		{
+			"sections_dept": "chem",
+			"averageScore": 63.28
+		},
+		{
+			"sections_dept": "civl",
+			"averageScore": 63.77
+		},
+		{
+			"sections_dept": "clst",
+			"averageScore": 63.46
+		},
+		{
+			"sections_dept": "comm",
+			"averageScore": 63.9
+		},
+		{
+			"sections_dept": "cpsc",
+			"averageScore": 64.21
+		},
+		{
+			"sections_dept": "econ",
+			"averageScore": 63.62
+		},
+		{
+			"sections_dept": "educ",
+			"averageScore": 62.57
+		},
+		{
+			"sections_dept": "elec",
+			"averageScore": 63.38
+		},
+		{
+			"sections_dept": "engl",
+			"averageScore": 63.93
+		},
+		{
+			"sections_dept": "eosc",
+			"averageScore": 63.5
+		},
+		{
+			"sections_dept": "fmst",
+			"averageScore": 62.49
+		},
+		{
+			"sections_dept": "fopr",
+			"averageScore": 63.64
+		},
+		{
+			"sections_dept": "fre",
+			"averageScore": 62.65
+		},
+		{
+			"sections_dept": "fren",
+			"averageScore": 63.85
+		},
+		{
+			"sections_dept": "frst",
+			"averageScore": 62.98
+		},
+		{
+			"sections_dept": "geob",
+			"averageScore": 63.34
+		},
+		{
+			"sections_dept": "geog",
+			"averageScore": 64.18
+		},
+		{
+			"sections_dept": "grsj",
+			"averageScore": 64.67
+		},
+		{
+			"sections_dept": "hist",
+			"averageScore": 62.96
+		},
+		{
+			"sections_dept": "ital",
+			"averageScore": 63.59
+		},
+		{
+			"sections_dept": "japn",
+			"averageScore": 63.65
+		},
+		{
+			"sections_dept": "kin",
+			"averageScore": 63.16
+		},
+		{
+			"sections_dept": "latn",
+			"averageScore": 62.75
+		},
+		{
+			"sections_dept": "lled",
+			"averageScore": 62.53
+		},
+		{
+			"sections_dept": "math",
+			"averageScore": 62.88
+		},
+		{
+			"sections_dept": "mech",
+			"averageScore": 62.45
+		},
+		{
+			"sections_dept": "medg",
+			"averageScore": 62
+		},
+		{
+			"sections_dept": "micb",
+			"averageScore": 64.47
+		},
+		{
+			"sections_dept": "mtrl",
+			"averageScore": 62.98
+		},
+		{
+			"sections_dept": "musc",
+			"averageScore": 62.9
+		},
+		{
+			"sections_dept": "obst",
+			"averageScore": 62.5
+		},
+		{
+			"sections_dept": "pcth",
+			"averageScore": 63.5
+		},
+		{
+			"sections_dept": "phar",
+			"averageScore": 63.33
+		},
+		{
+			"sections_dept": "phil",
+			"averageScore": 63.4
+		},
+		{
+			"sections_dept": "phys",
+			"averageScore": 63.4
+		},
+		{
+			"sections_dept": "poli",
+			"averageScore": 63.04
+		},
+		{
+			"sections_dept": "psyc",
+			"averageScore": 63.78
+		},
+		{
+			"sections_dept": "punj",
+			"averageScore": 64.89
+		},
+		{
+			"sections_dept": "rmst",
+			"averageScore": 62.51
+		},
+		{
+			"sections_dept": "russ",
+			"averageScore": 64.13
+		},
+		{
+			"sections_dept": "span",
+			"averageScore": 63.26
+		},
+		{
+			"sections_dept": "stat",
+			"averageScore": 62.29
+		},
+		{
+			"sections_dept": "surg",
+			"averageScore": 60.25
+		},
+		{
+			"sections_dept": "thtr",
+			"averageScore": 63.78
+		},
+		{
+			"sections_dept": "vant",
+			"averageScore": 62.87
+		},
+		{
+			"sections_dept": "wood",
+			"averageScore": 62.27
+		},
+		{
+			"sections_dept": "wrds",
+			"averageScore": 63.75
+		}
+	]
+}
