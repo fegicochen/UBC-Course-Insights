@@ -127,6 +127,7 @@ export default class Server {
 			const response = await Server.performPutDataset(req.params.id, req.params.kind, content);
 			res.status(StatusCodes.OK).json({ result: response });
 		} catch (err) {
+			Log.error("Bad dataset PUT request: " + (err as any)?.message);
 			res.status(StatusCodes.BAD_REQUEST).json({ error: (err as any)?.message ?? err });
 		}
 	}
