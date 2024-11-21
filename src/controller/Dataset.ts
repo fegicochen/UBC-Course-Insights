@@ -174,10 +174,7 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDatasetById(
-		provider: DatasetsProvider,
-		id: string
-	): SectionsDataset | RoomsDataset | undefined {
+	public static findDatasetById(provider: DatasetsProvider, id: string): SectionsDataset | RoomsDataset | undefined {
 		const datasets = provider();
 		for (const x of datasets.rooms) {
 			if (x.id === id) {
@@ -266,7 +263,9 @@ export class DatasetUtils {
 	 * @returns whether it is an mkey or not
 	 */
 	public static isMKey(key: InsightFacadeKey | string | undefined): boolean {
-		return key === undefined ? false : MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
+		return key === undefined
+			? false
+			: MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
 	}
 
 	/**
