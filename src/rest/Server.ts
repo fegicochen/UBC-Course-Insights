@@ -157,12 +157,14 @@ export default class Server {
 		const facade = new InsightFacade();
 		return await facade.removeDataset(id);
 	}
+
 	private static async postQuery(req: Request, res: Response): Promise<void> {
 		try {
-			Log.info(`Performing query: ${req.body}`);
+			Log.info(`Performing query: ${req.body.toString()}`);
 			const response = await Server.performPostQuery(req.body);
 			res.status(StatusCodes.OK).json({ result: response });
 		} catch (err) {
+			Log.error("Query error: " + (err as any).message);
 			res.status(StatusCodes.BAD_REQUEST).json({ error: (err as any)?.message ?? err });
 		}
 	}

@@ -1,5 +1,7 @@
 
 
+export type InsightResult = Record<string, string | number>;
+
 export interface InsightDataset {
 	id: string;
 	kind: string;
@@ -64,3 +66,20 @@ export const requestAddDataset = async (id: string, kind: string, file: File): P
 		});
 };
 
+export const requestQuery = async (query: unknown): Promise<InsightResult[]> => {
+	const headers = new Headers();
+	headers.append("Content-Type", "application/json");
+
+	return await fetch('http://localhost:4321/query', {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(query as any)
+	})
+	.then(res => res.json())
+	.then(res => {
+		if (res.error !== undefined) {
+			throw new Error(res.error);
+		}
+		return res.result as InsightResult[];
+	});
+}
