@@ -13,7 +13,12 @@ describe("Facade C3", function () {
 	let invalidQuery: string;
 	before(async function () {
 		// TODO: start server here once and handle errors properly
-		sections = fs.readFileSync("test/resources/archives/pair.zip");
+		try {
+			sections = await fs.promises.readFile("test/resources/archives/pair.zip");
+		} catch (err) {
+			Log.error(err);
+			expect.fail("Failed to read the file");
+		}
 		validQuery = {
 			WHERE: {
 				GT: {
@@ -48,7 +53,7 @@ describe("Facade C3", function () {
 	});
 
 	// Sample on how to format PUT requests
-	it("PUT test for courses dataset", function () {
+	it("PUT test for courses dataset", async function () {
 		const SERVER_URL = "http://localhost:4321";
 		const ENDPOINT_URL = "/dataset/sections/sections";
 
@@ -69,7 +74,7 @@ describe("Facade C3", function () {
 		}
 	});
 
-	it("PUT test for invalid dataset", function () {
+	it("PUT test for invalid dataset", async function () {
 		const SERVER_URL = "http://localhost:4321";
 		const ENDPOINT_URL = "/dataset/sections/sections";
 
@@ -101,7 +106,7 @@ describe("Facade C3", function () {
 				.put(ENDPOINT_URL)
 				.send(sections)
 				.set("Content-Type", "application/x-zip-compressed")
-				.then(function (res: Response) {
+				.then(async function (res: Response) {
 					expect(res.status).to.be.equal(StatusCodes.OK);
 
 					return request(SERVER_URL)
@@ -122,7 +127,7 @@ describe("Facade C3", function () {
 		}
 	});
 
-	it("DELETE test for non existent dataset", function () {
+	it("DELETE test for non existent dataset", async function () {
 		const SERVER_URL = "http://localhost:4321";
 		const ENDPOINT_URL = "/dataset/sections/none";
 
@@ -150,7 +155,7 @@ describe("Facade C3", function () {
 				.put(ENDPOINT_URL)
 				.send(sections)
 				.set("Content-Type", "application/x-zip-compressed")
-				.then(function (res: Response) {
+				.then(async function (res: Response) {
 					expect(res.status).to.be.equal(StatusCodes.OK);
 
 					return request(SERVER_URL)
@@ -180,7 +185,7 @@ describe("Facade C3", function () {
 				.put(ENDPOINT_URL)
 				.send(sections)
 				.set("Content-Type", "application/x-zip-compressed")
-				.then(function (res: Response) {
+				.then(async function (res: Response) {
 					expect(res.status).to.be.equal(StatusCodes.OK);
 
 					return request(SERVER_URL)
@@ -212,7 +217,7 @@ describe("Facade C3", function () {
 				.put(ENDPOINT_URL)
 				.send(sections)
 				.set("Content-Type", "application/x-zip-compressed")
-				.then(function (res: Response) {
+				.then(async function (res: Response) {
 					expect(res.status).to.be.equal(StatusCodes.OK);
 
 					return request(SERVER_URL)
