@@ -298,7 +298,7 @@ const Chart3 = (props: {
 
 	useEffect(() => {
 		getCourses();
-	}, [props.dataset, course])
+	}, [props.dataset, course, props.dataset.id])
 
 	return (<>
 	<TextField label="Course To Look At Instructors" helperText={"ex. CPCS 121"}
@@ -347,7 +347,7 @@ const getCourseAveragesByProf = (id: string, course: string): Promise<InsightRes
 			"APPLY": [
 				{
 					"avgMark": {
-						"AVG": "sections_avg"
+						"AVG": id + "_avg"
 					}
 				}
 			]
@@ -389,7 +389,7 @@ const getSingleCourse = (id: string, course: string)
 			"APPLY": [
 				{
 					"avgMark": {
-						"AVG": "sections_avg"
+						"AVG": id + "_avg"
 					}
 				}
 			]
