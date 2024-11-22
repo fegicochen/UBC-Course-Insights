@@ -97,7 +97,7 @@ export const SFields = [
 ];
 
 export interface InsightFacadeKey {
-	kind: string;
+	idstring: string;
 	field: DatasetId;
 }
 
@@ -210,13 +210,13 @@ export class DatasetUtils {
 		if (splitUnderscore.length !== expectedParts) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
+		const keyName = splitUnderscore[0];
 		const mfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !MFields.includes(mfield as DatasetId)) {
+		if (keyName.trim() === "" || !MFields.includes(mfield as DatasetId)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: keyName,
 			field: mfield as DatasetId,
 		};
 	}
@@ -232,20 +232,15 @@ export class DatasetUtils {
 		if (splitUnderscore.length !== expectedParts) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
+		const keyName = splitUnderscore[0];
 		const sfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !SFields.includes(sfield as DatasetId)) {
+		if (keyName.trim() === "" || !SFields.includes(sfield as DatasetId)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: keyName,
 			field: sfield as DatasetId,
 		};
-	}
-
-	// New helper function to validate kind
-	public static isValidKind(kind: string): boolean {
-		return kind === InsightDatasetKind.Sections || kind === InsightDatasetKind.Rooms;
 	}
 
 	/**

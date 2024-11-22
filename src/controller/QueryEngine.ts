@@ -85,13 +85,13 @@ export class QueryEngine {
 
 		this.options!.columns.forEach((column) => {
 			let value: any;
-			if (column.kind === "") {
+			if (column.idstring === "") {
 				value = itemWithKeys[column.field];
 				result[column.field] = value;
 			} else {
 				const fieldName = column.field;
 				value = itemWithKeys[fieldName];
-				result[`${column.kind}_${fieldName}`] = value;
+				result[`${column.idstring}_${fieldName}`] = value;
 			}
 		});
 		return result;

@@ -6,10 +6,10 @@ import { calculateMax, calculateMin, calculateSum, calculateCount, calculateAvg 
  * ApplyProcessor handles the APPLY operations in a query.
  */
 export class ApplyProcessor {
-	private datasetKind: string;
+	private datasetId: string;
 
-	constructor(datasetKind: string) {
-		this.datasetKind = datasetKind;
+	constructor(datasetId: string) {
+		this.datasetId = datasetId;
 	}
 
 	/**
@@ -95,7 +95,7 @@ export class ApplyProcessor {
 
 		// Parse and validate the target key format and dataset kind
 		const parsedKey = DatasetUtils.parseMOrSKey(targetKey);
-		if (!parsedKey || parsedKey.kind !== this.datasetKind) {
+		if (!parsedKey || parsedKey.idstring !== this.datasetId) {
 			throw new InsightError("APPLY target key does not match dataset kind.");
 		}
 	}
@@ -134,7 +134,7 @@ export class ApplyProcessor {
 	 * @returns The processed field name.
 	 */
 	private getFieldName(field: string): string {
-		const prefix = `${this.datasetKind}_`;
+		const prefix = `${this.datasetId}_`;
 		return field.startsWith(prefix) ? field.slice(prefix.length) : field;
 	}
 
