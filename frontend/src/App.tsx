@@ -3,7 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import { Button, CircularProgress, Container, Divider, FormControl, Grid2 as Grid, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from '@mui/material';
 import { InsightDataset, requestAddDataset, requestDatasets, requestQuery, requestRemoveDataset } from './Requests';
-import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto'
+import { Chart, Bar } from 'react-chartjs-2'
 
 function App() {
 
@@ -184,15 +185,18 @@ const SectionGraphs = (props: {
 	setQuerying: (q: boolean) => void
 }) => {
 	const id = props.dataset.id;
+	const [barData, setBarData] = useState<Array<{ dept: string, count: number }>>([]);
+	const courseAvgLimit = 80;
+	const coursesToDisplayInChart = 12;
 
 	useEffect(() => {
 		requestQuery({
 			"WHERE": {},
 			"OPTIONS": {
-				"COLUMNS": [id + "_title", "overallAvg"]
+				"COLUMNS": [id + "_title", "overallAvg", id + "_dept"]
 			},
 			"TRANSFORMATIONS": {
-				"GROUP": [id + "_title"],
+				"GROUP": [id + "_title", id + "_dept"],
 				"APPLY": [{
 					"overallAvg": {
 						"AVG": id + "_avg"
@@ -201,7 +205,27 @@ const SectionGraphs = (props: {
 			}
 		})
 		.then((res) => {
-			console.log(JSON.stringify(res))
+			const deptsMappedToNumberAvgOver80 = new Map<string, number>();
+			res.filter(x => x.overallAvg as number > courseAvgLimit)
+				.map(x => x[id + "_dept"] as string).forEach(dept => {
+					if (deptsMappedToNumberAvgOver80.has(dept)) {
+						let numPrev = deptsMappedToNumberAvgOver80.get(dept)!;
+						deptsMappedToNumberAvgOver80.set(dept, numPrev + 1);
+					} else {
+						deptsMappedToNumberAvgOver80.set(dept, 1);
+					}
+				});
+			const top = Array.from(deptsMappedToNumberAvgOver80.entries())
+				.map(x => ({
+					dept: x[0] as string,
+					count: x[1] as number,
+				}))
+				.sort((a, b) => (b.count as number) - (a.count as number))
+				.slice(0, coursesToDisplayInChart);
+
+			console.log(top);
+			setBarData(top);
+
 		})
 		.catch(e => {
 			console.error((e as any)?.message ?? e);
@@ -211,6 +235,18 @@ const SectionGraphs = (props: {
 	return (<>
 	<Typography>Sections insights:</Typography>
 	{props.querying && <CircularProgress />}
+	{!props.querying &&
+	<>
+	<Bar data={{
+		labels: barData.map(x => x.dept),
+		datasets: [
+			{
+				label: "Course Count Avg Over " + courseAvgLimit,
+				data: barData.map(x => x.count)
+			}
+		]
+	}}/>
+	</>}
 	</>);
 };
 
