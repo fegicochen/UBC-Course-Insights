@@ -1,5 +1,4 @@
 // import { DatasetUtils, Keywords } from "../../src/controller/Dataset";
-import { DatasetId, DatasetUtils } from "../../src/controller/Dataset";
 import {
 	IInsightFacade,
 	InsightDatasetKind,
@@ -12,8 +11,6 @@ import InsightFacade from "../../src/controller/InsightFacade";
 import { clearDisk, getContentFromArchives, loadTestQuery } from "../TestUtil";
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
-// import { QueryEngine } from "../../src/controller/QueryEngine";
-// import { RoomsDatasetProcessor } from "../../src/controller/RoomsDatasetProcessor";
 
 use(chaiAsPromised);
 
@@ -530,9 +527,9 @@ describe("InsightFacade", function () {
 			try {
 				result = await facade.performQuery(input);
 
-				// if (result !== expected) {
-				// 	console.log(`Expected : ${expected}, Actual : ${result}`);
-				// }
+				if (errorExpected) {
+					expect.fail("Expected error.");
+				}
 
 				expect(result.length).to.equal(expected.length);
 				expect(result).deep.equals(expected);
