@@ -162,7 +162,6 @@ const SectionGraphs = (props: {
 	const coursesToDisplayInChart = 12;
 
 	useEffect(() => {
-		// getAllCourses(id);
 		getCoursesAvgOver(id, courseAvgLimit, coursesToDisplayInChart, setBarData);
 	}, [props.dataset, id, courseAvgLimit]);
 
@@ -182,23 +181,9 @@ const SectionGraphs = (props: {
 			}
 		]
 	}}/>
+	<TextField />
 	</>);
 };
-
-const getAllCourses = (id: string): Promise<void> => {
-	return requestQuery({
-		WHERE: {},
-		OPTIONS: {
-			COLUMNS: [id + "_title"]
-		}
-	})
-	.then((res) => {
-		console.log(res);
-	})
-	.catch(e => {
-		console.error((e as any)?.message ?? e);
-	});
-}
 
 const getCoursesAvgOver = (id: string,
 	courseAvgLimit: number,
