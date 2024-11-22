@@ -227,7 +227,7 @@ const SectionGraphs = (props: {
 
 	return (<>
 	<Typography>Sections insights:</Typography>
-	{barData.length !== 0 && <Bar data={{
+	<Bar data={{
 		labels: barData.map(x => x.dept),
 		datasets: [
 			{
@@ -235,7 +235,7 @@ const SectionGraphs = (props: {
 				data: barData.map(x => x.count)
 			}
 		]
-	}}/>}
+	}}/>
 	</>);
 };
 
