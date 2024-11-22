@@ -3,8 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 import { Button, CircularProgress, Container, Divider, FormControl, Grid2 as Grid, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from '@mui/material';
 import { InsightDataset, requestAddDataset, requestDatasets, requestQuery, requestRemoveDataset } from './Requests';
-import { Chart as ChartJS } from 'chart.js/auto'
+import { CategoryScale, Chart as ChartJS } from 'chart.js/auto'
 import { Chart, Bar } from 'react-chartjs-2'
+
+ChartJS.register(CategoryScale);
 
 function App() {
 
@@ -143,22 +145,18 @@ const Graphs = (props: {
 	dataset: InsightDataset
 }) => {
 
-	const [querying, setQuerying] = useState(false);
-
 	return (<>
 		<Stack>
 			<h2>Insights for "{props.dataset.id}":</h2>
 			{props.dataset.kind === 'sections'
-			? <SectionGraphs dataset={props.dataset} querying={querying} setQuerying={setQuerying}/>
-			: <RoomsGraphs dataset={props.dataset} querying={querying} setQuerying={setQuerying}/>}
+			? <SectionGraphs dataset={props.dataset}/>
+			: <RoomsGraphs dataset={props.dataset}/>}
 		</Stack>
 	</>);
 }
 
 const RoomsGraphs = (props: {
 	dataset: InsightDataset,
-	querying: boolean,
-	setQuerying: (q: boolean) => void
 }) => {
 	const id = props.dataset.id;
 
@@ -175,14 +173,11 @@ const RoomsGraphs = (props: {
 
 	return (<>
 	<Typography>Rooms insights:</Typography>
-	{props.querying && <CircularProgress />}
 	</>);
 }
 
 const SectionGraphs = (props: {
 	dataset: InsightDataset,
-	querying: boolean,
-	setQuerying: (q: boolean) => void
 }) => {
 	const id = props.dataset.id;
 	const [barData, setBarData] = useState<Array<{ dept: string, count: number }>>([]);
@@ -223,9 +218,7 @@ const SectionGraphs = (props: {
 				.sort((a, b) => (b.count as number) - (a.count as number))
 				.slice(0, coursesToDisplayInChart);
 
-			console.log(top);
 			setBarData(top);
-
 		})
 		.catch(e => {
 			console.error((e as any)?.message ?? e);
@@ -234,10 +227,7 @@ const SectionGraphs = (props: {
 
 	return (<>
 	<Typography>Sections insights:</Typography>
-	{props.querying && <CircularProgress />}
-	{!props.querying &&
-	<>
-	<Bar data={{
+	{barData.length !== 0 && <Bar data={{
 		labels: barData.map(x => x.dept),
 		datasets: [
 			{
@@ -245,8 +235,7 @@ const SectionGraphs = (props: {
 				data: barData.map(x => x.count)
 			}
 		]
-	}}/>
-	</>}
+	}}/>}
 	</>);
 };
 
