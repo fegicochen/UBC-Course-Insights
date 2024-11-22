@@ -30,8 +30,13 @@ export default class InsightFacade implements IInsightFacade {
 			throw new InsightError("Invalid dataset ID: " + id + ".");
 		}
 
-		// Check for duplicate ID
+		// Check for duplicate sections ID
 		if ((await this.data.getDatasets()).sections.find((dataset) => dataset.id === id)) {
+			throw new InsightError("Duplicate ID: " + id);
+		}
+
+		// Check for duplicate rooms ID
+		if ((await this.data.getDatasets()).rooms.find((dataset) => dataset.id === id)) {
 			throw new InsightError("Duplicate ID: " + id);
 		}
 

@@ -97,7 +97,7 @@ export const SFields = [
 ];
 
 export interface InsightFacadeKey {
-	kind: string;
+	idstring: string;
 	field: DatasetId;
 }
 
@@ -152,7 +152,7 @@ export interface OptionsState {
 		keys: string[];
 	};
 	columns: InsightFacadeKey[];
-	datasetKind: string;
+	datasetId: string;
 }
 
 export class DatasetUtils {
@@ -174,17 +174,17 @@ export class DatasetUtils {
 	 * @param id id to search for
 	 * @returns undefined if not found, else the dataset with the given id
 	 */
-	public static findDatasetByKind(
-		provider: DatasetsProvider,
-		kind: string
-	): SectionsDataset | RoomsDataset | undefined {
+	public static findDatasetById(provider: DatasetsProvider, id: string): SectionsDataset | RoomsDataset | undefined {
 		const datasets = provider();
-		if (kind === InsightDatasetKind.Sections) {
-			// Assuming only one Sections dataset exists
-			return datasets.sections[0];
-		} else if (kind === InsightDatasetKind.Rooms) {
-			// Assuming only one Rooms dataset exists
-			return datasets.rooms[0];
+		for (const x of datasets.rooms) {
+			if (x.id === id) {
+				return x;
+			}
+		}
+		for (const y of datasets.sections) {
+			if (y.id === id) {
+				return y;
+			}
 		}
 		return undefined;
 	}
@@ -210,13 +210,13 @@ export class DatasetUtils {
 		if (splitUnderscore.length !== expectedParts) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
+		const keyName = splitUnderscore[0];
 		const mfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !MFields.includes(mfield as DatasetId)) {
+		if (keyName.trim() === "" || !MFields.includes(mfield as DatasetId)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: keyName,
 			field: mfield as DatasetId,
 		};
 	}
@@ -232,20 +232,15 @@ export class DatasetUtils {
 		if (splitUnderscore.length !== expectedParts) {
 			return undefined;
 		}
-		const kind = splitUnderscore[0];
+		const keyName = splitUnderscore[0];
 		const sfield = splitUnderscore[1];
-		if (!this.isValidKind(kind) || !SFields.includes(sfield as DatasetId)) {
+		if (keyName.trim() === "" || !SFields.includes(sfield as DatasetId)) {
 			return undefined;
 		}
 		return {
-			kind: kind,
+			idstring: keyName,
 			field: sfield as DatasetId,
 		};
-	}
-
-	// New helper function to validate kind
-	public static isValidKind(kind: string): boolean {
-		return kind === InsightDatasetKind.Sections || kind === InsightDatasetKind.Rooms;
 	}
 
 	/**
@@ -254,12 +249,7 @@ export class DatasetUtils {
 	 * @reutrns undefined if string is not an mkey or skey, otherwise produces id string and key split.
 	 */
 	public static parseMOrSKey(key: string): InsightFacadeKey | undefined {
-		const mkeyParse = this.parseMKey(key);
-		if (mkeyParse !== undefined) {
-			return mkeyParse;
-		} else {
-			return this.parseSKey(key);
-		}
+		return this.parseMKey(key) ?? this.parseSKey(key);
 	}
 
 	/**
@@ -268,10 +258,9 @@ export class DatasetUtils {
 	 * @returns whether it is an mkey or not
 	 */
 	public static isMKey(key: InsightFacadeKey | string | undefined): boolean {
-		if (key === undefined) {
-			return false;
-		}
-		return MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
+		return key === undefined
+			? false
+			: MFields.find((x) => x === (typeof key === "string" ? key : key.field)) !== undefined;
 	}
 
 	/**

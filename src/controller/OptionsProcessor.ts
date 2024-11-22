@@ -42,7 +42,9 @@ export class OptionsProcessor {
 		this.validateColumnsInGroupOrApply(columnsForState, transformations);
 
 		// Create a set of column keys for validation in ORDER
-		const columnsSet = new Set(columnsForState.map((col) => (col.kind ? `${col.kind}_${col.field}` : col.field)));
+		const columnsSet = new Set(
+			columnsForState.map((col) => (col.idstring ? `${col.idstring}_${col.field}` : col.field))
+		);
 
 		// Ensure that at least one column is present
 		if (columnsForState.length === 0) {
@@ -55,7 +57,7 @@ export class OptionsProcessor {
 		return {
 			columns: columnsForState,
 			order: orderForState,
-			datasetKind: this.datasetId,
+			datasetId: this.datasetId,
 		};
 	}
 
@@ -77,12 +79,12 @@ export class OptionsProcessor {
 				throw new InsightError(`Invalid GROUP key format: "${firstGroupKey}".`);
 			}
 
-			this.datasetId = groupKeyParsed.kind;
+			this.datasetId = groupKeyParsed.idstring;
 
 			// Ensure all GROUP keys belong to the same dataset kind
 			transformations.GROUP.forEach((groupKey) => {
 				const parsedKey = DatasetUtils.parseMOrSKey(groupKey);
-				if (!parsedKey || parsedKey.kind !== this.datasetId) {
+				if (!parsedKey || parsedKey.idstring !== this.datasetId) {
 					throw new InsightError(`GROUP key "${groupKey}" does not match dataset kind "${this.datasetId}".`);
 				}
 			});
@@ -106,14 +108,14 @@ export class OptionsProcessor {
 			const applyKeysSet = new Set(this.applyKeys);
 
 			columnsFState.forEach((column) => {
-				if (column.kind === "") {
+				if (column.idstring === "") {
 					// APPLY keys should already be validated to exist in APPLY
 					if (!applyKeysSet.has(column.field)) {
 						throw new InsightError(`APPLY key "${column.field}" not found.`);
 					}
 				} else {
 					// GROUP keys must be present in GROUP or as an APPLY key
-					const groupKey = `${column.kind}_${column.field}`;
+					const groupKey = `${column.idstring}_${column.field}`;
 					if (!groupKeys.has(groupKey) && !applyKeysSet.has(column.field)) {
 						throw new InsightError(`Key "${groupKey}" must be present in GROUP or as an APPLY key.`);
 					}
@@ -137,14 +139,14 @@ export class OptionsProcessor {
 			const column = DatasetUtils.checkIsString(Keywords.Columns, columnRaw);
 
 			if (this.applyKeys.includes(column)) {
-				columnsForState.push({ kind: "", field: column as any });
+				columnsForState.push({ idstring: "", field: column as any });
 			} else {
 				const columnKey = DatasetUtils.parseMOrSKey(column);
 				if (columnKey !== undefined) {
-					if (datasetKindForState !== undefined && datasetKindForState !== columnKey.kind) {
+					if (datasetKindForState !== undefined && datasetKindForState !== columnKey.idstring) {
 						throw new InsightError("Multiple datasets used in query. Only one kind allowed.");
 					} else {
-						datasetKindForState = columnKey.kind;
+						datasetKindForState = columnKey.idstring;
 					}
 					columnsForState.push(columnKey);
 				} else {
@@ -212,7 +214,7 @@ export class OptionsProcessor {
 		}
 		const orderKey = DatasetUtils.parseMOrSKey(key);
 		if (orderKey !== undefined) {
-			if (orderKey.kind !== datasetIdForState) {
+			if (orderKey.idstring !== datasetIdForState) {
 				throw new InsightError("Sort key belongs to a different dataset kind.");
 			}
 			return key;
