@@ -40,7 +40,6 @@ const DatasetsManager = (props: {
 	const [errorText, setErrorText] = useState("");
 	const [callingAPI, setCallingAPI] = useState(false);
 	const [file, setFile] = useState<File | null>(null);
-	const [kind, setKind] = useState<string>("");
 	const [datasetId, setDatasetId] = useState("");
 
 	const updateDatasets = async (): Promise<void> => {
@@ -62,7 +61,7 @@ const DatasetsManager = (props: {
 
 	const addDataset = async(): Promise<void> => {
 		setCallingAPI(true);
-		return requestAddDataset(datasetId, kind, file!)
+		return requestAddDataset(datasetId, "sections", file!)
 			.then(res => {
 				console.log(JSON.stringify(res));
 				setErrorText("");
@@ -95,6 +94,7 @@ const DatasetsManager = (props: {
 	useEffect(() => {
 		updateDatasets();
 	}, []);
+
 	return (<>
 		<Stack spacing={2}>
 			<TextField
@@ -102,24 +102,11 @@ const DatasetsManager = (props: {
 				value={datasetId}
 				helperText="Cannot contain underscores"
 				onChange={(event) => {setDatasetId(event.target.value.trim())}} />
-			<FormControl fullWidth>
-				<InputLabel id="kind">Dataset Kind</InputLabel>
-				<Select
-					value={kind}
-					label="Dataset Kind"
-					labelId='kind'
-					onChange={(event) => setKind(event.target.value)}>
-						<MenuItem value={""}>None</MenuItem>
-						<MenuItem value={"sections"}>Sections</MenuItem>
-						<MenuItem value={"rooms"}>Rooms</MenuItem>
-				</Select>
-			</FormControl>
 			<input type="file" onChange={(event) => {setFile((event.target.files ?? [null])[0] ?? null)}}/>
 			<Button variant='contained'
-				disabled={callingAPI || file === null || datasetId === "" || kind === ""}
+				disabled={callingAPI || file === null || datasetId === ""}
 				onClick={addDataset}>
 				{"Add Dataset" + (datasetId === "" ? " (add an id)" :
-					kind === "" ? " (add kind)" :
 					file === null ? " (select a file)" : "")}
 			</Button>
 			<Button variant='contained' onClick={updateDatasets} disabled={callingAPI}>Refresh Dataset List</Button>
@@ -144,48 +131,47 @@ const DatasetsManager = (props: {
 const Graphs = (props: {
 	dataset: InsightDataset
 }) => {
-
 	return (<>
 		<Stack>
 			<h2>Insights for "{props.dataset.id}":</h2>
-			{props.dataset.kind === 'sections'
-			? <SectionGraphs dataset={props.dataset}/>
-			: <RoomsGraphs dataset={props.dataset}/>}
+			<SectionGraphs dataset={props.dataset}/>
 		</Stack>
 	</>);
 }
 
-const RoomsGraphs = (props: {
-	dataset: InsightDataset,
-}) => {
-	const id = props.dataset.id;
-
-	useEffect(() => {
-		requestQuery({
-		})
-		.then((res) => {
-
-		})
-		.catch(e => {
-			console.error((e as any)?.message ?? e);
-		});
-	}, [props.dataset]);
-
-	return (<>
-	<Typography>Rooms insights:</Typography>
-	</>);
-}
+type AvgsByDeptData = Array<{ dept: string, count: number }>;
 
 const SectionGraphs = (props: {
 	dataset: InsightDataset,
 }) => {
 	const id = props.dataset.id;
-	const [barData, setBarData] = useState<Array<{ dept: string, count: number }>>([]);
+	const [barData, setBarData] = useState<AvgsByDeptData>([]);
 	const courseAvgLimit = 80;
 	const coursesToDisplayInChart = 12;
 
 	useEffect(() => {
-		requestQuery({
+		getCoursesAvgOver(id, courseAvgLimit, coursesToDisplayInChart, setBarData);
+	}, [props.dataset, id]);
+
+	return (<>
+	<Typography>Sections insights:</Typography>
+	<Bar data={{
+		labels: barData.map(x => x.dept),
+		datasets: [
+			{
+				label: "Course Count Avg Over " + courseAvgLimit,
+				data: barData.map(x => x.count)
+			}
+		]
+	}}/>
+	</>);
+};
+
+const getCoursesAvgOver = (id: string,
+	courseAvgLimit: number,
+	topNCourses: number,
+	setData: (d: AvgsByDeptData) => void): Promise<void> => {
+		return requestQuery({
 			"WHERE": {},
 			"OPTIONS": {
 				"COLUMNS": [id + "_title", "overallAvg", id + "_dept"]
@@ -216,27 +202,13 @@ const SectionGraphs = (props: {
 					count: x[1] as number,
 				}))
 				.sort((a, b) => (b.count as number) - (a.count as number))
-				.slice(0, coursesToDisplayInChart);
+				.slice(0, topNCourses);
 
-			setBarData(top);
+			setData(top);
 		})
 		.catch(e => {
 			console.error((e as any)?.message ?? e);
 		});
-	}, [props.dataset, id]);
-
-	return (<>
-	<Typography>Sections insights:</Typography>
-	<Bar data={{
-		labels: barData.map(x => x.dept),
-		datasets: [
-			{
-				label: "Course Count Avg Over " + courseAvgLimit,
-				data: barData.map(x => x.count)
-			}
-		]
-	}}/>
-	</>);
-};
+}
 
 export default App;
