@@ -20,7 +20,10 @@ function App() {
 				<h1>Insight Facade</h1>
 			</Grid>
 			<Grid size={6}>
-				<DatasetsManager datasets={datasets} setDatasets={setDatasets} setSelectedDataset={setSelectedDataset} />
+				<DatasetsManager datasets={datasets}
+				setDatasets={setDatasets}
+				selectedDataset={selectedDataset}
+				setSelectedDataset={setSelectedDataset} />
 			</Grid>
 			<Grid size={6}>
 				{selectedDataset === undefined
@@ -35,6 +38,8 @@ function App() {
 const DatasetsManager = (props: {
 	datasets: InsightDataset[],
 	setDatasets: (d: InsightDataset[]) => void,
+	selectedDataset: InsightDataset | undefined,
+
 	setSelectedDataset: (d: InsightDataset | undefined) => void
 }) => {
 	const [errorText, setErrorText] = useState("");
@@ -44,10 +49,8 @@ const DatasetsManager = (props: {
 
 	const updateDatasets = async (): Promise<void> => {
 		setCallingAPI(true);
-		props.setSelectedDataset(undefined);
 		return requestDatasets()
 			.then(res => {
-				console.log(JSON.stringify(res));
 				props.setDatasets(res as InsightDataset[]);
 			})
 			.catch(e => {
@@ -63,8 +66,7 @@ const DatasetsManager = (props: {
 		setCallingAPI(true);
 		return requestAddDataset(datasetId, "sections", file!)
 			.then(res => {
-				console.log(JSON.stringify(res));
-				setErrorText("");
+				setErrorText("Dataset \"" + datasetId + "\" added successfully.");
 			})
 			.catch(e => {
 				console.error("ADD DATASETS ERROR: " + e.message);
@@ -77,10 +79,12 @@ const DatasetsManager = (props: {
 
 	const removeDataset = (id: string) => {
 		setCallingAPI(true);
+		if (props.selectedDataset?.id === id) {
+			props.setSelectedDataset(undefined);
+		}
 		requestRemoveDataset(id)
 			.then(res => {
-				console.log(JSON.stringify(res));
-				setErrorText("");
+				setErrorText("Removed dataset \"" + id + "\".");
 			})
 			.catch(e => {
 				console.error("REMOVE DATASETS ERROR: " + e.message);
@@ -93,7 +97,16 @@ const DatasetsManager = (props: {
 
 	useEffect(() => {
 		updateDatasets();
+
+		const refreshInterval = setInterval(() => updateDatasets(), 5000);
+
+		// Unmount
+		return () => {
+			clearInterval(refreshInterval);
+		};
 	}, []);
+
+
 
 	return (<>
 		<Stack spacing={2}>
@@ -109,7 +122,6 @@ const DatasetsManager = (props: {
 				{"Add Dataset" + (datasetId === "" ? " (add an id)" :
 					file === null ? " (select a file)" : "")}
 			</Button>
-			<Button variant='contained' onClick={updateDatasets} disabled={callingAPI}>Refresh Dataset List</Button>
 			<Typography variant='caption'>{errorText}</Typography>
 			<Paper>
 				<h3>Datasets</h3>
@@ -146,15 +158,21 @@ const SectionGraphs = (props: {
 }) => {
 	const id = props.dataset.id;
 	const [barData, setBarData] = useState<AvgsByDeptData>([]);
-	const courseAvgLimit = 80;
+	const [courseAvgLimit, setCourseAvgLimit] = useState(80);
 	const coursesToDisplayInChart = 12;
 
 	useEffect(() => {
+		// getAllCourses(id);
 		getCoursesAvgOver(id, courseAvgLimit, coursesToDisplayInChart, setBarData);
-	}, [props.dataset, id]);
+	}, [props.dataset, id, courseAvgLimit]);
 
 	return (<>
 	<Typography>Sections insights:</Typography>
+	<TextField
+	label={"Course Average Lower Limit"}
+	inputProps={{ type: 'number'}}
+	value={courseAvgLimit}
+	onChange={(e) => setCourseAvgLimit(Math.max(0, Math.min(parseInt(e.target.value), 100)))} />
 	<Bar data={{
 		labels: barData.map(x => x.dept),
 		datasets: [
@@ -166,6 +184,21 @@ const SectionGraphs = (props: {
 	}}/>
 	</>);
 };
+
+const getAllCourses = (id: string): Promise<void> => {
+	return requestQuery({
+		WHERE: {},
+		OPTIONS: {
+			COLUMNS: [id + "_title"]
+		}
+	})
+	.then((res) => {
+		console.log(res);
+	})
+	.catch(e => {
+		console.error((e as any)?.message ?? e);
+	});
+}
 
 const getCoursesAvgOver = (id: string,
 	courseAvgLimit: number,
@@ -202,7 +235,7 @@ const getCoursesAvgOver = (id: string,
 					count: x[1] as number,
 				}))
 				.sort((a, b) => (b.count as number) - (a.count as number))
-				.slice(0, topNCourses);
+				.slice(0, Math.min(topNCourses, deptsMappedToNumberAvgOver80.size));
 
 			setData(top);
 		})
