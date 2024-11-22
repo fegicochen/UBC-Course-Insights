@@ -14,8 +14,12 @@ function App() {
 	const [selectedDataset, setSelectedDataset] = useState<InsightDataset | undefined>();
 
 	return (
-	<Container sx={{width: "100%"}}>
-		<Grid container spacing={2} alignItems={'center'} justifyItems={'center'} textAlign={'center'}>
+		<Grid container
+		padding={4}
+		spacing={2}
+		alignItems={'start'}
+		justifyItems={'center'}
+		textAlign={'center'}>
 			<Grid size={12}>
 				<h1>Insight Facade</h1>
 			</Grid>
@@ -31,7 +35,6 @@ function App() {
 				: <Graphs dataset={selectedDataset} />}
 			</Grid>
 		</Grid>
-	</Container>
 	);
 }
 
@@ -151,17 +154,40 @@ const Graphs = (props: {
 	</>);
 }
 
+enum Insights {
+	DeptsWithHighAvg,
+	CompareTwo,
+	CompareInstructors
+}
+
 const SectionGraphs = (props: {
 	dataset: InsightDataset,
 }) => {
 	const id = props.dataset.id;
+	const [insight, setInsight] = useState<undefined | Insights>(undefined);
 
 	return (<>
 	<Typography>Sections insights:</Typography>
-	<Divider />
+	<FormControl fullWidth>
+		<InputLabel id="insight">Select Insight</InputLabel>
+		<Select
+		labelId="insight"
+		id="insight"
+		value={insight}
+		label="Select Insight"
+		onChange={(e) => setInsight(e.target.value as any)}>
+			<MenuItem value={Insights.DeptsWithHighAvg}>Departments With High Average Courses</MenuItem>
+			<MenuItem value={Insights.CompareTwo}>Compare Two Courses</MenuItem>
+			<MenuItem value={Insights.CompareInstructors}>Compare Averages For Instructors</MenuItem>
+		</Select>
+	</FormControl>
+	{insight === Insights.DeptsWithHighAvg ?
 	<Chart1 dataset={props.dataset}/>
-	<Divider />
+	: insight === Insights.CompareTwo ?
 	<Chart2 dataset={props.dataset}/>
+	: insight === Insights.CompareInstructors ?
+	<Chart3 dataset={props.dataset}/>
+	: <></>}
 	</>);
 };
 
@@ -246,6 +272,92 @@ const Chart2 = (props: {
 		]
 	}} />
 	</>);
+};
+
+
+const Chart3 = (props: {
+	dataset: InsightDataset
+}) => {
+	const id = props.dataset.id;
+	const [barData, setBarData] = useState<{ instructor: string, avg: number }[]>([]);
+	const [course, setCourse] = useState("");
+
+	const getCourses = async () => {
+		const d1 = await getCourseAveragesByProf(id, course);
+		if ((d1 ?? []).length !== 0) {
+			setBarData(d1!.map(x => ({
+				instructor: x[id + "_instructor"] as string,
+				avg: x.avgMark as number
+			}))
+			.filter(x => x.instructor !== "")
+			.slice(0, 13))
+		} else {
+			setBarData([]);
+		}
+	};
+
+	useEffect(() => {
+		getCourses();
+	}, [props.dataset, course])
+
+	return (<>
+	<TextField label="Course To Look At Instructors" helperText={"ex. CPCS 121"}
+		value={course}
+		onChange={(e) => setCourse(e.target.value)}/>
+	<Bar data={{
+		labels: barData.map(x => x.instructor),
+		datasets: [
+			{
+				label: "Course Average Over All Sections",
+				data: barData.map(x => x.avg)
+			}
+		]
+	}} />
+	</>);
+};
+const getCourseAveragesByProf = (id: string, course: string): Promise<InsightResult[] | undefined> => {
+	const [dept, num] = course.trim().toLocaleLowerCase().split(" ");
+
+	return requestQuery({
+		"WHERE": {
+			"AND": [
+				{
+					"IS": {
+						[id + "_id"]: num
+					}
+				},
+				{
+					"IS": {
+						[dept + "_dept"]: dept
+					}
+				}
+			]
+		},
+		"OPTIONS": {
+			"COLUMNS": [id + "_id", id + "_dept", "avgMark", id + "_instructor"],
+			"ORDER": {
+				"dir": "DOWN",
+				"keys": ["avgMark"]
+			}
+		},
+		"TRANSFORMATIONS": {
+			"GROUP": [
+				id + "_id", id + "_dept", id + "_instructor"
+			],
+			"APPLY": [
+				{
+					"avgMark": {
+						"AVG": "sections_avg"
+					}
+				}
+			]
+		}
+	})
+	.then((res) => res)
+	.catch((e) => {
+		console.error((e as any)?.message ?? e);
+		return undefined;
+	});
 };
 
 const getSingleCourse = (id: string, course: string)
