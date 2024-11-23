@@ -70,6 +70,8 @@ export const requestQuery = async (query: unknown): Promise<InsightResult[]> => 
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
 
+	console.log("Querying: " + JSON.stringify(query));
+
 	return await fetch('http://localhost:4321/query', {
 		method: 'POST',
 		headers: headers,
