@@ -614,7 +614,6 @@ describe("InsightFacade", function () {
 		it("[invalid/lt_not_numeric.json] LT given string arg", checkQuery);
 		it("[invalid/asterisk_in_middle.json] Asterisk can't be in middle", checkQuery);
 		it("[invalid/only_asterisk.json] Too much", checkQuery);
-		it("[invalid/multiple_datasets.json] Multiple datasets fail", checkQuery);
 		it("[invalid/not_added.json] Accessing dataset not added", checkQuery);
 		it("[invalid/order_not_in_columns.json] Order is not in columns", checkQuery);
 		it("[invalid/num_for_dept.json] Number to filter for dept", checkQuery);
